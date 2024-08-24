@@ -25,7 +25,7 @@ const NavbarMenuItem = ({ item }: { item: MenuItemType }) => {
           item.childs?.map((x, i) => {
             return (
               <Link className='w-full' href={"#"} key={i}>
-                <div className='flex align-middle items-center justify-start gap-2  text-sm py-3 hover:bg-gray-200 px-4 '>
+                <div className='flex align-middle items-center justify-start gap-2  text-sm py-3 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 '>
                   <div>
                     <FaRegCircle size={6} />
                   </div>

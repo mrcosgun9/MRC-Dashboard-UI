@@ -17,6 +17,18 @@ export const menuItems:MenuItemType[]=[
       {
         title: "Main Dashboard 2",
         href:"/"
+      },
+      {
+        title: "Main Dashboard 2",
+        href:"/"
+      },
+      {
+        title: "Main Dashboard 2",
+        href:"/"
+      },
+      {
+        title: "Main Dashboard 2",
+        href:"/"
       }
     ]
   },

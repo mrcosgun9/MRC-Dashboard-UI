@@ -20,11 +20,9 @@ export function ThemeSwitcher() {
   }
   return (
     <div>
-      
       <Button isIconOnly aria-label="Like" variant="faded" onClick={() => { changeTheme() }}>
         {theme=='light'?<FiSun size={18}/>:<IoMoonOutline size={18}/>}
       </Button>
- 
     </div>
   )
 };
