@@ -5,7 +5,7 @@ const UserMenu = () => {
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
-        <div className='flex align-middle items-center gap-2'>
+        <div className='flex align-middle items-center gap-2 cursor-pointer'>
           <Avatar radius="lg" size="sm" isBordered src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
           <div className='hidden lg:block'>
             Raşit Coşgun

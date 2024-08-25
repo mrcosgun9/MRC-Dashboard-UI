@@ -9,8 +9,8 @@ import NavbarMobile from './NavbarMobile';
 
 const Navbar = () => {
   return (
-    <header className='w-full'>
-      <div className='w-full py-2 border-b-2 border-gray-200 dark:border-gray-800'>
+    <header className='w-full bg-white'>
+      <div className='w-full py-2 border-b border-gray-100 dark:border-gray-800'>
         <div className='container flex justify-between align-middle items-center'>
           <div className='flex align-middle items-center justify-center gap-3'>
             <div className='font-extrabold'>LOGO</div>
@@ -29,7 +29,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className='w-full border-b-2 border-gray-200 dark:border-gray-800 hidden lg:block'>
+      <div className='w-full border-b-2 border-gray-100 dark:border-gray-800 hidden lg:block'>
         <NavbarMenuList  />
       </div>
     </header>
