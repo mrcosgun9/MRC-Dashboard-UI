@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
-import Providers from "@/Providers";
+import Providers from "@/context/Providers";
 import Navbar from "@/components/layouts/main-layout/Navbar";
 
 const nunito = Nunito({ subsets: ["latin"] });
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={nunito.className}>
         <Providers>
           <main>
