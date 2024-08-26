@@ -27,12 +27,12 @@ const login = () => {
       redirect: false
     });
     if (res?.status === 200) {
-      showToast('success', 'Login successful');
+      // showToast('success', 'Login successful');
       setLoading(false)
       router.push('/dashboard');
     }
     else {
-      showToast('error', 'Login failed');
+      // showToast('error', 'Login failed');
       setLoading(false)
     }
   }

@@ -16,10 +16,9 @@ export const AppContext = createContext<AppContextProps>({
 });
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   return (
     <AppContext.Provider value={{ loading, setLoading }}>
-      <div>{JSON.stringify(loading)}</div>
         {children}
         {
           loading && <LoadingScreen />
