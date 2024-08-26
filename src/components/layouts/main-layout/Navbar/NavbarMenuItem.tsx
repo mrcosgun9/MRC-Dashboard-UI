@@ -6,7 +6,6 @@ import { MenuItemType } from '@/types/NavbarTypes'
 import { useRouter } from 'next/navigation'
 
 const NavbarMenuItem = ({ item }: { item: MenuItemType }) => {
-  const router=useRouter();
   return (
     <div className='relative group'>
       <div className='flex justify-start align-middle items-center gap-2 py-2 px-3 text-sm cursor-pointer' >
@@ -24,7 +23,7 @@ const NavbarMenuItem = ({ item }: { item: MenuItemType }) => {
         {
           item.childs?.map((x, i) => {
             return (
-              <Link className='w-full' href={"#"} key={i}>
+              <Link className='w-full' href={x.href??''} key={i}>
                 <div className='flex align-middle items-center justify-start gap-2  text-sm py-3 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 '>
                   <div>
                     <FaRegCircle size={6} />
