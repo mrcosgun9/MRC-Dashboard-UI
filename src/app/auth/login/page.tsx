@@ -5,14 +5,15 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
 type Inputs = {
   email: string
   password: string
 }
 const login = () => {
-  const router=useRouter();
-  const {loading,setLoading}=useAppContext();
+  const router = useRouter();
+  const { loading, setLoading } = useAppContext();
   const [isVisible, toggleVisibility] = useState(false);
   const {
     register,
@@ -20,19 +21,19 @@ const login = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-     setLoading(true)
+    setLoading(true)
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
       redirect: false
     });
     if (res?.status === 200) {
-      // showToast('success', 'Login successful');
+      toast.success('Login successful')
       setLoading(false)
       router.push('/dashboard');
     }
     else {
-      // showToast('error', 'Login failed');
+      toast.error('Login failed')
       setLoading(false)
     }
   }
@@ -43,16 +44,19 @@ const login = () => {
       </div>
       <div className='w-96 bg-white rounded-lg shadow-lg p-8'>
         <div className='text-xl font-bold text-center'>Sign In</div>
+      
         <form className='flex flex-col gap-5 mt-6' onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Email"
             placeholder="Enter your email"
             labelPlacement='outside'
+            {...register('email', { required: "This is required" })}
           />
           <Input
             label="Password"
             labelPlacement='outside'
             placeholder="Enter your password"
+            {...register('password', { required: "This is required" })}
             endContent={
               <button className="focus:outline-none" type="button" onClick={() => { toggleVisibility(!isVisible) }} aria-label="toggle password visibility">
                 {isVisible ? (
@@ -64,7 +68,7 @@ const login = () => {
             }
             type={isVisible ? "text" : "password"}
           />
-          <Button color="secondary" variant='flat' disabled={loading} isLoading={loading}>
+          <Button color="secondary" variant='flat' disabled={loading} isLoading={loading} type='submit'>
             Sign In
           </Button>
         </form>

@@ -3,16 +3,20 @@ import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react"
 import { AppProvider } from "./AppContext";
+import { Toaster } from "react-hot-toast";
 interface ProvidersProps {
   children: React.ReactNode;
+  session: any;
 }
-export default function Providers({ children }: ProvidersProps) {
+export default function Providers({ children,session }: ProvidersProps) {
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <AppProvider>
         <NextUIProvider>
           <NextThemesProvider attribute="class" defaultTheme="dark">
             {children}
+            <Toaster position="bottom-right"
+              reverseOrder={false} />
           </NextThemesProvider>
         </NextUIProvider>
       </AppProvider>

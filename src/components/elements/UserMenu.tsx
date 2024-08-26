@@ -1,14 +1,19 @@
-import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, User } from '@nextui-org/react'
+"use client"
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from '@nextui-org/react'
+import { signOut, useSession } from 'next-auth/react';
 import React from 'react'
 
 const UserMenu = () => {
+  const { data: session, status } = useSession();
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
         <div className='flex align-middle items-center gap-2 cursor-pointer'>
           <Avatar radius="lg" size="sm" isBordered src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
           <div className='hidden lg:block'>
-            Raşit Coşgun
+            {status == "loading" ?
+              <Skeleton className="h-2 w-24 rounded" /> :
+              session?.user.fullName}
           </div>
         </div>
       </DropdownTrigger>
@@ -29,7 +34,7 @@ const UserMenu = () => {
         <DropdownItem key="help_and_feedback">
           Help & Feedback
         </DropdownItem>
-        <DropdownItem key="logout" color="danger">
+        <DropdownItem key="logout" color="danger" onClick={()=> signOut()}>
           Log Out
         </DropdownItem>
       </DropdownMenu>
