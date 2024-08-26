@@ -42,7 +42,7 @@ const login = () => {
       <div className='font-black text-xl'>
         LOGO
       </div>
-      <div className='w-96 bg-white rounded-lg shadow-lg p-8'>
+      <div className='w-96 bg-white dark:bg-slate-700 rounded-lg shadow-lg p-8'>
         <div className='text-xl font-bold text-center'>Sign In</div>
       
         <form className='flex flex-col gap-5 mt-6' onSubmit={handleSubmit(onSubmit)}>

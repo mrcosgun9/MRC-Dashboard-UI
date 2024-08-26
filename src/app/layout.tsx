@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import Providers from "@/context/Providers";
-import Navbar from "@/components/layouts/main-layout/Navbar";
-
+ 
 const nunito = Nunito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -13,13 +12,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  session
 }: Readonly<{
   children: React.ReactNode;
+  session:any
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" >
       <body className={nunito.className}>
-        <Providers>
+        <Providers session={session}>
           <main>
           {children}
           </main>

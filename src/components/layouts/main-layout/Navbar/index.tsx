@@ -9,7 +9,7 @@ import NavbarMobile from './NavbarMobile';
 
 const Navbar = () => {
   return (
-    <header className='w-full bg-white'>
+    <header className='w-full bg-white dark:bg-gray-800'>
       <div className='w-full py-2 border-b border-gray-100 dark:border-gray-800'>
         <div className='container flex justify-between align-middle items-center'>
           <div className='flex align-middle items-center justify-center gap-3'>

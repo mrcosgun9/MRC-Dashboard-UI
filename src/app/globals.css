@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-  @apply min-h-screen min-w-full bg-[#f0f1f7];
+  @apply min-h-screen min-w-full bg-[#f0f1f7] dark:bg-gray-950;
 }
