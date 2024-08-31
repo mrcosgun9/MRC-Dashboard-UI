@@ -5,15 +5,14 @@ const DataTablePage = () => {
   const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
   return (
     <div>
-      <DataTable 
-      columns={columns} 
-      data={users} 
-      statusOptions={statusOptions} 
-      filteredRowName={['name','role','email']}
-      defaultSort={{
-        column: "age",
-        direction: "ascending",
-      }} />
+      <DataTable
+        columns={columns}
+        data={users}
+        filteredRowName={['name', 'role', 'email']}
+        defaultSort={{
+          column: "age",
+          direction: "ascending",
+        }} />
     </div>
   )
 }

@@ -18,11 +18,14 @@ import {
   Pagination,
   Selection,
   ChipProps,
-  SortDescriptor
+  SortDescriptor,
+  Skeleton,
+  Link,
+  Avatar
 } from "@nextui-org/react";
 import { BiChevronDown, BiDotsVertical, BiPlus, BiSearch } from "react-icons/bi";
 import { capitalize } from "../utils";
-import { ColumnType } from "@/types/DataTableType";
+import { ColumnType, ColumnTypeEnum } from "@/types/DataTableType";
 
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -34,16 +37,13 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 interface IDataTableProps {
   columns: ColumnType[],
   data: any[],
-  statusOptions: {
-    name: string;
-    uid: string;
-  }[],
   defaultSort: SortDescriptor,
   defaultVisibleColumns?: string[] | "all",
   defaultPageSize?: number,
-  filteredRowName?: string[]
+  filteredRowName?: string[],
+  loading?: boolean
 }
-export default function DataTable({ columns, data, statusOptions, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName }: IDataTableProps) {
+export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false }: IDataTableProps) {
   type DataType = typeof data[0];
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -53,7 +53,7 @@ export default function DataTable({ columns, data, statusOptions, defaultSort, d
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>(defaultSort);
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(data.length / rowsPerPage);
+  const pages = Math.ceil(data?.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -71,11 +71,11 @@ export default function DataTable({ columns, data, statusOptions, defaultSort, d
         )
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredData = filteredData.filter((data) =>
-        Array.from(statusFilter).includes(data.status),
-      );
-    }
+    // if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+    //   filteredData = filteredData.filter((data) =>
+    //     Array.from(statusFilter).includes(data.status),
+    //   );
+    // }
 
     return filteredData;
   }, [data, filterValue, statusFilter]);
@@ -99,39 +99,14 @@ export default function DataTable({ columns, data, statusOptions, defaultSort, d
 
   const renderCell = React.useCallback((data: DataType, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof DataType];
-    switch (columnKey) {
-      case "name":
+    const getColumnTytpe = columns.find(x => x.uid == columnKey)?.type
+
+    switch (getColumnTytpe) {
+      case ColumnTypeEnum.image:
         return (
-          <User
-            avatarProps={{ radius: "full", size: "sm", src: data.avatar }}
-            classNames={{
-              description: "text-default-500",
-            }}
-            description={data.email}
-            name={cellValue}
-          >
-            {data.email}
-          </User>
+          <Avatar size="sm" src={cellValue} />
         );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-500">{data.team}</p>
-          </div>
-        );
-      case "status":
-        return (
-          <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[data.status]}
-            size="sm"
-            variant="dot"
-          >
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
+      case ColumnTypeEnum.actions:
         return (
           <div className="relative flex justify-end items-center gap-2">
             <Dropdown className="bg-background border-1 border-default-200">
@@ -146,6 +121,14 @@ export default function DataTable({ columns, data, statusOptions, defaultSort, d
                 <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
+          </div>
+        );
+      case ColumnTypeEnum.email:
+        return (
+          <div className="relative flex justify-start items-center">
+            <Link href={`mailto:${cellValue}`}>
+              {cellValue}
+            </Link>
           </div>
         );
       default:
@@ -189,7 +172,7 @@ export default function DataTable({ columns, data, statusOptions, defaultSort, d
             />
           }
           <div className="flex gap-3">
-            <Dropdown>
+            {/* <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
                   endContent={<BiChevronDown className="text-small" />}
@@ -213,7 +196,7 @@ export default function DataTable({ columns, data, statusOptions, defaultSort, d
                   </DropdownItem>
                 ))}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -351,7 +334,17 @@ export default function DataTable({ columns, data, statusOptions, defaultSort, d
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No datas found"} items={sortedItems}>
+        <TableBody
+          loadingContent={<div className="w-full h-full overflow-hidden flex flex-col gap-1.5 align-middle items-center justify-center mt-24">
+            {Array.from({ length: 5 }, (_, index) => (
+              <Skeleton key={index++} className="rounded-lg w-full ">
+                <div className="h-8 rounded-lg bg-default-300"></div>
+              </Skeleton>
+            ))}
+          </div>}
+          emptyContent={"No datas found"}
+          items={sortedItems}
+          isLoading={loading}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

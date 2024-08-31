@@ -2,7 +2,7 @@ import { User, type NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthService from "@/services/actions/auth";
- 
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
             image: resProfileInfo.data.profileImage,
             id: resProfileInfo.data.id,
             accessToken: res.data.accessToken,
+            refreshToken: res.data.refreshToken
           };
         }
 
@@ -49,6 +50,7 @@ export const authOptions: NextAuthOptions = {
         email: token.email,
         image: token.image as string,
         accessToken: token.accessToken as string,
+        refreshToken: token.refreshToken as string
       };
       return session;
     },

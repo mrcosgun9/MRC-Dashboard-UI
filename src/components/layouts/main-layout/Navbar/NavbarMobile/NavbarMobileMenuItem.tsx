@@ -24,7 +24,7 @@ const NavbarMobileMenuItem = ({ item }: { item: MenuItemType }) => {
         <div className={twMerge('ml-3 mb-2 transition-all ease-in-out bg-gray-100 dark:bg-gray-700 rounded-md',(openMenuItem?'h-auto':'h-0 overflow-hidden'))}>
           {item.childs.map((x, i) => {
             return (
-              <Link className='w-full' href={"#"} key={i} >
+              <Link className='w-full' href={x.href!} key={i} >
                 <div className='flex align-middle items-center justify-start text-xs text-slate-600 dark:text-slate-200 font-medium gap-2 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 rounded-lg'>
                   <div>
                     <FaRegCircle size={6} />

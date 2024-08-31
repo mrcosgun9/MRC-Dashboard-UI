@@ -9,17 +9,22 @@ export const httpClient = axios.create({
 
 httpClient.interceptors.request.use(async (request) => {
   const session = await getSession();
-  if (session) {
+  if (session) {    
     request.headers.Authorization = `Bearer ${session?.user.accessToken}`;
   }
   return request;
 });
 
 httpClient.interceptors.response.use(
-  (response) => {
+  (response) => {  
     return Promise.resolve(response);
   },
-  (error) => {
+  async (error) => {
+    if (error.response && error.response.status === 401) {
+      const session = await getSession();
+      console.log('call the refresh token api here',session)
+      // Handle 401 error, e.g., redirect to login or refresh token
+    }
     return Promise.reject(error);
   }
 );

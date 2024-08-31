@@ -14,5 +14,6 @@ declare module "next-auth" {
     fullName: string;
     id:number;
     accessToken:string;
+    refreshToken:string;
   }
 }
