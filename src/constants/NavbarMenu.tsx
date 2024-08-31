@@ -1,6 +1,6 @@
 import { BiHomeAlt2, BiUser } from 'react-icons/bi';
 import { MenuItemType } from "@/types/NavbarTypes";
-
+const dashboardUrl='/dashboard';
 export const menuItems: MenuItemType[] = [
   {
     icon: <BiHomeAlt2 />,
@@ -8,7 +8,7 @@ export const menuItems: MenuItemType[] = [
     childs: [
       {
         title: "Main Dashboard",
-        href: "/dashboard"
+        href: dashboardUrl
       },
 
     ]

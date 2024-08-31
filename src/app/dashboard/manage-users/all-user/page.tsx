@@ -6,9 +6,9 @@ import useGetAllUsers from '@/hooks/useGetAllUsers'
 import { ColumnType, ColumnTypeEnum } from '@/types/DataTableType'
 import React from 'react'
 const columns: ColumnType[] = [
-  { name: "Image", uid: "profileImage", type: ColumnTypeEnum.image },
+  { name: "IMAGE", uid: "profileImage", type: ColumnTypeEnum.image },
   { name: "ID", uid: "id", sortable: true },
-  { name: "Full Name", uid: "fullName", sortable: true },
+  { name: "FULL NAME", uid: "fullName", sortable: true },
   { name: "Email", uid: "email", sortable: true, type: ColumnTypeEnum.email },
   { name: "ACTIONS", uid: "actions", type: ColumnTypeEnum.actions },
 ]
