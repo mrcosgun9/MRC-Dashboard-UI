@@ -40,6 +40,11 @@ export type LoginResponse = {
   expiration: string;
   refreshToken: string;
 };
+
+//RefreshToken Services Type
+export type RefreshTokenRequest = {
+  refreshToken: string | undefined;
+};
 //Get Profile Info Services Type
 export type GetProfileInfoResponse = {
   id: number

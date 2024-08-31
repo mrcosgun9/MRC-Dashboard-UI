@@ -1,5 +1,5 @@
 import { IBaseDataResponse } from "@/types/baseType";
-import { GetProfileInfoResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "./type";
+import { GetProfileInfoResponse, LoginRequest, LoginResponse, RefreshTokenRequest, RegisterRequest, RegisterResponse } from "./type";
 import { httpClient } from "@/services/httpClient";
 import { httpServer } from "@/services/httpServer";
 
@@ -25,6 +25,20 @@ const login = async (
 ): Promise<IBaseDataResponse<LoginResponse>> => {
   return await httpClient
     .post<IBaseDataResponse<LoginResponse>>("Auth/Login", data)
+    .then((response) => {
+      const { data: res } = response;
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    })
+    .finally();
+};
+const refreshToken = async (
+  data: RefreshTokenRequest
+): Promise<IBaseDataResponse<LoginResponse>> => {
+  return await httpClient
+    .post<IBaseDataResponse<LoginResponse>>("Auth/RefreshToken", data)
     .then((response) => {
       const { data: res } = response;
       return res;
@@ -94,6 +108,7 @@ const AuthService = {
   login,
   getProfileInfo,
   getProfileInfoClient,
-  updateProfile
+  updateProfile,
+  refreshToken
 };
 export default AuthService;

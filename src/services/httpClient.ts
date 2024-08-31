@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
+import AuthService from "./actions/auth";
 export const httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API,
   headers: {
@@ -9,24 +10,40 @@ export const httpClient = axios.create({
 
 httpClient.interceptors.request.use(async (request) => {
   const session = await getSession();
-  if (session) {    
+  if (session) {
     request.headers.Authorization = `Bearer ${session?.user.accessToken}`;
   }
   return request;
 });
 
 httpClient.interceptors.response.use(
-  (response) => {  
+  (response) => {
     return Promise.resolve(response);
   },
-  async (error) => {
-    if (error.response && error.response.status === 401) {
-      const session = await getSession();
-      console.log('call the refresh token api here',session)
-      // Handle 401 error, e.g., redirect to login or refresh token
+  async error => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // Mark the request as retried to avoid infinite loops.
+      try {
+        const session = await getSession();
+        console.log(session);
+        
+        const refreshToken =  session?.user.refreshToken; // Retrieve the stored refresh token.
+
+        var response = await AuthService.refreshToken({refreshToken:refreshToken})
+        const res = response.data;
+
+        httpClient.defaults.headers.common['Authorization'] = `Bearer ${res.accessToken}`;
+        return httpClient(originalRequest); // Retry the original request with the new access token.
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
+        
+        return Promise.reject(refreshError);
+      }
     }
-    return Promise.reject(error);
+    return Promise.reject(error); // For all other errors, return the error as is.
   }
+ 
 );
 
 const responseBody = <T>(response: AxiosResponse<T>) => response?.data;

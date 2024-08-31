@@ -26,6 +26,7 @@ import {
 import { BiChevronDown, BiDotsVertical, BiPlus, BiSearch } from "react-icons/bi";
 import { capitalize } from "../utils";
 import { ColumnType, ColumnTypeEnum } from "@/types/DataTableType";
+import { useRouter } from "next/navigation";
 
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -41,9 +42,11 @@ interface IDataTableProps {
   defaultVisibleColumns?: string[] | "all",
   defaultPageSize?: number,
   filteredRowName?: string[],
-  loading?: boolean
+  loading?: boolean,
+  addNewUrl?:string,
 }
-export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false }: IDataTableProps) {
+export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false,addNewUrl }: IDataTableProps) {
+  const router=useRouter();
   type DataType = typeof data[0];
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -222,13 +225,15 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button
+            {addNewUrl&&<Button
               className="bg-foreground text-background"
               endContent={<BiPlus />}
               size="sm"
+              onClick={()=>{router.push(addNewUrl)}}
             >
               Add New
-            </Button>
+            </Button>}
+            
           </div>
         </div>
         <div className="flex justify-between items-center">

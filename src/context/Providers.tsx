@@ -8,7 +8,7 @@ interface ProvidersProps {
   children: React.ReactNode;
   session: any;
 }
-export default function Providers({ children,session }: ProvidersProps) {
+export default function Providers({ children,session }: ProvidersProps) {  
   return (
     <SessionProvider session={session}>
       <AppProvider>
