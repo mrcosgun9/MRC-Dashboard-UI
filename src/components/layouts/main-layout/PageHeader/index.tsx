@@ -4,10 +4,10 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { MdArrowBack } from 'react-icons/md'
 
-const PageHeader = ({ title, breadcrumbsItems }: { title: string, breadcrumbsItems: { title: string, url: string }[] }) => {
+const PageHeader = ({ title, breadcrumbsItems }: { title: string, breadcrumbsItems: { title: string, url?: string }[] }) => {
   const router = useRouter();
   return (
-    <div className='w-full flex align-middle items-center justify-between'>
+    <div className='w-full flex align-middle items-center justify-between bg-white dark:bg-gray-800 px-5 py-4 rounded-md mb-5 shadow'>
       <div className='w-full text-xl font-bold flex align-middle items-center justify-start gap-3'>
         <Button isIconOnly size='sm' variant='light' color='primary' onClick={() => { router.back() }}>
           <MdArrowBack size={18} />
@@ -17,7 +17,7 @@ const PageHeader = ({ title, breadcrumbsItems }: { title: string, breadcrumbsIte
       <div className='w-full flex justify-end align-middle items-center'>
         <Breadcrumbs
           itemClasses={{
-            separator: "px-2"
+            separator: "px-1"
           }}
         >
           {breadcrumbsItems.map((x, i) => {
