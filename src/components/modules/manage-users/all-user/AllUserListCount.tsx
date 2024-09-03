@@ -10,7 +10,7 @@ const AllUserListItem=({title,count}:{title:string,count:string})=>{
 
 const AllUserListCount = () => {
   return (
-    <div className='flex gap-4 align-middle items-center w-full'>
+    <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6  gap-4 align-middle items-center w-full'>
       <AllUserListItem count='986' title='Total'/>
       <AllUserListItem count='89' title='Real'/>
       <AllUserListItem count='23' title='Fake'/>

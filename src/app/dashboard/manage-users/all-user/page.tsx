@@ -33,12 +33,12 @@ const AllUser = () => {
             column: "id",
             direction: "ascending"
           }}
-          filteredRowName={["name"]}
+          filteredRowName={["fullName","email"]}
         />
       </div>
-      <pre>
+      {/* <pre>
         {JSON.stringify(data, null, 2)}
-      </pre>
+      </pre> */}
     </div>
   )
 }

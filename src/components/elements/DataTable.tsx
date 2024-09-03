@@ -307,7 +307,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow p-5 rounded-md">
+    <div className="bg-white dark:bg-gray-800 shadow p-5 rounded-md overflow-y-auto">
       <Table
         isCompact
         removeWrapper
