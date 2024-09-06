@@ -2,13 +2,13 @@ import { menuItems } from '@/constants/NavbarMenu'
 import React from 'react'
 import MenuItem from './MenuItem'
 
-const MenuList = () => {
+const MenuList = ({minimalMenu}:{minimalMenu:boolean}) => {
   return (
-    <div>
+    <div className='h-[calc(100vh-8rem)] overflow-y-auto overflow-x-hidden custom-scroll'>
       {
         menuItems.map((x, i) => {
           return (
-            <MenuItem item={x} key={i} />
+            <MenuItem item={x} key={i} minimalMenu={minimalMenu}/>
           )
         })
       }

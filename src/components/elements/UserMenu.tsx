@@ -1,10 +1,12 @@
 "use client"
+import { useAppContext } from '@/context/AppContext';
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from '@nextui-org/react'
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react'
 
 const UserMenu = () => {
   const { data: session, status } = useSession();
+  const { isMinimalMenu } = useAppContext();
   const getNameFirstCharacter = () => {
     return session?.user.fullName
       .split(' ')
@@ -16,11 +18,13 @@ const UserMenu = () => {
       <DropdownTrigger>
         <div className='flex align-middle items-center gap-2 cursor-pointer'>
           <Avatar radius="lg" size="sm" isBordered name={getNameFirstCharacter()} />
-          <div className='hidden lg:block text-sm font-semibold'>
-            {status == "loading" ?
-              <Skeleton className="h-2 w-24 rounded" /> :
-              session?.user.fullName}
-          </div>
+          {
+            !isMinimalMenu && <div className='hidden lg:block text-sm font-semibold'>
+              {status == "loading" ?
+                <Skeleton className="h-2 w-24 rounded" /> :
+                session?.user.fullName}
+            </div>
+          }
         </div>
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
