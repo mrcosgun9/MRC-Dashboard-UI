@@ -121,3 +121,13 @@ export type UpdateProfileRequest = {
   ethnicity: string;
   bodyType: string;
 };
+
+
+export type AuthenticationRequest = {
+  email: string;
+  password: string;
+};
+export type AuthenticationResponse  = {
+  token: string;
+  expiryDate: string;
+};

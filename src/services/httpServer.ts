@@ -2,7 +2,7 @@ import { authOptions } from "@/configs/next-auth";
 import axios, { AxiosResponse } from "axios";
 import { getServerSession } from "next-auth";
  export const httpServer = axios.create({
-  baseURL: `https://api.realdates.online/api/`,
+  baseURL: `https://bff.mrcosgun.com/api/`,
   headers: {
     "content-type": "application/json",
   },

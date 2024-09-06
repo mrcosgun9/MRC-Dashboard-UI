@@ -1,9 +1,9 @@
 import { IBaseDataResponse } from "@/types/baseType";
-import { GetProfileInfoResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "./type";
+import { AuthenticationRequest, GetProfileInfoResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "./type";
 import { httpClient } from "@/services/httpClient";
 import { httpServer } from "@/services/httpServer";
 
- 
+
 
 const register = async (
   data: RegisterRequest
@@ -89,11 +89,29 @@ const updateProfile = async (
     })
     .finally();
 };
+const authentication = async (
+  data: AuthenticationRequest
+): Promise<IBaseDataResponse<GetProfileInfoResponse>> => {
+  return await httpClient
+    .post<IBaseDataResponse<GetProfileInfoResponse>>(
+      "v1/authentication",
+      data
+    )
+    .then((response) => {
+      const { data: res } = response;
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    })
+    .finally();
+};
 const AuthService = {
   register,
   login,
   getProfileInfo,
   getProfileInfoClient,
-  updateProfile
+  updateProfile,
+  authentication
 };
 export default AuthService;

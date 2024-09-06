@@ -1,5 +1,7 @@
 "use client"
 import { useAppContext } from '@/context/AppContext';
+import AuthService from '@/services/actions/auth';
+import { ResponseStatus } from '@/types/baseType';
 import { Button, Input } from '@nextui-org/react'
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -21,21 +23,30 @@ const login = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    
     setLoading(true)
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false
-    });
-    if (res?.status === 200) {
-      toast.success('Login successful')
-      setLoading(false)
-      router.push('/dashboard');
+    const res = await AuthService.authentication({ email: data.email, password: data.password });
+    if (res.status==ResponseStatus.Ok) {
+      toast.success('İşlem başarılı.')
     }
-    else {
-      toast.error('Login failed')
-      setLoading(false)
+    else{
+      toast.error('Email veya Şifre Hatalı! ')
     }
+    setLoading(false)
+    // const res = await signIn('credentials', {
+    //   email: data.email,
+    //   password: data.password,
+    //   redirect: false
+    // });
+    // if (res?.status === 200) {
+    //   toast.success('Login successful')
+    //   setLoading(false)
+    //   router.push('/dashboard');
+    // }
+    // else {
+    //   toast.error('Login failed')
+    //   setLoading(false)
+    // }
   }
   return (
     <div className='w-full h-screen flex flex-col gap-4 align-middle items-center justify-center'>
@@ -44,7 +55,7 @@ const login = () => {
       </div>
       <div className='w-96 bg-white dark:bg-slate-700 rounded-lg shadow-lg p-8'>
         <div className='text-xl font-bold text-center'>Sign In</div>
-      
+
         <form className='flex flex-col gap-5 mt-6' onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Email"
