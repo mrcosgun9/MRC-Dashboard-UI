@@ -11,7 +11,7 @@ import { ThemeSwitcher } from '@/components/elements/ThemeSwitcher'
 const LayoutMenu = () => {
   const { isMinimalMenu, setIsMinimalMenu } = useAppContext();
   return (
-    <div className={twMerge('w-60 h-screen fixed top-0 left-0 bg-white dark:bg-gray-800 p-4 pr-0 transition-all ease-in-out', (isMinimalMenu ? 'w-16' : 'w-60'))}>
+    <div className={twMerge('w-60 h-screen fixed top-0 left-0 bg-white dark:bg-gray-800 p-4 pr-1 transition-all ease-in-out', (isMinimalMenu ? 'w-16' : 'w-60'))}>
       <div className={twMerge("flex align-middle items-center justify-between", (isMinimalMenu && 'justify-center'))}>
         <div className="text-2xl font-extrabold">
           {isMinimalMenu ? <Button isIconOnly className='text-2xl font-extrabold' variant='light' onClick={() => { setIsMinimalMenu(!isMinimalMenu) }}>
