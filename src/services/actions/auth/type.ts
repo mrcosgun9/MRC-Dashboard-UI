@@ -131,3 +131,13 @@ export type AuthenticationResponse  = {
   token: string;
   expiryDate: string;
 };
+
+export interface GetAuthenticationResponse {
+  id: number
+  name: string
+  surname: string
+  email: string
+  createdOnUtc: string
+  updatedOnUtc: string
+  tenantIds: number[]
+}

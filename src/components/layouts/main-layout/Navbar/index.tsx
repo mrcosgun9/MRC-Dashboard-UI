@@ -5,6 +5,7 @@ import React from 'react'
 import { IoSettingsOutline } from 'react-icons/io5';
 import NavbarMenuList from './NavbarMenuList';
 import NavbarMobile from './NavbarMobile';
+import ChangeStore from '../ChangeStore';
 
 
 const Navbar = () => {
@@ -22,6 +23,9 @@ const Navbar = () => {
             </div>
             <div>
               <UserMenu />
+            </div>
+            <div>
+              <ChangeStore/>
             </div>
             <div>
               <IoSettingsOutline size={24} />

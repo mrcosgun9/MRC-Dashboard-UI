@@ -123,13 +123,7 @@ const getAuthenticationClient = async (data: {
     })
     .finally();
 };
-const AuthService = {
-  register,
-  login,
-  getProfileInfo,
-  getProfileInfoClient,
-  updateProfile,
-  authentication,
-  getAuthenticationClient
+const TenantService = {
+ 
 };
-export default AuthService;
+export default TenantService;

@@ -5,12 +5,18 @@ import React from 'react'
 
 const UserMenu = () => {
   const { data: session, status } = useSession();
+  const getNameFirstCharacter = () => {
+    return session?.user.fullName
+      .split(' ')
+      .map(word => word[0])
+      .join('');
+  }
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
         <div className='flex align-middle items-center gap-2 cursor-pointer'>
-          <Avatar radius="lg" size="sm" isBordered src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
-          <div className='hidden lg:block'>
+          <Avatar radius="lg" size="sm" isBordered name={getNameFirstCharacter()} />
+          <div className='hidden lg:block text-sm font-semibold'>
             {status == "loading" ?
               <Skeleton className="h-2 w-24 rounded" /> :
               session?.user.fullName}
@@ -34,7 +40,7 @@ const UserMenu = () => {
         <DropdownItem key="help_and_feedback">
           Help & Feedback
         </DropdownItem>
-        <DropdownItem key="logout" color="danger" onClick={()=> signOut()}>
+        <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
           Log Out
         </DropdownItem>
       </DropdownMenu>

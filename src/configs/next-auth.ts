@@ -1,8 +1,7 @@
 import { User, type NextAuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthService from "@/services/actions/auth";
- 
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,20 +18,24 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials): Promise<User | null> {
         // Validate credentials with your database here
         if (credentials) {
-          const res = await AuthService.login({
+          const res = await AuthService.authentication({
             email: credentials.email,
             password: credentials.password,
           });
-          const resProfileInfo = await AuthService.getProfileInfoClient({
-            accessToken: res.data.accessToken,
+          console.log(res);
+
+          const resProfileInfo = await AuthService.getAuthenticationClient({
+            accessToken: res.data.token,
           });
+          console.log(resProfileInfo);
+          
           return {
-            fullName: resProfileInfo.data.fullName,
-            name: resProfileInfo.data.userName,
+            fullName: `${resProfileInfo.data.name} ${resProfileInfo.data.surname}`,
+            name: resProfileInfo.data.name,
             email: resProfileInfo.data.email,
-            image: resProfileInfo.data.profileImage,
+            image: "",
             id: resProfileInfo.data.id,
-            accessToken: res.data.accessToken,
+            accessToken: res.data.token,
           };
         }
 

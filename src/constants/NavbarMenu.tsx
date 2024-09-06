@@ -1,78 +1,15 @@
-import { BiHomeAlt2, BiUser } from 'react-icons/bi';
+import { TbBook, TbHome, TbHome2, TbShoppingBag } from 'react-icons/tb'
 import { MenuItemType } from "@/types/NavbarTypes";
-
-export const menuItems:MenuItemType[]=[
+const main = "/dashboard";
+export const menuItems: MenuItemType[] = [
   {
-    icon:<BiHomeAlt2/>,
-    title: "Dashboard",
-    childs: [
-      {
-        title: "Main Dashboard",
-        href:"/"
-      },
-      {
-        title: "Main Dashboard 2",
-        href:"/"
-      },
-      {
-        title: "Main Dashboard 2",
-        href:"/"
-      },
-      {
-        title: "Main Dashboard 2",
-        href:"/"
-      },
-      {
-        title: "Main Dashboard 2",
-        href:"/"
-      },
-      {
-        title: "Main Dashboard 2",
-        href:"/"
-      }
-    ]
+    icon: <TbHome size={20} />,
+    title: "Giriş",
+    href: main
   },
   {
-    icon:<BiUser/>,
-    title: "Manage Users",
-    childs: [
-      {
-        title: "All Users"
-      },
-      {
-        title: "Banned Users"
-      },
-      {
-        title: "Reported Users"
-      }
-    ]
+    icon: <TbBook size={20} />,
+    title: "Blog",
+    href: `${main}/blog` 
   },
-  {
-    title: "Manage Users",
-    childs: [
-      {
-        title: "All Users"
-      },
-      {
-        title: "Banned Users"
-      },
-      {
-        title: "Reported Users"
-      }
-    ]
-  },
-  {
-    title: "Manage Users",
-    childs: [
-      {
-        title: "All Users"
-      },
-      {
-        title: "Banned Users"
-      },
-      {
-        title: "Reported Users"
-      }
-    ]
-  }
 ]

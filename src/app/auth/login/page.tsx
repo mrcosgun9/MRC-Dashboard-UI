@@ -3,12 +3,13 @@ import { useAppContext } from '@/context/AppContext';
 import AuthService from '@/services/actions/auth';
 import { ResponseStatus } from '@/types/baseType';
 import { Button, Input } from '@nextui-org/react'
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BsEyeFill, BsEyeSlashFill } from 'react-icons/bs';
+import Cookies from "js-cookie";
+import { signIn } from 'next-auth/react';
 type Inputs = {
   email: string
   password: string
@@ -25,28 +26,29 @@ const login = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     
     setLoading(true)
-    const res = await AuthService.authentication({ email: data.email, password: data.password });
-    if (res.status==ResponseStatus.Ok) {
-      toast.success('İşlem başarılı.')
-    }
-    else{
-      toast.error('Email veya Şifre Hatalı! ')
-    }
-    setLoading(false)
-    // const res = await signIn('credentials', {
-    //   email: data.email,
-    //   password: data.password,
-    //   redirect: false
-    // });
-    // if (res?.status === 200) {
-    //   toast.success('Login successful')
-    //   setLoading(false)
-    //   router.push('/dashboard');
+    // const res = await AuthService.authentication({ email: data.email, password: data.password });
+    // if (res.status==ResponseStatus.Ok) {
+    //   Cookies.set("currentUser",res.data.token)
+    //   toast.success('İşlem başarılı.')
     // }
-    // else {
-    //   toast.error('Login failed')
-    //   setLoading(false)
+    // else{
+    //   toast.error('Email veya Şifre Hatalı! ')
     // }
+    // setLoading(false)
+    const res = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false
+    });
+    if (res?.status === 200) {
+      toast.success('Login successful')
+      setLoading(false)
+      router.push('/dashboard');
+    }
+    else {
+      toast.error('Email veya şifre hatalı!')
+      setLoading(false)
+    }
   }
   return (
     <div className='w-full h-screen flex flex-col gap-4 align-middle items-center justify-center'>
