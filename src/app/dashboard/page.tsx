@@ -14,7 +14,7 @@ export default function Home() {
           {title:'Test',url:'/test'},
         ]} />
       </div>
-      <div className="grid grid-cols-4 gap-3 my-5">
+      <div className="grid lg:grid-cols-4 gap-3 my-5">
         <InformationCard />
         <InformationCard />
         <InformationCard />

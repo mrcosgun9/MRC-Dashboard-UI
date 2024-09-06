@@ -15,17 +15,11 @@ const Navbar = () => {
         <div className='container flex justify-between align-middle items-center'>
           <div className='flex align-middle items-center justify-center gap-3'>
             <div className='font-extrabold'>LOGO</div>
-            <NavbarMobile/>
+            <NavbarMobile />
           </div>
           <div className='flex justify-end align-middle items-center gap-4'>
             <div>
-              <ThemeSwitcher />
-            </div>
-            <div>
               <UserMenu />
-            </div>
-            <div>
-              <ChangeStore/>
             </div>
             <div>
               <IoSettingsOutline size={24} />
@@ -34,7 +28,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className='w-full border-b-2 border-gray-100 dark:border-gray-800 hidden lg:block'>
-        <NavbarMenuList  />
+        
       </div>
     </header>
   )

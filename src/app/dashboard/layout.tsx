@@ -2,11 +2,9 @@ import MainLayout from "@/components/layouts/main-layout/MainLayout";
 
 
 export default function DashboardLayout({
-  children,
-  session
+  children
 }: Readonly<{
   children: React.ReactNode;
-  session: any;
 }>) {
 
   return (

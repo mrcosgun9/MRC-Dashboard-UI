@@ -6,6 +6,7 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import NavbarMobileMenuItem from './NavbarMobileMenuItem'
 import { menuItems } from '@/constants/NavbarMenu'
 import { twMerge } from 'tailwind-merge'
+import LayoutMenu from '../../LayoutMenu'
 
 const NavbarMobileMenuList = ({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -26,13 +27,7 @@ const NavbarMobileMenuList = ({ showMenu, setShowMenu }: { showMenu: boolean, se
       <div ref={ref} className={twMerge(
         'absolute w-[260px] top-0 h-screen z-[999999999] bg-slate-50 dark:bg-gray-800 shadow-sm px-4 py-5 transition-all ease-in-out duration-300',
         (showMenu ? 'left-0' : '-left-full'))}>
-        {
-          menuItems.map((x, i) => {
-            return (
-              <NavbarMobileMenuItem item={x} key={i} />
-            )
-          })
-        }
+        {showMenu &&<LayoutMenu isMobile={true} />}
       </div>
     </>
   )
