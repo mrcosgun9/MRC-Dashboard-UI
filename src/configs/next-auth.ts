@@ -1,6 +1,7 @@
 import { User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthService from "@/services/actions/auth";
+import TenantService from "@/services/actions/tenants";
 
 
 export const authOptions: NextAuthOptions = {
@@ -16,29 +17,23 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials): Promise<User | null> {
-        // Validate credentials with your database here
         if (credentials) {
-          const res = await AuthService.authentication({
+          const res = await TenantService.login({
             email: credentials.email,
             password: credentials.password,
           });
-          console.log(res);
-
-          const resProfileInfo = await AuthService.getAuthenticationClient({
-            accessToken: res.data.token,
-          });
-          console.log(resProfileInfo);
-          
+          const resProfileInfo = await TenantService.getProfileInfoClient({
+            accessToken: res.data.accessToken,
+          });          
           return {
             fullName: `${resProfileInfo.data.name} ${resProfileInfo.data.surname}`,
             name: resProfileInfo.data.name,
             email: resProfileInfo.data.email,
             image: "",
             id: resProfileInfo.data.id,
-            accessToken: res.data.token,
+            accessToken: res.data.accessToken,
           };
         }
-
         return null;
       },
     }),

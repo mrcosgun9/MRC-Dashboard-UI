@@ -36,3 +36,45 @@ body {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+
+.hero-circle-gradient:before {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, .08));
+}
+
+.hero-circle-gradient:before, .hero-subtitle-gradient:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.hero-subtitle-gradient {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, .05), hsla(0, 0%, 100%, 0));
+  transition: box-shadow .45s cubic-bezier(.6,.6,0,1);
+}
+.hero-subtitle-text {
+  background: -webkit-linear-gradient(90deg, #e59cff .01%, #ba9cff 50.01%, #9cb2ff), -webkit-linear-gradient(0deg, hsla(0, 0%, 100%, .4), hsla(0, 0%, 100%, .4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hover\:hero-subtitle-hover:hover {
+  box-shadow: inset 0 -7px 11px #a48fff3d;
+}
+.hero-subtitle-gradient {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, .05), hsla(0, 0%, 100%, 0));
+  transition: box-shadow .45s cubic-bezier(.6,.6,0,1);
+}
+
+.features-row-border {
+  background: linear-gradient(270deg, hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, .12) 49.48%, hsla(0, 0%, 100%, 0));
+}
+.features-bg {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, 0), hsla(0, 0%, 100%, .05));
+  transition: opacity .45s cubic-bezier(.6,.6,0,1);
+}

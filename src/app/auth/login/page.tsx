@@ -73,9 +73,9 @@ const login = () => {
             endContent={
               <button className="focus:outline-none" type="button" onClick={() => { toggleVisibility(!isVisible) }} aria-label="toggle password visibility">
                 {isVisible ? (
-                  <BsEyeSlashFill className="text-2xl text-default-400 pointer-events-none" />
+                  <BsEyeSlashFill className="text-default-400 pointer-events-none" />
                 ) : (
-                  <BsEyeFill className="text-2xl text-default-400 pointer-events-none" />
+                  <BsEyeFill className="text-default-400 pointer-events-none" />
                 )}
               </button>
             }

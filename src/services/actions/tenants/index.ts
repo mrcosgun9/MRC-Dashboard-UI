@@ -1,5 +1,5 @@
 import { IBaseDataResponse } from "@/types/baseType";
-import { AuthenticationRequest, AuthenticationResponse, GetAuthenticationResponse, GetProfileInfoResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "./type";
+import { GetTenantInfoResponse, LoginRequest, RegisterRequest, RegisterResponse, TokenData } from "./type";
 import { httpClient } from "@/services/httpClient";
 import { httpServer } from "@/services/httpServer";
 
@@ -8,7 +8,6 @@ import { httpServer } from "@/services/httpServer";
 const register = async (
   data: RegisterRequest
 ): Promise<IBaseDataResponse<RegisterResponse>> => {
-  data.fullName = `${data.name} ${data.lastName}`;
   return await httpClient
     .post<IBaseDataResponse<RegisterResponse>>("Auth/Register", data)
     .then((response) => {
@@ -22,9 +21,9 @@ const register = async (
 };
 const login = async (
   data: LoginRequest
-): Promise<IBaseDataResponse<LoginResponse>> => {
+): Promise<IBaseDataResponse<TokenData>> => {
   return await httpClient
-    .post<IBaseDataResponse<LoginResponse>>("Auth/Login", data)
+    .post<IBaseDataResponse<TokenData>>("Auth/Login", data)
     .then((response) => {
       const { data: res } = response;
       return res;
@@ -36,9 +35,9 @@ const login = async (
 };
 const getProfileInfoClient = async (data: {
   accessToken?: string;
-}): Promise<IBaseDataResponse<GetProfileInfoResponse>> => {
+}): Promise<IBaseDataResponse<GetTenantInfoResponse>> => {
   return await httpClient
-    .post<IBaseDataResponse<GetProfileInfoResponse>>(
+    .post<IBaseDataResponse<GetTenantInfoResponse>>(
       "Auth/GetProfileInfo",
       {},
       { headers: { Authorization: `Bearer ${data.accessToken}` } }
@@ -54,9 +53,9 @@ const getProfileInfoClient = async (data: {
 };
 const getProfileInfo = async (data: {
   accessToken?: string;
-}): Promise<IBaseDataResponse<GetProfileInfoResponse>> => {
+}): Promise<IBaseDataResponse<GetTenantInfoResponse>> => {
   return await httpServer
-    .post<IBaseDataResponse<GetProfileInfoResponse>>(
+    .post<IBaseDataResponse<GetTenantInfoResponse>>(
       "Auth/GetProfileInfo",
       {},
       { headers: { Authorization: `Bearer ${data.accessToken}` } }
@@ -72,58 +71,11 @@ const getProfileInfo = async (data: {
     })
     .finally();
 };
-const updateProfile = async (
-  data: GetProfileInfoResponse
-): Promise<IBaseDataResponse<GetProfileInfoResponse>> => {
-  return await httpClient
-    .post<IBaseDataResponse<GetProfileInfoResponse>>(
-      "Auth/UpdateProfile",
-      data
-    )
-    .then((response) => {
-      const { data: res } = response;
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    })
-    .finally();
-};
-const authentication = async (
-  data: AuthenticationRequest
-): Promise<IBaseDataResponse<AuthenticationResponse>> => {
-  return await httpClient
-    .post<IBaseDataResponse<AuthenticationResponse>>(
-      "v1/authentication",
-      data
-    )
-    .then((response) => {
-      const { data: res } = response;
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    })
-    .finally();
-};
-const getAuthenticationClient = async (data: {
-  accessToken?: string;
-}): Promise<IBaseDataResponse<GetAuthenticationResponse>> => {
-  return await httpClient
-    .get<IBaseDataResponse<GetAuthenticationResponse>>(
-      "v1/authentication",
-      { headers: { Authorization: `Bearer ${data.accessToken}` } }
-    )
-    .then((response) => {
-      const { data: res } = response;
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    })
-    .finally();
-};
-const TenantService = {
  
+const TenantService = {
+  register,
+  login,
+  getProfileInfoClient,
+  getProfileInfo
 };
 export default TenantService;
