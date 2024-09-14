@@ -1,10 +1,11 @@
 "use client"
 import React from "react";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu } from "@nextui-org/react";
 import { BiChevronDown, BiLock, BiServer, BiUser } from "react-icons/bi";
 import { HiScale } from "react-icons/hi";
 import { BsActivity } from "react-icons/bs";
 import { IoFlash } from "react-icons/io5";
+import Link from "next/link";
 
 export default function HomeNavbar() {
   const icons = {
@@ -20,7 +21,7 @@ export default function HomeNavbar() {
   return (
     <Navbar position="sticky" maxWidth="xl">
       <NavbarBrand>
-        <p className="font-bold text-inherit">LOGO</p>
+        <Link href={"/"} className="font-bold text-inherit">LOGO</Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-5" justify="center">
         <NavbarItem>
@@ -107,9 +108,9 @@ export default function HomeNavbar() {
           <Link href="#">Login</Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
+          <Link  color="primary" href="/auth/register" >
+            Kayıt Ol
+          </Link>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

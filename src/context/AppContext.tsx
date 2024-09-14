@@ -1,6 +1,5 @@
 "use client"
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import React, { createContext, useContext, useState } from 'react';
 import LoadingScreen from '@/components/elements/LoadingScreen';
 
 interface AppContextProps {
