@@ -29,7 +29,7 @@ export const menuItems: MenuItemType[] = [
     childs: [
       {
         title: "Fake Users Chat",
-        href: "/dashboard/chats/fake-user-chats"
+        href: "/dashboard/chats"
       },
     ]
   }

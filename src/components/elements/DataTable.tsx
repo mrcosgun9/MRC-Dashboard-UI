@@ -43,10 +43,12 @@ interface IDataTableProps {
   defaultPageSize?: number,
   filteredRowName?: string[],
   loading?: boolean,
-  addNewUrl?:string,
+  addNewUrl?: string,
+  rowEvent?: (item: any) => void,
+  selectionMode?: 'none' | 'single' | 'multiple'
 }
-export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false,addNewUrl }: IDataTableProps) {
-  const router=useRouter();
+export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false, addNewUrl, rowEvent,selectionMode="single" }: IDataTableProps) {
+  const router = useRouter();
   type DataType = typeof data[0];
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -99,11 +101,12 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
-
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split('.').reduce((acc, key) => acc && acc[key], obj);
+  };
   const renderCell = React.useCallback((data: DataType, columnKey: React.Key) => {
-    const cellValue = data[columnKey as keyof DataType];
+    const cellValue = getNestedValue(data, columnKey.toString());
     const getColumnTytpe = columns.find(x => x.uid == columnKey)?.type
-
     switch (getColumnTytpe) {
       case ColumnTypeEnum.image:
         return (
@@ -135,7 +138,9 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
           </div>
         );
       default:
-        return cellValue;
+        return <>
+          {cellValue}
+        </>;
     }
   }, []);
 
@@ -225,15 +230,15 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
                 ))}
               </DropdownMenu>
             </Dropdown>
-            {addNewUrl&&<Button
+            {addNewUrl && <Button
               className="bg-foreground text-background"
               endContent={<BiPlus />}
               size="sm"
-              onClick={()=>{router.push(addNewUrl)}}
+              onClick={() => { router.push(addNewUrl) }}
             >
               Add New
             </Button>}
-            
+
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -321,7 +326,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
         }}
         classNames={classNames}
         selectedKeys={selectedKeys}
-        selectionMode="multiple"
+        selectionMode={selectionMode}
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
@@ -334,6 +339,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
               allowsSorting={column.sortable}
+
             >
               {column.name}
             </TableColumn>
@@ -351,7 +357,9 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
           items={sortedItems}
           isLoading={loading}>
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.id} onClick={() => {
+              rowEvent && rowEvent(item);
+            }}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}

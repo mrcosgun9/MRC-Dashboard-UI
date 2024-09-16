@@ -1,18 +1,22 @@
+"use client"
+import { User } from '@/services/actions/chat/type'
 import { Avatar, Input, Textarea } from '@nextui-org/react'
 import React from 'react'
 import { AiOutlineMan } from 'react-icons/ai'
 import { BsCalendarDate } from 'react-icons/bs'
 import { PiCoinsDuotone } from 'react-icons/pi'
 
-const ChatProfileInformation = () => {
+const ChatProfileInformation = ({user}:{user: User | undefined}) => {
+  console.log(user);
+  
   return (
     <div className='w-3/12 bg-white rounded shadow p-5'>
       <div className='flex gap-3 align-middle items-center'>
         <div className='w-14'>
-          <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" radius='sm' className="w-14 h-14 text-large" isBordered color='primary' />
+          <Avatar src={user?.profileImage} radius='sm' className="w-14 h-14 text-large" isBordered color='primary' />
         </div>
         <div className='w-full'>
-          <div className='flex justify-between align-middle items-center w-full'>User Name<AiOutlineMan className='text-blue-700' size={24} /></div>
+          <div className='flex justify-between align-middle items-center w-full'>{user?.userName}<AiOutlineMan className='text-blue-700' size={24} /></div>
           <div className='text-xs flex align-middle items-center justify-start gap-1'><BsCalendarDate className='text-purple-800' />
             69 Jahre (1955-01-01)</div>
         </div>
@@ -28,6 +32,7 @@ const ChatProfileInformation = () => {
           labelPlacement="outside-left"
           placeholder="Name"
           size='sm'
+          value={user?.fullName}
           classNames={{
             mainWrapper: ['w-full'],
             label: ['min-w-16']
