@@ -5,7 +5,7 @@ import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from 'react-icon
 import { twMerge } from 'tailwind-merge';
 
 const ChatInformationList = () => {
-  const [isListShow, setIsListShow] = useState(true);
+  const [isListShow, setIsListShow] = useState(false);
   return (
     <div>
       <div className='flex justify-between align-middle items-center mb-2'>
