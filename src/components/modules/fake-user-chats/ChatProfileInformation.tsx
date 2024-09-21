@@ -7,8 +7,6 @@ import { BsCalendarDate } from 'react-icons/bs'
 import { PiCoinsDuotone } from 'react-icons/pi'
 
 const ChatProfileInformation = ({user}:{user: User | undefined}) => {
-  console.log(user);
-  
   return (
     <div className='w-3/12 bg-white rounded shadow p-5'>
       <div className='flex gap-3 align-middle items-center'>

@@ -26,12 +26,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const [connection, setConnection] = useState<HubConnection | null>(null);
+  useEffect(()=>{
+    console.log(connection);
+    
+  },[connection])
   useEffect(() => {
     if (session !== null && session !== undefined && status === 'authenticated' && connection === null) {
       createHubConnection();
     }
   }, [status])
   const createHubConnection = async () => {
+    console.log("create hub", session!.user.accessToken);
+    
     const connect = new HubConnectionBuilder()
       .withUrl(process.env.NEXT_PUBLIC_CHAT_HUB ?? "", {
         accessTokenFactory: () => session!.user.accessToken,

@@ -3,26 +3,51 @@ import PageHeader from '@/components/layouts/main-layout/PageHeader'
 import ChatInformationList from '@/components/modules/fake-user-chats/ChatInformationList'
 import ChatProfileInformation from '@/components/modules/fake-user-chats/ChatProfileInformation'
 import useGetUsersChatById from '@/hooks/useGetUsersChatById'
-import { Avatar, Textarea } from '@nextui-org/react'
-import React, { useEffect } from 'react'
+import { Avatar, Button, Textarea } from '@nextui-org/react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import useGetMessagesByChatId from '@/hooks/useGetMessagesByChatId'
 import ChatItem from '@/components/modules/fake-user-chats/ChatItem'
+import { BiSend } from 'react-icons/bi'
+import { useAppContext } from '@/context/AppContext'
 
 
 const ChatsPage = () => {
   const params = useParams()
+  const { connection } = useAppContext();
   const { data, setChatId } = useGetUsersChatById();
   const { data: messagesData, setChatId: setMessagesChatId } = useGetMessagesByChatId();
+  const [message, setMessage] = useState("");
   useEffect(() => {
     if (params.chatId) {
       setChatId(Number(params.chatId))
       setMessagesChatId(Number(params.chatId))
-
     }
   }, [params])
-  console.log(messagesData);
 
+  const sendMessage = () => {
+    connection!.invoke("PostMessage", params.chatId, data?.senderUserId, data?.recipientUserId, message);
+  }
+  useEffect(() => {
+    if (connection) {
+      connection.on("receiveMessage", (senderId, receiverUserId, content) => {
+        console.log(senderId,receiverUserId,content);
+          
+        // setReceiveMessage({
+        //   chat: {
+        //     id: selectedChat?.id!,
+        //     recipientUserId: receiverUserId,
+        //     senderUserId: senderId
+        //   },
+        //   receiverUserId: receiverUserId,
+        //   senderId: senderId,
+        //   content: content,
+        //   receiverUser: selectedChat?.senderUser!,
+        //   senderUser: selectedChat?.recipientUser!
+        // });
+      })
+    }
+  }, [connection])
   return (
     <div>
       <PageHeader title="FAKE USER CHATS" breadcrumbsItems={[
@@ -41,7 +66,7 @@ const ChatsPage = () => {
 
                 {
                   messagesData.map((x, i) => {
-                    return <ChatItem chatItem={x} isLeft={x.senderId==data?.senderUserId} key={i}/>
+                    return <ChatItem chatItem={x} isLeft={x.senderId == data?.senderUserId} key={i} />
                   })
                 }
 
@@ -52,12 +77,17 @@ const ChatsPage = () => {
               </div>
             </div>
           </div>
-          <div className='bg-white rounded shadow w-full mt-3'>
+          <div className='bg-white rounded shadow w-full mt-3 flex align-middle items-center justify-between'>
             <Textarea
               className='px-4'
               variant="underlined"
+              value={message}
+              onChange={e => setMessage(e.target.value)}
               placeholder="Enter your message"
             />
+            <Button color="primary" variant="solid" isIconOnly onClick={() => { sendMessage() }}>
+              <BiSend />
+            </Button>
           </div>
         </div>
         <ChatProfileInformation user={data?.senderUser} />

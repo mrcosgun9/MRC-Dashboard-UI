@@ -15,7 +15,6 @@ const ChatList = () => {
   const router=useRouter();
   const { data, error, loading } = useGetFakeUserChatList();
   const rowEvent = (item: any) => {
-    console.log(item);
     router.push("/dashboard/chats/"+item.id)
   }
   return (

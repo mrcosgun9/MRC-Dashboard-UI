@@ -10,7 +10,6 @@ export default async function middleware(req: any) {
   
   const path = req.nextUrl.pathname;  
   const isProtectedRoute = path.startsWith('/dashboard');
-  console.log("isProtectedRoute",isProtectedRoute);
   
   const isPublicRoute = publicRoutes.includes(path);
   if (isProtectedRoute && !isAuthenticated) {
