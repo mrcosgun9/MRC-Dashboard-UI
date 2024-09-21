@@ -8,8 +8,7 @@ import { httpServer } from "@/services/httpServer";
 const register = async (
   data: RegisterRequest
 ): Promise<IBaseDataResponse<RegisterResponse>> => {
-  data.fullName = `${data.name} ${data.lastName}`;
-  return await httpClient
+  return await httpServer
     .post<IBaseDataResponse<RegisterResponse>>("Auth/Register", data)
     .then((response) => {
       const { data: res } = response;

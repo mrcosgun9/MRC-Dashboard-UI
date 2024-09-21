@@ -1,81 +1,40 @@
 import { IBaseDataResponse } from "@/types/baseType";
-import { GetTenantInfoResponse, LoginRequest, RegisterRequest, RegisterResponse, TokenData } from "./type";
 import { httpClient } from "@/services/httpClient";
 import { httpServer } from "@/services/httpServer";
+import { TenantControlRequest, TenantControlResponse, TenantRequest, TenantResponse } from "./type";
 
-
-
-const register = async (
-  data: RegisterRequest
-): Promise<IBaseDataResponse<RegisterResponse>> => {
-  return await httpClient
-    .post<IBaseDataResponse<RegisterResponse>>("Auth/Register", data)
-    .then((response) => {
-      const { data: res } = response;
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    })
-    .finally();
-};
-const login = async (
-  data: LoginRequest
-): Promise<IBaseDataResponse<TokenData>> => {
-  return await httpClient
-    .post<IBaseDataResponse<TokenData>>("Auth/Login", data)
-    .then((response) => {
-      const { data: res } = response;
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    })
-    .finally();
-};
-const getProfileInfoClient = async (data: {
-  accessToken?: string;
-}): Promise<IBaseDataResponse<GetTenantInfoResponse>> => {
-  return await httpClient
-    .post<IBaseDataResponse<GetTenantInfoResponse>>(
-      "Auth/GetProfileInfo",
-      {},
-      { headers: { Authorization: `Bearer ${data.accessToken}` } }
-    )
-    .then((response) => {
-      const { data: res } = response;
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    })
-    .finally();
-};
-const getProfileInfo = async (data: {
-  accessToken?: string;
-}): Promise<IBaseDataResponse<GetTenantInfoResponse>> => {
+const upsertTenant = async (
+  data: TenantRequest
+): Promise<IBaseDataResponse<TenantResponse>> => {
   return await httpServer
-    .post<IBaseDataResponse<GetTenantInfoResponse>>(
-      "Auth/GetProfileInfo",
-      {},
-      { headers: { Authorization: `Bearer ${data.accessToken}` } }
-    )
+    .post<IBaseDataResponse<TenantResponse>>("Tenant/UpsertTenant", data, { headers: { Authorization: `Bearer ${data.accessToken}` } })
     .then((response) => {
       const { data: res } = response;
       return res;
     })
     .catch((err) => {
-      console.log("❌ Auth/GetProfileInfo", err);
-
       return err;
     })
     .finally();
 };
- 
+
+const tenantControl = async (
+  data: TenantControlRequest
+): Promise<IBaseDataResponse<TenantControlResponse>> => {
+  return await httpClient
+    .post<IBaseDataResponse<TenantControlResponse>>("Tenant/TenantControl", data )
+    .then((response) => {
+      const { data: res } = response;
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    })
+    .finally();
+};
+
 const TenantService = {
-  register,
-  login,
-  getProfileInfoClient,
-  getProfileInfo
+  upsertTenant,
+  tenantControl
 };
 export default TenantService;

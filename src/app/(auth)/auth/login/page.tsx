@@ -53,7 +53,7 @@ const login = () => {
   return (
     <div className='w-full h-screen flex flex-col gap-4 align-middle items-center justify-center'>
       <div className='font-black text-xl'>
-        LOGO
+        <img src='/images/iconiumlogo.png'/>
       </div>
       <div className='w-96 bg-white dark:bg-slate-700 rounded-lg shadow-lg p-8'>
         <div className='text-xl font-bold text-center'>Sign In</div>
@@ -81,7 +81,7 @@ const login = () => {
             }
             type={isVisible ? "text" : "password"}
           />
-          <Button color="secondary" variant='flat' disabled={loading} isLoading={loading} type='submit'>
+          <Button color="secondary" variant='shadow' disabled={loading} isLoading={loading} type='submit'>
             Sign In
           </Button>
         </form>

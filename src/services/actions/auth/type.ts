@@ -1,29 +1,12 @@
 //Register Services Type
 export type RegisterRequest = {
   email: string;
-  userName: string;
   password: string;
-  fullName: string;
   name: string;
-  lastName: string;
-  phoneNumber: string;
-  birthDay: string;
-  birthMonth: string;
-  birthYear: string;
-  gender: GenderType;
-  sexualOrientation: SexualOrientation;
+  surname: string;
 };
-export enum GenderType {
-  Unknown = 0, //Belirtmek İstemiyorum
-  Male = 1,
-  Woman = 2,
-  Trans = 3,
-  Other = 4,
-}
-export enum SexualOrientation {
-  Male = 0,
-  Women = 1,
-}
+
+
 export type RegisterResponse = {
   accessToken: string;
   expiration: string;

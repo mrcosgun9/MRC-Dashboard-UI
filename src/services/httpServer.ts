@@ -1,8 +1,9 @@
 import { authOptions } from "@/configs/next-auth";
 import axios, { AxiosResponse } from "axios";
 import { getServerSession } from "next-auth";
+
  export const httpServer = axios.create({
-  baseURL: `https://bff.mrcosgun.com/api/`,
+  baseURL: process.env.BASE_API,
   headers: {
     "content-type": "application/json",
   },

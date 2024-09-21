@@ -49,7 +49,9 @@ const RegisterPage = () => {
   }
   return (
     <div className='container py-10'>
-      
+      <div>
+        
+      </div>
       <form className='flex flex-col gap-5 mt-6' onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Email"
@@ -73,7 +75,7 @@ const RegisterPage = () => {
             }
             type={isVisible ? "text" : "password"}
           />
-          <Button color="secondary" variant='flat' disabled={loading} isLoading={loading} type='submit'>
+          <Button color="secondary" variant='solid' disabled={loading} isLoading={loading} type='submit'>
             Sign In
           </Button>
         </form>

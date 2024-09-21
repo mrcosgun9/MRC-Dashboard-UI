@@ -6,8 +6,10 @@ import { HiScale } from "react-icons/hi";
 import { BsActivity } from "react-icons/bs";
 import { IoFlash } from "react-icons/io5";
 import Link from "next/link";
+import { useAppContext } from "@/context/AppContext";
 
 export default function HomeNavbar() {
+  const { loginOnModal, registerOnModal } = useAppContext();
   const icons = {
     chevron: <BiChevronDown fill="currentColor" size={16} />,
     scale: <HiScale className="text-warning" fill="currentColor" size={30} />,
@@ -21,7 +23,9 @@ export default function HomeNavbar() {
   return (
     <Navbar position="sticky" maxWidth="xl">
       <NavbarBrand>
-        <Link href={"/"} className="font-bold text-inherit">LOGO</Link>
+        <Link href={"/"} className="font-bold text-inherit">
+          <img src='/images/white-logo.png' className="h-9" />
+        </Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-5" justify="center">
         <NavbarItem>
@@ -104,13 +108,13 @@ export default function HomeNavbar() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
         <NavbarItem>
-          <Link  color="primary" href="/auth/register" >
+          <Button onPress={registerOnModal} variant="shadow" className="bg-gradient-to-tr from-purple-700 to-blue-700 text-white shadow-lg font-medium" >
             Kayıt Ol
-          </Link>
+          </Button>
+        </NavbarItem>
+        <NavbarItem className="hidden lg:flex">
+          <Button onPress={loginOnModal} className="bg-gradient-to-tr from-purple-700 to-blue-700 text-white shadow-lg font-medium" variant="shadow">Giriş Yap</Button>
         </NavbarItem>
       </NavbarContent>
     </Navbar>
