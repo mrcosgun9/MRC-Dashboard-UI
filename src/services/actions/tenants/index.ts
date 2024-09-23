@@ -6,7 +6,7 @@ import { TenantControlRequest, TenantControlResponse, TenantRequest, TenantRespo
 const upsertTenant = async (
   data: TenantRequest
 ): Promise<IBaseDataResponse<TenantResponse>> => {
-  return await httpServer
+  return await httpClient
     .post<IBaseDataResponse<TenantResponse>>("Tenant/UpsertTenant", data, { headers: { Authorization: `Bearer ${data.accessToken}` } })
     .then((response) => {
       const { data: res } = response;
@@ -22,7 +22,7 @@ const tenantControl = async (
   data: TenantControlRequest
 ): Promise<IBaseDataResponse<TenantControlResponse>> => {
   return await httpClient
-    .post<IBaseDataResponse<TenantControlResponse>>("Tenant/TenantControl", data )
+    .post<IBaseDataResponse<TenantControlResponse>>("Tenant/TenantControl", data)
     .then((response) => {
       const { data: res } = response;
       return res;

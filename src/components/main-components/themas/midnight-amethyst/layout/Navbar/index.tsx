@@ -7,9 +7,9 @@ import { BsActivity } from "react-icons/bs";
 import { IoFlash } from "react-icons/io5";
 import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
+import UserMenu from "./UserMenu";
 
 export default function HomeNavbar() {
-  const { loginOnModal, registerOnModal } = useAppContext();
   const icons = {
     chevron: <BiChevronDown fill="currentColor" size={16} />,
     scale: <HiScale className="text-warning" fill="currentColor" size={30} />,
@@ -108,14 +108,7 @@ export default function HomeNavbar() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
-          <Button onPress={registerOnModal} variant="shadow" className="bg-gradient-to-tr from-purple-700 to-blue-700 text-white shadow-lg font-medium" >
-            Kayıt Ol
-          </Button>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Button onPress={loginOnModal} className="bg-gradient-to-tr from-purple-700 to-blue-700 text-white shadow-lg font-medium" variant="shadow">Giriş Yap</Button>
-        </NavbarItem>
+        <UserMenu />
       </NavbarContent>
     </Navbar>
   );

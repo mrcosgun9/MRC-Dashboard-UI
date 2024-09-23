@@ -3,9 +3,7 @@ import { ThemeSwitcher } from '@/components/elements/ThemeSwitcher';
 import UserMenu from '@/components/elements/UserMenu';
 import React from 'react'
 import { IoSettingsOutline } from 'react-icons/io5';
-import NavbarMenuList from './NavbarMenuList';
 import NavbarMobile from './NavbarMobile';
-import ChangeStore from '../ChangeStore';
 
 
 const Navbar = () => {

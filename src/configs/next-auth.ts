@@ -1,8 +1,6 @@
 import { User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthService from "@/services/actions/auth";
-import TenantService from "@/services/actions/tenants";
-
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -18,11 +16,11 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<User | null> {
         if (credentials) {
-          const res = await TenantService.login({
+          const res = await AuthService.login({
             email: credentials.email,
             password: credentials.password,
           });
-          const resProfileInfo = await TenantService.getProfileInfoClient({
+          const resProfileInfo = await AuthService.getProfileInfoClient({
             accessToken: res.data.accessToken,
           });          
           return {

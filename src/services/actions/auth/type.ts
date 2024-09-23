@@ -26,31 +26,22 @@ export type LoginResponse = {
 //Get Profile Info Services Type
 export type GetProfileInfoResponse = {
   id: number
-  userName: string
-  fullName: string
   email: string
-  userType: number
-  gender: number
-  dateOfBirth: string
-  dateOfBirthTime: string
-  placeOfBirth: string
-  maritalStatus: number
-  numberOfChildren: number
-  profileImage: string
-  birthDay: string
-  birthMonth: string
-  birthYear: string
-  about: string
-  sexualOrientation: number
+  password: string
   name: string
-  lastName: string
-  phoneNumber: string
-  isVerify: boolean
-  isSmoke: boolean
-  ethnicity: string
-  bodyType: string
-  likedByUsers: LikedByUser[];
-};
+  surname: string
+  tenantInfos: TenantInfo[]
+}
+
+export interface TenantInfo {
+  id: number
+  slug: string
+  domain: string
+  title: string
+  aliasId: string
+  connectionString: string
+}
+
 export type GetALLOnlineUserResponse = {
   id: number;
   userName: string;
@@ -110,7 +101,7 @@ export type AuthenticationRequest = {
   email: string;
   password: string;
 };
-export type AuthenticationResponse  = {
+export type AuthenticationResponse = {
   token: string;
   expiryDate: string;
 };

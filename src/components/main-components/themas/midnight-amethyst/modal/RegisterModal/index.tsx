@@ -14,12 +14,13 @@ import useTenantControl from '@/hooks/useTenantControl';
 
 const RegisterModal = ({ registerIsModal, registerOnModal, registerOnOpenChange }: { registerIsModal: boolean, registerOnModal: () => void, registerOnOpenChange: () => void }) => {
   const { data, error, loading, setSlug } = useTenantControl();
-  const { setLoading } = useAppContext();
+  const { setLoading,loginOnModal } = useAppContext();
   const [isVisible, toggleVisibility] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<RegisterFormType>({ resolver: yupResolver(RegisterSchema) })
 
   const onSubmit: SubmitHandler<RegisterFormType> = async (data) => {
@@ -34,21 +35,24 @@ const RegisterModal = ({ registerIsModal, registerOnModal, registerOnOpenChange 
       return res;
     }).catch((e) => {
       return e;
-    })
+    });
     if (res.status == 200) {
       const resData = await res.json();
       if (resData.status == ResponseStatus.Ok) {
-
+        toast.success('Başarılı bir şekilde kayıt oldunuz giriş yaparak ilk mağazanızı oluşturabilisiniz.');
+        reset();
+        registerOnOpenChange();
+        loginOnModal();
       }
       else {
         toast.custom((t) => (
           <ForgotPasswordToast message={resData.message} t={t} />
         ))
       }
-      console.log(resData);
     }
     else {
-      toast.error("İşlem sırasında bir hata oluştu");
+      const resData = await res.json();
+      toast.error(resData.message);
     }
     setLoading(false)
   }
@@ -76,13 +80,13 @@ const RegisterModal = ({ registerIsModal, registerOnModal, registerOnOpenChange 
                     <Input label="İsim" {...register('name', { required: "This is required" })} isInvalid={!!errors.name} errorMessage={errors.name?.message} />
                     <Input label="Soyisim" {...register('surname', { required: "This is required" })} isInvalid={!!errors.surname} errorMessage={errors.surname?.message} />
                   </div>
-                  <Input label="Mağaza Adı"
+                  {/* <Input label="Mağaza Adı"
                     isInvalid={!!errors.subDomain} errorMessage={errors.subDomain?.message}
                     {...register(
                       'subDomain',
-                      { 
-                        required: "This is required", 
-                        onChange: (e) => setSlug(e.target.value) 
+                      {
+                        required: "This is required",
+                        onChange: (e) => setSlug(e.target.value)
                       },
 
                     )}
@@ -90,10 +94,14 @@ const RegisterModal = ({ registerIsModal, registerOnModal, registerOnOpenChange 
                       <div className="pointer-events-none flex items-end relative">
                         <span className="text-default-400 text-small">.iconiumbilisim.com</span>
                         <div className='ml-1'>
-                          {loading ? <Spinner size="sm" /> : data && data.isExist ? <BsX size={28} className='text-red-600' /> : <BsCheck size={28} className='text-green-600' />}
+                          {loading ?
+                            <Spinner size="sm" /> :
+                            data && (data.isExist ?
+                              <BsX size={28} className='text-red-600' /> :
+                              <BsCheck size={28} className='text-green-600' />)}
                         </div>
                       </div>
-                    } />
+                    } /> */}
                   <Input
                     {...register('email', { required: "This is required" })}
                     isInvalid={!!errors.email} errorMessage={errors.email?.message}
@@ -124,7 +132,7 @@ const RegisterModal = ({ registerIsModal, registerOnModal, registerOnOpenChange 
                   <Button color="danger" variant="shadow" onPress={onClose}>
                     Kapat
                   </Button>
-                  <Button color="primary" variant='shadow' type='submit' className='disabled:bg-slate-700 disabled:cursor-not-allowed' disabled={data?.isExist}>
+                  <Button color="primary" variant='shadow' type='submit' className='disabled:bg-slate-700 disabled:cursor-not-allowed'  >
                     Hesabı Oluştur
                   </Button>
                 </ModalFooter>

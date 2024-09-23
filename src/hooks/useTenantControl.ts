@@ -1,9 +1,9 @@
 import TenantService from "@/services/actions/tenants";
-import { TenantControlRequest } from "@/services/actions/tenants/type";
+import {  TenantControlResponse } from "@/services/actions/tenants/type";
 import { useEffect, useState } from "react";
 
 const useTenantControl = () => {
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<TenantControlResponse | undefined>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(false);
   const [slug, setSlug] = useState<string | null>();
@@ -12,7 +12,6 @@ const useTenantControl = () => {
     setLoading(true);
     try {
       const res = await TenantService.tenantControl({ slug: slug! })
-      console.log(res);
 
       setData(res.data)
 
@@ -24,7 +23,7 @@ const useTenantControl = () => {
   };
 
   useEffect(() => {
-    if (slug && slug.length > 4) {
+    if (slug && slug.length > 3) {
       const handler = setTimeout(() => {
         getData();
       }, 1000);

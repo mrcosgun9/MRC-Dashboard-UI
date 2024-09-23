@@ -8,10 +8,10 @@ export const httpClient = axios.create({
 });
 
 httpClient.interceptors.request.use(async (request) => {
-  // const session = await getSession();
-  // if (session) {
-  //   request.headers.Authorization = `Bearer ${session?.user.accessToken}`;
-  // }
+  const session = await getSession();
+  if (session) {
+    request.headers.Authorization = `Bearer ${session?.user.accessToken}`;
+  }
   return request;
 });
 
