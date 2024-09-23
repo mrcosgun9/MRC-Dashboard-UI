@@ -20,3 +20,4 @@ export interface TenantControlRequest {
 export interface TenantControlResponse {
   isExist:boolean
 }
+

@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
           });
           const resProfileInfo = await AuthService.getProfileInfoClient({
             accessToken: res.data.accessToken,
-          });          
+          });
           return {
             fullName: `${resProfileInfo.data.name} ${resProfileInfo.data.surname}`,
             name: resProfileInfo.data.name,
@@ -30,6 +30,8 @@ export const authOptions: NextAuthOptions = {
             image: "",
             id: resProfileInfo.data.id,
             accessToken: res.data.accessToken,
+            tenantInfos: resProfileInfo.data.tenantInfos,
+            surname: resProfileInfo.data.surname
           };
         }
         return null;
@@ -42,7 +44,9 @@ export const authOptions: NextAuthOptions = {
         fullName: token.fullName as string,
         name: token.name as string,
         id: token.id as number,
-        email: token.email,
+        email: token.email as string,
+        surname:token.surname as string,
+        tenantInfos:token.tenantInfos as any[],
         image: token.image as string,
         accessToken: token.accessToken as string,
       };

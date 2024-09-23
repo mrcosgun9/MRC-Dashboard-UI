@@ -9,10 +9,21 @@ declare module "next-auth" {
     user: User;
   }
   interface User {
-
-    name: string;
-    fullName: string;
     id:number;
+    fullName: string;
     accessToken:string;
+    email: string
+    name: string
+    surname: string
+    tenantInfos: TenantInfo[]
   }
+  interface TenantInfo {
+    id: number
+    slug: string
+    domain: string
+    title: string
+    aliasId: string
+    connectionString: string
+  }
+  
 }

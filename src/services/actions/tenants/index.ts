@@ -1,4 +1,4 @@
-import { IBaseDataResponse } from "@/types/baseType";
+import { IBaseDataResponse, IBaseDatasResponse } from "@/types/baseType";
 import { httpClient } from "@/services/httpClient";
 import { httpServer } from "@/services/httpServer";
 import { TenantControlRequest, TenantControlResponse, TenantRequest, TenantResponse } from "./type";
@@ -32,9 +32,22 @@ const tenantControl = async (
     })
     .finally();
 };
+const getTenantList = async (): Promise<IBaseDatasResponse<TenantResponse>> => {
+  return await httpClient
+    .post<IBaseDatasResponse<TenantResponse>>("Tenant/GetTenantList", {})
+    .then((response) => {
+      const { data: res } = response;
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    })
+    .finally();
+};
 
 const TenantService = {
   upsertTenant,
-  tenantControl
+  tenantControl,
+  getTenantList
 };
 export default TenantService;

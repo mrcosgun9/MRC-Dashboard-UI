@@ -1,19 +1,20 @@
 "use client"
 import { useAppContext } from '@/context/AppContext';
-import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from '@nextui-org/react'
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Skeleton } from '@nextui-org/react'
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react'
-import {  BsPlusCircleDotted } from 'react-icons/bs';
+import { BsPlusCircleDotted } from 'react-icons/bs';
 
 const UserDropDownMenu = () => {
   const { data: session, status } = useSession();
-  const { isMinimalMenu,createTenantOnModal } = useAppContext();
+  const { isMinimalMenu, createTenantOnModal } = useAppContext();
   const getNameFirstCharacter = () => {
     return session?.user.fullName
       .split(' ')
       .map(word => word[0])
       .join('');
   }
+  
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -29,12 +30,18 @@ const UserDropDownMenu = () => {
         </div>
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
-        <DropdownItem  onClick={createTenantOnModal} key="addShopping" color='primary' className="gap-2" startContent={<BsPlusCircleDotted size={24}/>}>
+        <DropdownItem onClick={createTenantOnModal} key="addShopping" color='primary' className="gap-2" startContent={<BsPlusCircleDotted size={24} />}>
           <p className="font-bold"> Mağaza Oluştur</p>
         </DropdownItem>
-        <DropdownItem key="settings">
-          My Settings
-        </DropdownItem>
+        <DropdownSection title="Mağazalarınız">
+          <DropdownItem
+            key="delete"
+            color="secondary"
+            description="Mağaza yönetimi"
+          >
+            Blog Sayfam (mrcblog)
+          </DropdownItem>
+        </DropdownSection>
         <DropdownItem key="team_settings">Team Settings</DropdownItem>
         <DropdownItem key="analytics">
           Analytics
