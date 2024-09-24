@@ -1,20 +1,24 @@
 "use client"
 import { useAppContext } from '@/context/AppContext';
+import useGetTenantList from '@/hooks/useGetTenantList';
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Skeleton } from '@nextui-org/react'
 import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import { BsPlusCircleDotted } from 'react-icons/bs';
 
 const UserDropDownMenu = () => {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const { isMinimalMenu, createTenantOnModal } = useAppContext();
+  const { data } = useGetTenantList();
   const getNameFirstCharacter = () => {
     return session?.user.fullName
       .split(' ')
       .map(word => word[0])
       .join('');
   }
-  
+
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -34,23 +38,19 @@ const UserDropDownMenu = () => {
           <p className="font-bold"> Mağaza Oluştur</p>
         </DropdownItem>
         <DropdownSection title="Mağazalarınız">
-          <DropdownItem
-            key="delete"
-            color="secondary"
-            description="Mağaza yönetimi"
-          >
-            Blog Sayfam (mrcblog)
-          </DropdownItem>
+          {
+            data?.map((x, i) => {
+              return <DropdownItem
+                key={i}
+                color="secondary"
+                description="Mağaza yönetimi"
+                onClick={() => { router.push("/dashboard?slug=" + x.domain) }}
+              >
+                {x.title} ({x.domain})
+              </DropdownItem>
+            })
+          }
         </DropdownSection>
-        <DropdownItem key="team_settings">Team Settings</DropdownItem>
-        <DropdownItem key="analytics">
-          Analytics
-        </DropdownItem>
-        <DropdownItem key="system">System</DropdownItem>
-        <DropdownItem key="configurations">Configurations</DropdownItem>
-        <DropdownItem key="help_and_feedback">
-          Help & Feedback
-        </DropdownItem>
         <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
           Çıkış Yap
         </DropdownItem>
