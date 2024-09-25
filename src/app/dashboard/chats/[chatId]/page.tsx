@@ -25,14 +25,28 @@ const ChatsPage = () => {
     }
   }, [params])
 
-  const sendMessage = () => {
-    connection!.invoke("PostMessage", params.chatId, data?.senderUserId, data?.recipientUserId, message);
+  const sendMessage = async () => {
+       
+
+    console.log("🚀PostMessage", params.chatId, data?.senderUserId, data?.recipientUserId, message);
+    if (connection) {
+      // connection.invoke("PostMessage",46,7,9,"22222")
+      try {
+         connection.invoke("PostMessage", Number(params.chatId), Number(data?.senderUserId), Number(data?.recipientUserId), message.toString());
+      } catch (err) {
+        console.error("SignalR Hatası:", err);
+      }
+    }
+    else {
+      console.log("connection yok");
+
+    }
   }
   useEffect(() => {
     if (connection) {
       connection.on("receiveMessage", (senderId, receiverUserId, content) => {
-        console.log(senderId,receiverUserId,content);
-          
+        console.log(senderId, receiverUserId, content);
+
         // setReceiveMessage({
         //   chat: {
         //     id: selectedChat?.id!,

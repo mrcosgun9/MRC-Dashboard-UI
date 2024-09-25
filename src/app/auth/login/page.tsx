@@ -13,8 +13,8 @@ type Inputs = {
 }
 const login = () => {
   const router = useRouter();
-  const { loading, setLoading } = useAppContext();
-  const [isVisible, toggleVisibility] = useState(false);
+  const { loading, setLoading,connection } = useAppContext();
+   const [isVisible, toggleVisibility] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,7 +27,11 @@ const login = () => {
       password: data.password,
       redirect: false
     });
+
+
     if (res?.status === 200) {
+   
+
       toast.success('Login successful')
       setLoading(false)
       router.push('/dashboard');
@@ -44,7 +48,7 @@ const login = () => {
       </div>
       <div className='w-96 bg-white dark:bg-slate-700 rounded-lg shadow-lg p-8'>
         <div className='text-xl font-bold text-center'>Sign In</div>
-      
+
         <form className='flex flex-col gap-5 mt-6' onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Email"

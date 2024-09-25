@@ -17,12 +17,13 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials): Promise<User | null> {
-        // Validate credentials with your database here
         if (credentials) {
           const res = await AuthService.login({
             email: credentials.email,
             password: credentials.password,
-          });
+          });   
+          console.log("auth",res);
+                 
           const resProfileInfo = await AuthService.getProfileInfoClient({
             accessToken: res.data.accessToken,
           });

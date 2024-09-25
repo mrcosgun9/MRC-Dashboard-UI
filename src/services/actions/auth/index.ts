@@ -29,7 +29,7 @@ const login = async (
       const { data: res } = response;
       return res;
     })
-    .catch((err) => {
+    .catch((err) => {      
       return err;
     })
     .finally();
