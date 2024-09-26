@@ -6,7 +6,7 @@ import { CgMail } from 'react-icons/cg';
 import { CreateTenantFormType, CreateTenantSchema } from './type';
 import { BsCheck, BsX } from 'react-icons/bs';
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import toast from 'react-hot-toast';
 import { ResponseStatus } from '@/types/baseType';
 import useTenantControl from '@/hooks/useTenantControl';

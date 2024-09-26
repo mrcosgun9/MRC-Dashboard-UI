@@ -7,12 +7,11 @@ export default function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <>
       <HomeNavbar />
       {children}
-      <HomeFooter/>
+      <HomeFooter />
       <div className="fixed z-50 right-5 bottom-5">
         <ThemeSwitcher />
       </div>

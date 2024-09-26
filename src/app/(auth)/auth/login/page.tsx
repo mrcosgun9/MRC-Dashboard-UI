@@ -1,5 +1,5 @@
 "use client"
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import AuthService from '@/services/actions/auth';
 import { ResponseStatus } from '@/types/baseType';
 import { Button, Input } from '@nextui-org/react'

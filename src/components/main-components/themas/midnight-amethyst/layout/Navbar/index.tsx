@@ -6,7 +6,7 @@ import { HiScale } from "react-icons/hi";
 import { BsActivity } from "react-icons/bs";
 import { IoFlash } from "react-icons/io5";
 import Link from "next/link";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext } from "@/context/app-context";
 import UserMenu from "./UserMenu";
 
 export default function HomeNavbar() {

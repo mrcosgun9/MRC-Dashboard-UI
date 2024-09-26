@@ -5,7 +5,7 @@ import { CgMail } from 'react-icons/cg';
 import { LoginFormType, LoginSchema } from './type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 

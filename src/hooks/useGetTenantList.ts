@@ -20,7 +20,7 @@ const useGetTenantList = () => {
   };
 
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
 
   return {

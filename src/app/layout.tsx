@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "../styles/globals.scss";
 import Providers from "@/context/Providers";
+import { httpClient } from "@/services/httpClient";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -17,13 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
   session: any
 }>) {
+
   return (
     <html lang="en" >
       <body className={nunito.className}>
         <Providers session={session}>
-          <main>
-            {children}
-          </main>
+            <main>
+              {children}
+            </main>
         </Providers>
       </body>
     </html>

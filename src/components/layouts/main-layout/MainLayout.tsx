@@ -2,7 +2,7 @@
 import React from 'react'
 import LayoutMenu from './LayoutMenu';
 import { twMerge } from 'tailwind-merge';
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import { ThemeSwitcher } from '@/components/elements/ThemeSwitcher';
 import Navbar from './Navbar';
 

@@ -1,14 +1,14 @@
 "use client";
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { SessionProvider } from "next-auth/react"
-import { AppProvider } from "./AppContext";
+import { SessionProvider, useSession } from "next-auth/react"
+import { AppProvider } from "./app-context";
 import { Toaster } from "react-hot-toast";
 interface ProvidersProps {
   children: React.ReactNode;
   session: any;
 }
-export default function Providers({ children,session }: ProvidersProps) {
+export default function Providers({ children, session }: ProvidersProps) {
   return (
     <SessionProvider session={session}>
       <AppProvider>

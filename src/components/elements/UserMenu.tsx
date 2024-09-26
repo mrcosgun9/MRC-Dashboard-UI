@@ -1,5 +1,5 @@
 "use client"
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from '@nextui-org/react'
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react'

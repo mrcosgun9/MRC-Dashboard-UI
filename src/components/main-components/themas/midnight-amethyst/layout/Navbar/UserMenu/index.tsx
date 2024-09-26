@@ -1,4 +1,4 @@
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import { Button, NavbarItem } from '@nextui-org/react'
 import { useSession } from 'next-auth/react';
 import React, { useEffect } from 'react'

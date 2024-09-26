@@ -1,24 +1,34 @@
 "use client"
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import useGetTenantList from '@/hooks/useGetTenantList';
+import { TenantResponse } from '@/services/actions/tenants/type';
+import { swrFetcher } from '@/services/swr-service';
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Skeleton } from '@nextui-org/react'
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BsPlusCircleDotted } from 'react-icons/bs';
+import useSWR from 'swr';
 
 const UserDropDownMenu = () => {
   const router = useRouter();
+
   const { data: session, status } = useSession();
   const { isMinimalMenu, createTenantOnModal } = useAppContext();
-  const { data } = useGetTenantList();
+  const { data, isLoading, error } = useSWR<TenantResponse[]>(
+    () => ['Tenant/GetTenantList', {}],
+    ([url, body]) => swrFetcher(url, body)
+  );
   const getNameFirstCharacter = () => {
     return session?.user.fullName
       .split(' ')
       .map(word => word[0])
       .join('');
   }
+  useEffect(() => {
+    console.log(data);
 
+  }, [data])
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -37,20 +47,20 @@ const UserDropDownMenu = () => {
         <DropdownItem onClick={createTenantOnModal} key="addShopping" color='primary' className="gap-2" startContent={<BsPlusCircleDotted size={24} />}>
           <p className="font-bold"> Mağaza Oluştur</p>
         </DropdownItem>
-        <DropdownSection title="Mağazalarınız">
-          {
-            data?.map((x, i) => {
-              return <DropdownItem
-                key={i}
-                color="secondary"
-                description="Mağaza yönetimi"
-                onClick={() => { router.push("/dashboard?slug=" + x.domain) }}
-              >
-                {x.title} ({x.domain})
-              </DropdownItem>
-            })
-          }
-        </DropdownSection>
+        {
+          data ? <DropdownSection title="Mağazalarınız">
+            {
+              data?.map((x, i) => {
+                return <DropdownItem key={i}
+                  color="secondary"
+                  description="Mağaza yönetimi"
+                  onClick={() => { router.push("/dashboard?slug=" + x.domain) }}>
+                  {x.title} ({x.domain})
+                </DropdownItem>
+              })
+            }
+          </DropdownSection> : <></>
+        }
         <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
           Çıkış Yap
         </DropdownItem>

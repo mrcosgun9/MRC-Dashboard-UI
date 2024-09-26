@@ -5,6 +5,8 @@ import { useDisclosure } from '@nextui-org/react';
 import LoginModal from '@/components/main-components/themas/midnight-amethyst/modal/LoginModal';
 import RegisterModal from '@/components/main-components/themas/midnight-amethyst/modal/RegisterModal';
 import CreateTenantModal from '@/components/main-components/themas/midnight-amethyst/modal/CreateTenantModal';
+import { useSession } from 'next-auth/react';
+import { SWRConfig } from 'swr';
 
 interface AppContextProps {
   loading: boolean;
@@ -27,6 +29,7 @@ export const AppContext = createContext<AppContextProps>({
 });
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const [isMinimalMenu, setIsMinimalMenu] = useState(false);
   const { isOpen: loginIsModal, onOpen: loginOnModal, onOpenChange: loginOnOpenChange } = useDisclosure();
@@ -38,7 +41,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       <LoginModal loginIsModal={loginIsModal} loginOnModal={loginOnModal} loginOnOpenChange={loginOnOpenChange} />
       <RegisterModal registerIsModal={registerIsModal} registerOnModal={registerOnModal} registerOnOpenChange={registerOnOpenChange} />
       <CreateTenantModal createTenantIsModal={createTenantIsModal} createTenantOnModal={createTenantOnModal} createTenantOnOpenChange={createTenantOnOpenChange} />
-      {children}
+        {children}
       {
         loading && <LoadingScreen />
       }

@@ -1,5 +1,5 @@
 "use client"
-import { useAppContext } from '@/context/AppContext';
+import { useAppContext } from '@/context/app-context';
 import { Button, Input } from '@nextui-org/react'
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';

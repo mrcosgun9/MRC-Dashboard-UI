@@ -5,14 +5,16 @@ import { ServicesList } from '@/components/main-components/themas/midnight-ameth
 import Hero from '@/components/main-components/themas/midnight-amethyst/hero';
 import Features from '@/components/main-components/themas/midnight-amethyst/features';
 import FaqsList from '@/components/main-components/themas/midnight-amethyst/faqs';
-import BlogList from '@/components/main-components/themas/midnight-amethyst/blogs';
- const HomePage = () => {
-  const { data: session, status } = useSession();
+import useSWR from 'swr';
+import { httpClient } from '@/services/httpClient';
+import { swrFetcher } from '@/services/swr-service';
+
+const HomePage = () => {
   return <>
     <Hero />
     <ServicesList />
     <Features />
-    <FaqsList/>
+    <FaqsList />
     {/* <BlogList/> */}
   </>
 }

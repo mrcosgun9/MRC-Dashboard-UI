@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { RiMenuFoldFill } from 'react-icons/ri'
 import MenuList from './MenuList'
 import { twMerge } from 'tailwind-merge'
-import { useAppContext } from '@/context/AppContext'
+import { useAppContext } from '@/context/app-context'
 
 const LayoutMenu = ({ isMobile = false }: { isMobile?: boolean }) => {
   const { isMinimalMenu, setIsMinimalMenu } = useAppContext();

@@ -1,4 +1,4 @@
-import { useAppContext } from '@/context/AppContext'
+import { useAppContext } from '@/context/app-context'
 import React from 'react'
 import toast, { Toast } from 'react-hot-toast'
 import { BsX } from 'react-icons/bs'
