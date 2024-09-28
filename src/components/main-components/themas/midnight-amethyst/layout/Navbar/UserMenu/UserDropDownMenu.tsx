@@ -2,7 +2,7 @@
 import { useAppContext } from '@/context/app-context';
 import useGetTenantList from '@/hooks/useGetTenantList';
 import { TenantResponse } from '@/services/actions/tenants/type';
-import { swrFetcher } from '@/services/swr-service';
+import { swrTenantFetcher } from '@/services/swr-service';
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Skeleton } from '@nextui-org/react'
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -12,12 +12,11 @@ import useSWR from 'swr';
 
 const UserDropDownMenu = () => {
   const router = useRouter();
-
   const { data: session, status } = useSession();
   const { isMinimalMenu, createTenantOnModal } = useAppContext();
   const { data, isLoading, error } = useSWR<TenantResponse[]>(
     () => ['Tenant/GetTenantList', {}],
-    ([url, body]) => swrFetcher(url, body)
+    ([url, body]) => swrTenantFetcher(url, body)
   );
   const getNameFirstCharacter = () => {
     return session?.user.fullName
@@ -25,10 +24,6 @@ const UserDropDownMenu = () => {
       .map(word => word[0])
       .join('');
   }
-  useEffect(() => {
-    console.log(data);
-
-  }, [data])
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -48,18 +43,20 @@ const UserDropDownMenu = () => {
           <p className="font-bold"> Mağaza Oluştur</p>
         </DropdownItem>
         {
-          data ? <DropdownSection title="Mağazalarınız">
+          <DropdownSection title="Mağazalarınız">
             {
-              data?.map((x, i) => {
+              data ? data.map((x, i) => {
                 return <DropdownItem key={i}
                   color="secondary"
                   description="Mağaza yönetimi"
-                  onClick={() => { router.push("/dashboard?slug=" + x.domain) }}>
+                  onClick={() => { router.push("/dashboard/" + x.slug) }}>
                   {x.title} ({x.domain})
                 </DropdownItem>
-              })
+              }) : <DropdownItem>
+                <div className='w-full h-full bg-red-500'></div>
+              </DropdownItem>
             }
-          </DropdownSection> : <></>
+          </DropdownSection>
         }
         <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
           Çıkış Yap

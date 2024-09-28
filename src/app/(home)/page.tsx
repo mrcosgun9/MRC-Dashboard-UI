@@ -6,7 +6,7 @@ import Hero from '@/components/main-components/themas/midnight-amethyst/hero';
 import Features from '@/components/main-components/themas/midnight-amethyst/features';
 import FaqsList from '@/components/main-components/themas/midnight-amethyst/faqs';
 import useSWR from 'swr';
-import { httpClient } from '@/services/httpClient';
+import { httpClient } from '@/services/http-client';
 import { swrFetcher } from '@/services/swr-service';
 
 const HomePage = () => {

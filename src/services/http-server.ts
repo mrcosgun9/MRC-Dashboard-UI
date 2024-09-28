@@ -2,8 +2,8 @@ import { authOptions } from "@/configs/next-auth";
 import axios, { AxiosResponse } from "axios";
 import { getServerSession } from "next-auth";
 
- export const httpServer = axios.create({
-  baseURL: process.env.BASE_API,
+export const httpServer = axios.create({
+  baseURL: process.env.BASE_SHOPPING_API,
   headers: {
     "content-type": "application/json",
   },
@@ -13,6 +13,7 @@ httpServer.interceptors.request.use(async (request) => {
   const session = await getServerSession(authOptions);
   if (session) {
     request.headers.Authorization = `Bearer ${session?.user.accessToken}`;
+    request.headers["X-Alias-Id"] = session?.user.id;
   }
   return request;
 });

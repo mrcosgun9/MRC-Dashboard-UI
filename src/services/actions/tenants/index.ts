@@ -1,6 +1,6 @@
 import { IBaseDataResponse, IBaseDatasResponse } from "@/types/baseType";
-import { httpClient } from "@/services/httpClient";
-import { httpServer } from "@/services/httpServer";
+import { httpClient } from "@/services/http-client";
+import { httpServer } from "@/services/http-server";
 import { TenantControlRequest, TenantControlResponse, TenantRequest, TenantResponse } from "./type";
 
 const upsertTenant = async (

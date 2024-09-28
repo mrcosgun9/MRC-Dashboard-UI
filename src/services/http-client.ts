@@ -1,7 +1,7 @@
-import axios, { AxiosResponse } from "axios";
+ import axios, { AxiosResponse } from "axios";
 import { getSession } from "next-auth/react";
 export const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API,
+  baseURL: process.env.NEXT_PUBLIC_BASE_SHOPPING_API,
   headers: {
     "content-type": "application/json",
   },
@@ -11,6 +11,8 @@ httpClient.interceptors.request.use(async (request) => {
   const session = await getSession();
   if (session) {
     request.headers.Authorization = `Bearer ${session?.user.accessToken}`;
+    request.headers["X-User-Id"] = session?.user.id;
+
   }
   return request;
 });
@@ -28,13 +30,16 @@ const responseBody = <T>(response: AxiosResponse<T>) => response?.data;
 
 export const useRequest = {
   get: <T>(url: string) => httpClient.get<T>(url).then(responseBody),
-  post: <T>(url: string, body: {}) =>
-    httpClient
-      .post<T>(url, body)
+  post: <T>(url: string, body: {}, headers: {}) => {
+    console.log("httpClient headers",headers);
+    
+    return httpClient
+      .post<T>(url, body, { headers: headers })
       .then(responseBody)
       .catch((err) => {
         return err;
-      }),
+      })
+  },
   postWithToken: <T>(url: string, body: {}, token: string) =>
     httpClient
       .post<T>(url, body, { headers: { Authorization: `Bearer ${token}` } })

@@ -7,12 +7,9 @@ import UserDropDownMenu from './UserDropDownMenu';
 const UserMenu = () => {
   const { data: session, status } = useSession();
   const { loginOnModal, registerOnModal } = useAppContext();
-  useEffect(() => {
-    console.log(status);
 
-  }, [status])
   if (status == "loading") {
-    <></>
+    <>Loading..</>
   }
   else if (status == 'authenticated') {
     return <>
