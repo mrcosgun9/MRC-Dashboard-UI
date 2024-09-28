@@ -4,7 +4,7 @@ export interface GetMessageByChatIdResponses {
   chatId: number
   chat: Chat
   content: string
-  createdAt: string
+  createdAt?: string
 }
 
 export interface Chat {

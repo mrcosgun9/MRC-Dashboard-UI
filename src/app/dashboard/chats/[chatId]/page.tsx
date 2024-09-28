@@ -4,20 +4,27 @@ import ChatInformationList from '@/components/modules/fake-user-chats/ChatInform
 import ChatProfileInformation from '@/components/modules/fake-user-chats/ChatProfileInformation'
 import useGetUsersChatById from '@/hooks/useGetUsersChatById'
 import { Avatar, Button, Textarea } from '@nextui-org/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import useGetMessagesByChatId from '@/hooks/useGetMessagesByChatId'
 import ChatItem from '@/components/modules/fake-user-chats/ChatItem'
 import { BiSend } from 'react-icons/bi'
 import { useAppContext } from '@/context/AppContext'
+import { getSession } from 'next-auth/react'
+import { GetMessageByChatIdResponses, MessagesUser } from '@/services/actions/messages/type'
 
 
 const ChatsPage = () => {
+
   const params = useParams()
   const { connection } = useAppContext();
   const { data, setChatId } = useGetUsersChatById();
-  const { data: messagesData, setChatId: setMessagesChatId } = useGetMessagesByChatId();
+  const { data: messagesData, setData: setMessagesData, setChatId: setMessagesChatId } = useGetMessagesByChatId();
+  const [receiveMessage, setReceiveMessage] = useState<GetMessageByChatIdResponses | null>();
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+
   useEffect(() => {
     if (params.chatId) {
       setChatId(Number(params.chatId))
@@ -26,39 +33,65 @@ const ChatsPage = () => {
   }, [params])
 
   const sendMessage = async () => {
-       
-
-    console.log("🚀PostMessage", params.chatId, data?.senderUserId, data?.recipientUserId, message);
+    setLoading(true);
+    const session = await getSession();
     if (connection) {
-      // connection.invoke("PostMessage",46,7,9,"22222")
       try {
-         connection.invoke("PostMessage", Number(params.chatId), Number(data?.senderUserId), Number(data?.recipientUserId), message.toString());
+        await connection.invoke("PostMessageModerator", Number(params.chatId), Number(data?.senderUserId), Number(data?.recipientUserId), Number(session?.user.id), message.toString());
+        var newMessage: GetMessageByChatIdResponses = {
+          chat: {
+            id: Number(params.chatId),
+            recipientUser: data?.recipientUser as MessagesUser,
+            recipientUserId: Number(data?.recipientUserId),
+            senderUser: data?.senderUser as MessagesUser,
+            senderUserId: Number(data?.senderUserId)
+          },
+          chatId: Number(params.chatId),
+          content: message.toString(),
+          sender: data?.senderUser as MessagesUser,
+          senderId: Number(data?.senderUserId),
+        }
+        setMessagesData([...messagesData, newMessage])
+        setMessage('');
+        inputRef.current?.focus();
+        setLoading(false);
       } catch (err) {
         console.error("SignalR Hatası:", err);
+        setLoading(false);
       }
     }
     else {
       console.log("connection yok");
-
+      setLoading(false);
     }
   }
   useEffect(() => {
+    console.log(messagesData);
+
+    console.log(receiveMessage);
+
+  }, [receiveMessage])
+  useEffect(() => {
     if (connection) {
       connection.on("receiveMessage", (senderId, receiverUserId, content) => {
-        console.log(senderId, receiverUserId, content);
+        console.log("receiveMessage", senderId, receiverUserId, content);
+        var newMessage: GetMessageByChatIdResponses = {
+          chat: {
+            id: Number(params.chatId),
+            recipientUser: data?.recipientUser as MessagesUser,
+            recipientUserId: Number(receiverUserId),
+            senderUser: data?.senderUser as MessagesUser,
+            senderUserId: Number(senderId)
+          },
+          chatId: Number(params.chatId),
+          content: content.toString(),
+          sender: data?.senderUser as MessagesUser,
+          senderId: Number(senderId),
+        }
+        setReceiveMessage(newMessage)
 
-        // setReceiveMessage({
-        //   chat: {
-        //     id: selectedChat?.id!,
-        //     recipientUserId: receiverUserId,
-        //     senderUserId: senderId
-        //   },
-        //   receiverUserId: receiverUserId,
-        //   senderId: senderId,
-        //   content: content,
-        //   receiverUser: selectedChat?.senderUser!,
-        //   senderUser: selectedChat?.recipientUser!
-        // });
+        setMessage('');
+        inputRef.current?.focus();
       })
     }
   }, [connection])
@@ -95,11 +128,12 @@ const ChatsPage = () => {
             <Textarea
               className='px-4'
               variant="underlined"
+              ref={inputRef}
               value={message}
               onChange={e => setMessage(e.target.value)}
               placeholder="Enter your message"
             />
-            <Button color="primary" variant="solid" isIconOnly onClick={() => { sendMessage() }}>
+            <Button color="primary" variant="solid" isIconOnly onClick={() => { sendMessage() }} isLoading={loading}>
               <BiSend />
             </Button>
           </div>

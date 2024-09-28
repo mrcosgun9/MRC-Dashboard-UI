@@ -25,6 +25,8 @@ export default function DashboardLayout({
         console.log("userConnections", userList)
       })
       connection.on("receiveMessageNotification", (senderId: number, userName: string, receiverUserId: number, content: string) => {
+        console.log("receiveMessageNotification",content);
+        
         const audio = new Audio('/sounds/bell.wav'); // Ses dosyanızın yolu
         audio.play();
         showToast('default', `${userName} send you a new message`);

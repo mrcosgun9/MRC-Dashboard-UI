@@ -25,7 +25,7 @@ const useGetMessagesByChatId = () => {
     }
   }, [chatId]);
 
-  return { data, loading, error, setChatId };
+  return { data,setData, loading, error, setChatId };
 };
 
 export default useGetMessagesByChatId;
