@@ -20,17 +20,17 @@ const UserMenu = () => {
     return (
       <>
         <NavbarItem>
-          <Button onPress={registerOnModal} variant="shadow" className="bg-gradient-to-tr from-purple-700 to-blue-700 text-white shadow-lg font-medium" >
+          <Button onPress={registerOnModal} variant="shadow" color='secondary' size='sm'   >
             Kayıt Ol
           </Button>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
-          <Button onPress={loginOnModal} className="bg-gradient-to-tr from-purple-700 to-blue-700 text-white shadow-lg font-medium" variant="shadow">Giriş Yap</Button>
+          <Button onPress={loginOnModal} variant="shadow" color='secondary' size='sm'>Giriş Yap</Button>
         </NavbarItem>
       </>
     )
   else {
-    return <></>
+    return <>Loading..</>
   }
 }
 

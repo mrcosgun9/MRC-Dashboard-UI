@@ -1,20 +1,15 @@
 "use client"
 import React from 'react'
-import { useSession } from 'next-auth/react';
-import { ServicesList } from '@/components/main-components/themas/midnight-amethyst/services-list';
-import Hero from '@/components/main-components/themas/midnight-amethyst/hero';
-import Features from '@/components/main-components/themas/midnight-amethyst/features';
-import FaqsList from '@/components/main-components/themas/midnight-amethyst/faqs';
-import useSWR from 'swr';
-import { httpClient } from '@/services/http-client';
-import { swrFetcher } from '@/services/swr-service';
+import { createPage } from '@/dynamic-rendering';
+import mockResponse from '@/dynamic-rendering/dynamic-rendering.mock';
 
 const HomePage = () => {
   return <>
-    <Hero />
+    {createPage(mockResponse)}
+    {/* <Hero />
     <ServicesList />
     <Features />
-    <FaqsList />
+    <FaqsList /> */}
     {/* <BlogList/> */}
   </>
 }

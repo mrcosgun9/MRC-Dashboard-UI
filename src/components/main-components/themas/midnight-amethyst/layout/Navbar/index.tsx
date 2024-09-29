@@ -1,112 +1,106 @@
 "use client"
 import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu } from "@nextui-org/react";
-import { BiChevronDown, BiLock, BiServer, BiUser } from "react-icons/bi";
-import { HiScale } from "react-icons/hi";
-import { BsActivity } from "react-icons/bs";
-import { IoFlash } from "react-icons/io5";
+import { BiChevronDown } from "react-icons/bi";
 import Link from "next/link";
-import { useAppContext } from "@/context/app-context";
 import UserMenu from "./UserMenu";
+interface ILogo {
+  url: string,
+  href: string,
+  isCenter: boolean
+}
+interface IChildMenuItem {
+  title: string,
+  href: string,
+  description?: string,
+  img?: string
+}
+interface IMenuItem {
+  title: string,
+  href: string,
+  items?: IChildMenuItem[]
+}
+interface INavbar {
+  logo: ILogo | null,
+  menuItems: IMenuItem[],
+  position: "static" | "sticky"
+}
 
-export default function HomeNavbar() {
+export default function HomeNavbar({ logo, menuItems, position = "sticky" }: INavbar) {
   const icons = {
     chevron: <BiChevronDown fill="currentColor" size={16} />,
-    scale: <HiScale className="text-warning" fill="currentColor" size={30} />,
-    lock: <BiLock className="text-success" fill="currentColor" size={30} />,
-    activity: <BsActivity className="text-secondary" fill="currentColor" size={30} />,
-    flash: <IoFlash className="text-primary" fill="currentColor" size={30} />,
-    server: <BiServer className="text-success" fill="currentColor" size={30} />,
-    user: <BiUser className="text-danger" fill="currentColor" size={30} />,
   };
-
   return (
-    <Navbar position="sticky" maxWidth="xl">
-      <NavbarBrand>
-        <Link href={"/"} className="font-bold text-inherit">
-          <img src='/images/white-logo.png' className="h-9" />
-        </Link>
-      </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-5" justify="center">
-        <NavbarItem>
-          <Link href="#" color="foreground">
-            Kurumsal
-          </Link>
-        </NavbarItem>
-        <Dropdown>
-          <NavbarItem>
-            <DropdownTrigger>
-              <Button
-                disableRipple
-                className="p-0 bg-transparent data-[hover=true]:bg-transparent text-base"
-                endContent={icons.chevron}
-                radius="sm"
-                variant="light"
-              >
-                Hizmetlerimiz
-              </Button>
-            </DropdownTrigger>
-          </NavbarItem>
-          <DropdownMenu
-            aria-label="ACME features"
-            className="w-[340px]"
-            itemClasses={{
-              base: "gap-4",
-            }}
-          >
-            <DropdownItem
-              key="autoscaling"
-              description="ACME scales apps to meet user demand, automagically, based on load."
-              startContent={icons.scale}
-            >
-              Autoscaling
-            </DropdownItem>
-            <DropdownItem
-              key="usage_metrics"
-              description="Real-time metrics to debug issues. Slow query added? We’ll show you exactly where."
-              startContent={icons.activity}
-            >
-              Usage Metrics
-            </DropdownItem>
-            <DropdownItem
-              key="production_ready"
-              description="ACME runs on ACME, join us and others serving requests at web scale."
-              startContent={icons.flash}
-            >
-              Production Ready
-            </DropdownItem>
-            <DropdownItem
-              key="99_uptime"
-              description="Applications stay on the grid with high availability and high uptime guarantees."
-              startContent={icons.server}
-            >
-              +99% Uptime
-            </DropdownItem>
-            <DropdownItem
-              key="supreme_support"
-              description="Overcome any challenge with a supporting team ready to respond."
-              startContent={icons.user}
-            >
-              +Supreme Support
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <NavbarItem>
-          <Link href="#" color="foreground">
-            Referanslar
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Blog
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            İletişim
-          </Link>
-        </NavbarItem>
+    <Navbar position={position} maxWidth="xl">
+      {
+        !logo?.isCenter && <NavbarContent justify="start">
+          <NavbarBrand>
+            <Link href={logo?.href ?? ""} className="font-bold text-inherit">
+              <img src={logo?.url} className="h-11" />
+            </Link>
+          </NavbarBrand>
+        </NavbarContent>
+      }
+      <NavbarContent className="hidden sm:flex gap-4" justify="start">
+        {
+          menuItems?.map((x, i) => {
+            if (!x.items) {
+              return <NavbarItem key={i}>
+                <Link href={x.href} color="foreground">
+                  {x.title}
+                </Link>
+              </NavbarItem>
+            }
+            else {
+              return <Dropdown key={i}>
+                <NavbarItem>
+                  <DropdownTrigger>
+                    <Button
+                      disableRipple
+                      className="p-0 bg-transparent data-[hover=true]:bg-transparent text-base"
+                      endContent={icons.chevron}
+                      radius="sm"
+                      variant="light"
+
+                    >
+                      {x.title}
+                    </Button>
+                  </DropdownTrigger>
+                </NavbarItem>
+                <DropdownMenu
+                  aria-label="ACME features"
+                  className="max-w-80"
+                  itemClasses={{
+                    base: "gap-4",
+                  }}
+                >
+                  {
+                    x.items.map((child, j) => {
+                      return <DropdownItem
+                        key={j}
+                        description={child.description}
+                        startContent={<img src={child.img} className="w-5 h-5" />}
+                      >
+                        {child.title}
+                      </DropdownItem>
+                    })
+                  }
+
+                </DropdownMenu>
+              </Dropdown>
+            }
+          })
+        }
       </NavbarContent>
+      {
+        logo?.isCenter && <NavbarContent justify="center">
+          <NavbarBrand>
+            <Link href={logo?.href ?? ""} className="font-bold text-inherit">
+              <img src={logo?.url} className="h-11" />
+            </Link>
+          </NavbarBrand>
+        </NavbarContent>
+      }
       <NavbarContent justify="end">
         <UserMenu />
       </NavbarContent>
