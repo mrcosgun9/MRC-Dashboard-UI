@@ -1,6 +1,6 @@
 import { BiChat, BiHomeAlt2, BiUser } from 'react-icons/bi';
 import { MenuItemType } from "@/types/NavbarTypes";
-const dashboardUrl='/dashboard';
+const dashboardUrl = '/dashboard';
 export const menuItems: MenuItemType[] = [
   {
     icon: <BiHomeAlt2 />,
@@ -20,6 +20,9 @@ export const menuItems: MenuItemType[] = [
       {
         title: "All Users",
         href: "/dashboard/manage-users/all-user"
+      }, {
+        title: "Create Users",
+        href: "/dashboard/manage-users/create-user"
       },
     ]
   },
