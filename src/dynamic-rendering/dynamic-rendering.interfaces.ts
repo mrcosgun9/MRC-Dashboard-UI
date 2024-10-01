@@ -5,7 +5,8 @@ type ComponentList =
   | 'CustomDivider'
   | 'CustomInput'
   | 'CustomHeader'
-  | 'HomeNavbar';
+  | 'HomeNavbar'
+  | 'TextSlider';
 
 export interface IComponent {
   type: ComponentList;

@@ -7,60 +7,92 @@ const mockResponse: IComponent = {
     fluid: true,
     items: [
       {
-        type:"HomeNavbar",
-        data:{
-          id:"navbar",
-          position:"sticky",
-          logo:{
-            url:"/images/logo.png",
-            href:"/",
-            isCenter:false
+        type: "HomeNavbar",
+        data: {
+          id: "navbar",
+          position: "sticky",
+          logo: {
+            url: "/images/logo.png",
+            href: "/",
+            isCenter: false
           },
-          menuItems:[
+          menuItems: [
             {
-              title:"Kurumsal",
-              href:"/kurumsal"
+              title: "Kurumsal",
+              href: "/kurumsal"
             },
             {
-              title:"Hizmetlerimiz",
-              href:"/hizmetlerimiz",
-              items:[
+              title: "Hizmetlerimiz",
+              href: "/hizmetlerimiz",
+              items: [
                 {
-                  title:"Alt Menü 1",
-                  href:"alt-menu-1",
-                  description:"Alt Menü 1 Açıklaması",
-                  img:"/images/favicon.png"
+                  title: "Alt Menü 1",
+                  href: "alt-menu-1",
+                  description: "Alt Menü 1 Açıklaması",
+                  img: "/images/favicon.png"
                 },
                 {
-                  title:"Alt Menü 2",
-                  href:"alt-menu-2",
-                  description:"Alt Menü 2 Açıklaması",
-                  img:"/images/favicon.png"
+                  title: "Alt Menü 2",
+                  href: "alt-menu-2",
+                  description: "Alt Menü 2 Açıklaması",
+                  img: "/images/favicon.png"
                 },
                 {
-                  title:"Alt Menü 3",
-                  href:"alt-menu-3",
-                  description:"Alt Menü 3 Açıklaması",
-                  img:"/images/favicon.png"
+                  title: "Alt Menü 3",
+                  href: "alt-menu-3",
+                  description: "Alt Menü 3 Açıklaması",
+                  img: "/images/favicon.png"
                 }
               ]
             },
             {
-              title:"Referanslar",
-              href:"/referanslar"
+              title: "Referanslar",
+              href: "/referanslar"
             },
             {
-              title:"Blog",
-              href:"/blog"
+              title: "Blog",
+              href: "/blog"
             },
             {
-              title:"İletişim",
-              href:"/iletisim"
+              title: "İletişim",
+              href: "/iletisim"
             }
           ]
         }
       },
- 
+      {
+        type: "TextSlider",
+        data: {
+          id: "text-slider",
+          sliderItems: [
+            {
+              sliderText: {
+                header1: "Dijital Dönüşüme Adım Atın!",
+                header2: "Çarpıcı web siteleri oluşturmak çok kolay",
+                header3: "Saniyeler içinde büyüleyici içerik ve görsellerle dolu muhteşem web siteleri oluşturun ve satışa başlayın"
+              },
+              buttons: [
+                {
+                  title: "Ücretsiz Kayıt Ol",
+                  href: "/hakkimizda",
+                  radius:"lg"
+                },
+                {
+                  title: "Planları İnceleyin",
+                  href: "/hakkimizda",
+                  radius:"lg"
+                }
+              ],
+              img: {
+                url: "/images/slider.png",
+                alt: "deneme",
+                isFullImage: false
+              }
+            },
+            
+          ]
+        }
+      }
     ]
   }
 }

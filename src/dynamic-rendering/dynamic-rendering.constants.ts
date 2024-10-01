@@ -5,6 +5,7 @@ import CustomDivider from '@/components/elements/PageComponent/CustomDivider';
 import CustomHeader from '@/components/elements/PageComponent/CustomHeader';
 import CustomInput from '@/components/elements/PageComponent/CustomInput';
 import HomeNavbar from '@/components/main-components/themas/midnight-amethyst/layout/Navbar';
+import TextSlider from '@/components/main-components/themas/midnight-amethyst/text-slider';
 
 export const Components = {
   CustomButton,
@@ -13,5 +14,6 @@ export const Components = {
   CustomDivider,
   CustomInput,
   CustomHeader,
-  HomeNavbar
+  HomeNavbar,
+  TextSlider
 };

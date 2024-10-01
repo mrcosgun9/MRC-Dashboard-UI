@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import "../styles/globals.scss";
 import Providers from "@/context/Providers";
-import { httpClient } from "@/services/http-client";
 
-const nunito = Nunito({ subsets: ["latin"] });
+const nunito = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
