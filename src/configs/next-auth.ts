@@ -1,10 +1,20 @@
 import { User, type NextAuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthService from "@/services/actions/auth";
 
-
 export const authOptions: NextAuthOptions = {
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token-realdates-dashboard",
+      options: {
+        domain: ".localhost",
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false
+      }
+    }
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -21,9 +31,7 @@ export const authOptions: NextAuthOptions = {
           const res = await AuthService.login({
             email: credentials.email,
             password: credentials.password,
-          });   
-          console.log("auth",res);
-                 
+          });
           const resProfileInfo = await AuthService.getProfileInfoClient({
             accessToken: res.data.accessToken,
           });

@@ -45,7 +45,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       .configureLogging(LogLevel.Error)
       .build();
     try {
-      await connect.start();   
+      connect.start()
+        .then(() => {
+          console.log('Connected to SignalR', connect.connectionId);
+        })
+        .catch((err) => console.log('Connection error: ', err));
+
+      connect.onreconnected((connectionId) => {
+        console.log('Reconnected. ConnectionId:', connectionId);
+      });
+
+      connect.onclose(() => {
+        console.log('Connection closed.');
+      });
+
       setConnection(connect)
     } catch (e) {
       console.log("e", e)

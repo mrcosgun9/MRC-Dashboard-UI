@@ -4,8 +4,13 @@ export interface GetFakeUserChatListResponse {
   senderUser: User
   recipientUserId: number
   recipientUser: User
+  chatNotes: ChatNote[]
 }
-
+export interface ChatNote {
+  note: string
+  userId: number
+  createdAt: string
+}
 export interface User {
   id: number
   userName: string

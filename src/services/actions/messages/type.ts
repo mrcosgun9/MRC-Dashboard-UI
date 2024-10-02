@@ -1,6 +1,8 @@
 export interface GetMessageByChatIdResponses {
   senderId: number
   sender: MessagesUser
+  recipientUserId: number
+  recipientUser: MessagesUser
   chatId: number
   chat: Chat
   content: string

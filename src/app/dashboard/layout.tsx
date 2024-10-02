@@ -2,9 +2,10 @@
 import Providers from "@/context/Providers";
 import Navbar from "@/components/layouts/main-layout/Navbar";
 import { useAppContext } from "@/context/AppContext";
-import { useEffect } from "react";
+import React,{ useEffect } from "react";
 import { showToast } from "@/services/toastrServices";
-
+import toast from "react-hot-toast";
+ 
 
 export default function DashboardLayout({
   children,
@@ -25,11 +26,9 @@ export default function DashboardLayout({
         console.log("userConnections", userList)
       })
       connection.on("receiveMessageNotification", (senderId: number, userName: string, receiverUserId: number, content: string) => {
-        console.log("receiveMessageNotification",content);
-        
         const audio = new Audio('/sounds/bell.wav'); // Ses dosyanızın yolu
         audio.play();
-        showToast('default', `${userName} send you a new message`);
+        toast.success(`new message`);
       })
     }
   }, [connection])

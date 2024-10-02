@@ -5,17 +5,20 @@ import React from 'react'
 import { AiOutlineMan } from 'react-icons/ai'
 import { BsCalendarDate } from 'react-icons/bs'
 import { PiCoinsDuotone } from 'react-icons/pi'
+import { twMerge } from 'tailwind-merge'
 
-const ChatProfileInformation = ({user}:{user: User | undefined}) => {
+const ChatProfileInformation = ({ user, isLeft = false }: { user: User | undefined, isLeft?: boolean }) => {
   return (
     <div className='w-3/12 bg-white rounded shadow p-5'>
-      <div className='flex gap-3 align-middle items-center'>
+      <div className={twMerge('flex gap-3 align-middle items-center', (isLeft && 'flex-row-reverse'))}>
         <div className='w-14'>
           <Avatar src={user?.profileImage} radius='sm' className="w-14 h-14 text-large" isBordered color='primary' />
         </div>
         <div className='w-full'>
-          <div className='flex justify-between align-middle items-center w-full'>{user?.userName}<AiOutlineMan className='text-blue-700' size={24} /></div>
-          <div className='text-xs flex align-middle items-center justify-start gap-1'><BsCalendarDate className='text-purple-800' />
+          <div className={twMerge('flex justify-between align-middle items-center w-full', (isLeft && 'flex-row-reverse'))}>
+            {user?.userName}<AiOutlineMan className='text-blue-700' size={24} /></div>
+          <div className={twMerge('text-xs flex align-middle items-center justify-start gap-1',(isLeft&&'justify-end'))}>
+            <BsCalendarDate className='text-purple-800' />
             69 Jahre (1955-01-01)</div>
         </div>
       </div>
@@ -101,7 +104,7 @@ const ChatProfileInformation = ({user}:{user: User | undefined}) => {
           isRequired
           labelPlacement="outside"
           size='sm'
- 
+
           className="w-full h-min"
           value={`
             MAG NICHT SCHREIBEN,
