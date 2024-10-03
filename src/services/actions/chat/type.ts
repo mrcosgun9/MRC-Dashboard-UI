@@ -1,15 +1,12 @@
+import { CreateChatNoteResponse } from "../chatNote/type"
+
 export interface GetFakeUserChatListResponse {
   id: number
   senderUserId: number
   senderUser: User
   recipientUserId: number
   recipientUser: User
-  chatNotes: ChatNote[]
-}
-export interface ChatNote {
-  note: string
-  userId: number
-  createdAt: string
+  chatNotes: CreateChatNoteResponse[]
 }
 export interface User {
   id: number

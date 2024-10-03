@@ -12,9 +12,6 @@ import { BiSend } from 'react-icons/bi'
 import { useAppContext } from '@/context/AppContext'
 import { getSession } from 'next-auth/react'
 import { GetMessageByChatIdResponses, MessagesUser } from '@/services/actions/messages/type'
-import { showToast } from '@/services/toastrServices'
-import toast from 'react-hot-toast'
-
 
 const ChatsPage = () => {
   const params = useParams()
@@ -105,6 +102,7 @@ const ChatsPage = () => {
       setReceiveMessage(null);
     }
   }, [receiveMessage])
+
   return (
     <div>
       <PageHeader title="FAKE USER CHATS" breadcrumbsItems={[
@@ -113,19 +111,17 @@ const ChatsPage = () => {
         { title: 'FAKE USER CHATS' },
       ]} />
       <div>
-      <ChatInformationList chatData={data}/>
+        {data && <ChatInformationList chatData={data} />}
       </div>
-      <div className='w-full flex align-top items-start justify-between gap-4'>
-        <ChatProfileInformation user={data?.recipientUser} />
+      <div className='w-full flex align-top items-start justify-between gap-4 pb-6'>
+        <ChatProfileInformation user={data?.senderUser} />
         <div className='w-6/12'>
-    
-
           <div className='bg-white rounded shadow'>
-            <div className='max-h-[360px] overflow-x-auto p-4'>
+            <div className='max-h-[calc(100vh-21rem)] overflow-x-auto p-4'>
               <div className='flex flex-col gap-3'>
                 {
                   messagesData.map((x, i) => {
-                    return <ChatItem chatItem={x} isLeft={x.senderId == data?.senderUserId} key={i} />
+                    return <ChatItem chatItem={x} isLeft={x.senderId !== data?.senderUserId} key={i} />
                   })
                 }
               </div>
@@ -146,7 +142,7 @@ const ChatsPage = () => {
             </Button>
           </div>
         </div>
-        <ChatProfileInformation user={data?.senderUser} isLeft={true} />
+        <ChatProfileInformation user={data?.recipientUser} isLeft={true} />
       </div>
     </div>
   )

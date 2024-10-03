@@ -27,11 +27,7 @@ const login = () => {
       password: data.password,
       redirect: false
     });
-
-
     if (res?.status === 200) {
-   
-
       toast.success('Login successful')
       setLoading(false)
       router.push('/dashboard');
