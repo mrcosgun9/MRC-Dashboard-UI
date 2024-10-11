@@ -67,3 +67,11 @@ export const bodyTypeItems = [
   { label: "Curvy", value: "3", disabled: false, selected: false },
   { label: "Heavy", value: "4", disabled: false, selected: false },
 ];
+
+export const userTypeItems = [
+  { label: "Please choose an answer", value: "", disabled: true, selected: true },
+  { label: "Slim", value: "1", disabled: false, selected: false },
+  { label: "Athletic", value: "2", disabled: false, selected: false },
+  { label: "Curvy", value: "3", disabled: false, selected: false },
+  { label: "Heavy", value: "4", disabled: false, selected: false },
+];

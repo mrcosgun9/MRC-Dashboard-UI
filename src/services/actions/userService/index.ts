@@ -1,10 +1,8 @@
-import { IBaseDatasResponse } from "@/types/baseType";
+import { IBaseDataResponse, IBaseDatasResponse } from "@/types/baseType";
 import { httpClient } from "@/services/httpClient";
-import { GetAllOnlineUserResponse } from "./type";
+import { CreateUserRequest, CreateUserResponse, GetAllOnlineUserResponse } from "./type";
 
-const getAllOnlineUser = async (
-
-): Promise<IBaseDatasResponse<GetAllOnlineUserResponse>> => {
+const getAllOnlineUser = async (): Promise<IBaseDatasResponse<GetAllOnlineUserResponse>> => {
   return await httpClient
     .post<IBaseDatasResponse<GetAllOnlineUserResponse>>(
       "User/GetAllOnlineUser",
@@ -19,7 +17,23 @@ const getAllOnlineUser = async (
     })
     .finally();
 };
+const createUser = async (
+  data: CreateUserRequest
+): Promise<IBaseDataResponse<CreateUserResponse>> => {
+  data.fullName = `${data.name} ${data.lastName}`;
+  return await httpClient
+    .post<IBaseDataResponse<CreateUserResponse>>("User/CreateUser", data)
+    .then((response) => {
+      const { data: res } = response;
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    })
+    .finally();
+};
 const UserService = {
-  getAllOnlineUser
+  getAllOnlineUser,
+  createUser
 };
 export default UserService;
