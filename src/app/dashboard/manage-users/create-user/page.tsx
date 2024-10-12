@@ -22,7 +22,7 @@ const CreateUserPage = () => {
   const router = useRouter();
   const { loading, setLoading } = useAppContext();
   const [imageList, setImageList] = useState<ImageType[]>()
-  const [addedUser, setAddedUser] = useState<CreateUserResponse>()
+  const [addedUser, setAddedUser] = useState<CreateUserResponse>( )
   const {
     register,
     handleSubmit,
@@ -35,8 +35,6 @@ const CreateUserPage = () => {
     data.gender = Number(data.gender);
     data.maritalStatus = Number(data.maritalStatus);
     data.sexualOrientation = Number(data.sexualOrientation);
-    console.log(data);
-
     const res = await UserService.createUser(data);
     if (res.status == ResponseStatus.Ok) {
 

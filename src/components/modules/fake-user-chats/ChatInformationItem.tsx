@@ -11,8 +11,6 @@ moment.locale();
 const ChatInformationItem = ({ item, isLeft, chatNotes, setChatNotes }: { item: CreateChatNoteResponse, isLeft: boolean, chatNotes: CreateChatNoteResponse[], setChatNotes: React.Dispatch<React.SetStateAction<CreateChatNoteResponse[]>> }) => {
   const [isOpen, setIsOpen] = useState(false);
   const deleteNote = async () => {
-    console.log(item);
-
     const res = await ChatNoteService.deleteChatNote({ id: item.id });
     if (res.status == ResponseStatus.Ok) {
       setChatNotes(chatNotes.filter(x => x.id != item.id))

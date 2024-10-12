@@ -1,4 +1,4 @@
-import {nextui} from '@nextui-org/theme';
+import { nextui } from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -28,6 +28,43 @@ const config: Config = {
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      
+      layout: {
+        disabledOpacity: "0.3", // opacity-[0.3]
+        radius: {
+          small: "2px", // rounded-small
+          medium: "4px", // rounded-medium
+          large: "6px", // rounded-large
+        },
+        borderWidth: {
+          small: "1px", // border-small
+          medium: "1px", // border-medium
+          large: "2px", // border-large
+        },
+      },
+      themes: {
+        light: {
+          colors: {
+            secondary: {
+              DEFAULT: "#481878",
+              foreground: "#fff",
+            },
+            focus: "#BEF264",
+          }
+        },
+        dark: {
+          colors: {
+            secondary: {
+              DEFAULT: "#481878",
+              foreground: "#fff",
+            },
+            focus: "#BEF264",
+          }
+        },
+      },
+    }),
+  ],
 };
 export default config;

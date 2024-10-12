@@ -1,16 +1,16 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-const protectedRoutes = ["/dashboard",'/dashboard/manage-users/all-user'];
+const protectedRoutes = ["/dashboard", '/dashboard/manage-users/all-user'];
 const publicRoutes = ["/auth/login", "/signup", "/"];
 export default async function middleware(req: any) {
   const secret = process.env.AUTH_SECRET;
   const token = await getToken({ req, secret });
-  
+
   const isAuthenticated = !!token;
-  
-  const path = req.nextUrl.pathname;  
+
+  const path = req.nextUrl.pathname;
   const isProtectedRoute = path.startsWith('/dashboard');
-  
+
   const isPublicRoute = publicRoutes.includes(path);
   if (isProtectedRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/auth/login", req.nextUrl));

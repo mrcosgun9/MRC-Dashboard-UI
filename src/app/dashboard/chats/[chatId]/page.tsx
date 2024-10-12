@@ -12,6 +12,7 @@ import { BiSend } from 'react-icons/bi'
 import { useAppContext } from '@/context/AppContext'
 import { getSession } from 'next-auth/react'
 import { GetMessageByChatIdResponses, MessagesUser } from '@/services/actions/messages/type'
+import ChatService from '@/services/actions/chat'
 
 const ChatsPage = () => {
   const params = useParams()
@@ -61,6 +62,9 @@ const ChatsPage = () => {
         setMessagesData([...messagesData, newMessage])
         setMessage('');
         inputRef.current?.focus();
+        const res = await ChatService.getFakeUserLastedChat();
+        console.log(res);
+        
         setLoading(false);
       } catch (err) {
         console.error("SignalR Hatası:", err);

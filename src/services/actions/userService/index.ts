@@ -32,8 +32,22 @@ const createUser = async (
     })
     .finally();
 };
+const getFakeUserLastedChat = async (
+): Promise<IBaseDataResponse<CreateUserResponse>> => {
+  return await httpClient
+    .post<IBaseDataResponse<CreateUserResponse>>("User/GetFakeUserLastedChat", {})
+    .then((response) => {
+      const { data: res } = response;
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    })
+    .finally();
+};
 const UserService = {
   getAllOnlineUser,
-  createUser
+  createUser,
+  getFakeUserLastedChat
 };
 export default UserService;

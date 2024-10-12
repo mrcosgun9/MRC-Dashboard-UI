@@ -34,3 +34,6 @@ export interface User {
   ethnicity: string
   bodyType: string
 }
+export interface GetFakeUserLastedChatResponse {
+  id?: number
+}
