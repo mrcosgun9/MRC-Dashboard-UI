@@ -11,7 +11,7 @@ type Inputs = {
   email: string
   password: string
 }
-const login = () => {
+const LoginPage = () => {
   const router = useRouter();
   const { loading, setLoading,connection } = useAppContext();
    const [isVisible, toggleVisibility] = useState(false);
@@ -78,4 +78,4 @@ const login = () => {
   )
 }
 
-export default login
+export default LoginPage

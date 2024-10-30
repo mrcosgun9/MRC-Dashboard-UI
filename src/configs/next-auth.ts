@@ -1,20 +1,8 @@
-import { User, type NextAuthOptions } from "next-auth";
+import { getServerSession, User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthService from "@/services/actions/auth";
 
-export const authOptions: NextAuthOptions = {
-  cookies: {
-    sessionToken: {
-      name: "next-auth.session-token-realdates-dashboard",
-      options: {
-        domain: ".localhost",
-        path: "/",
-        httpOnly: true,
-        sameSite: "lax",
-        secure: false
-      }
-    }
-  },
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -51,6 +39,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+
     async session({ session, user, token }) {
       session.user = {
         fullName: token.fullName as string,
@@ -75,6 +64,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+
   },
   session: {
     strategy: "jwt",
@@ -85,3 +75,5 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.AUTH_SECRET!,
 };
+const getSession = () => getServerSession(authOptions)
+export { authOptions, getSession }

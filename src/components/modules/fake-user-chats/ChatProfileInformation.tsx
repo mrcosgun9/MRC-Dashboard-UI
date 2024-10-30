@@ -2,7 +2,7 @@
 import { GenderType } from '@/services/actions/auth/type'
 import { User } from '@/services/actions/chat/type'
 import { Avatar, Button, Input, Textarea, Tooltip } from '@nextui-org/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { BiUser } from 'react-icons/bi'
 import { BsCalendarDate } from 'react-icons/bs'
@@ -12,7 +12,6 @@ import { PiCoinsDuotone } from 'react-icons/pi'
 import { twMerge } from 'tailwind-merge'
 
 const GetGenderIcon = ({ gender }: { gender: number }) => {
-
   if (gender == GenderType.Unknown) {
     return <Tooltip content="Gender Unknown"><Button size='sm' variant='light' isIconOnly><MdQuestionMark className='text-gray-700' size={24} /></Button></Tooltip>;
   }
@@ -30,7 +29,10 @@ const GetGenderIcon = ({ gender }: { gender: number }) => {
   }
 }
 const ChatProfileInformation = ({ user, isLeft = false }: { user: User | undefined, isLeft?: boolean }) => {
-
+  useEffect(()=>{
+    console.log(user);
+    
+  },[user])
   return (
     <div className='w-3/12 bg-white rounded shadow p-5'>
       <div className={twMerge('flex gap-3 align-middle items-center', (isLeft && 'flex-row-reverse'))}>
@@ -43,7 +45,7 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: User | undefin
           </div>
           <div className={twMerge('text-xs flex align-middle items-center justify-start gap-1', (isLeft && 'justify-end'))}>
             <BsCalendarDate className='text-purple-800' />
-            69 Jahre (1955-01-01)</div>
+            {Number(new Date().getFullYear())-Number(user?.birthYear)} Jahre ({user?.birthYear}-{user?.birthMonth}-{user?.birthMonth})</div>
         </div>
       </div>
       {
@@ -131,32 +133,13 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: User | undefin
         <div className='text-xs'>
           <b>PLZ:</b> 78462 Konstanz
         </div>
-        <div className='text-xs'><b>Profil Text</b><br />Leben ohne Liebe ist
-          mo lich aber sinnlos.
-        </div>
+        <div className='text-xs'><b>Profil Text:</b><br />{user?.about}</div>
         <Textarea
           isRequired
           labelPlacement="outside"
           size='sm'
-
           className="w-full h-min"
-          value={`
-            MAG NICHT SCHREIBEN,
-            MACHT SICH GROSSE SORGEN
-            UM SEINE FAMILIE IN LIBANON
-            - hat einen festen Kreis an
-            Freunden
-            - hat eine grosse Familie in d.
-            Heimat
-            - fâhrt gerne Rad und grosse
-            Spaziergange
-            - letztes Date ein Janr her
-            -die letzten 25 jahre in der schweiz
-            gewese n
-            - mag es rasiert
-            -Er würde geme auf unsere Brüste
-            abspritzen
-            `}
+          value={``}
         />
       </div>
     </div>

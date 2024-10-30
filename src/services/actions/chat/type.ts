@@ -7,6 +7,7 @@ export interface GetFakeUserChatListResponse {
   recipientUserId: number
   recipientUser: User
   chatNotes: CreateChatNoteResponse[]
+  createdAt:string
 }
 export interface User {
   id: number

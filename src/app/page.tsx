@@ -2,7 +2,7 @@
 import React from 'react'
 import { redirect } from 'next/navigation'
 import { useSession } from 'next-auth/react';
-const page = () => {
+const MainPage = () => {
   const { data: session, status } = useSession();
   // redirect('/hello-nextjs');
   if (status=='authenticated') redirect("/dashboard")
@@ -10,4 +10,4 @@ const page = () => {
 
 }
 
-export default page
+export default MainPage

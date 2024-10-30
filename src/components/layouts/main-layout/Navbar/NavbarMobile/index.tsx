@@ -1,9 +1,5 @@
 import { Button } from '@nextui-org/react'
-import Link from 'next/link'
 import React, { useState } from 'react'
-import { BiHome } from 'react-icons/bi'
-import { FaRegCircle } from 'react-icons/fa6'
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import { RiMenu2Line } from 'react-icons/ri'
 import NavbarMobileMenuList from './NavbarMobileMenuList'
 
