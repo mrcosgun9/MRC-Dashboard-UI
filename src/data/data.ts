@@ -1,27 +1,27 @@
 import { ColumnType } from "@/types/DataTableType";
-const columns:ColumnType[] = [
-  {name: "ID", uid: "id", sortable: true},
-  {name: "NAME", uid: "name", sortable: true},
-  {name: "WAGE", uid: "wage", sortable: true},
-  {name: "AGE", uid: "age", sortable: true},
-  {name: "ROLE", uid: "role", sortable: true},
-  {name: "TEAM", uid: "team"},
-  {name: "EMAIL", uid: "email"},
-  {name: "STATUS", uid: "status", sortable: true},
-  {name: "ACTIONS", uid: "actions"},
+const columns: ColumnType[] = [
+  { name: "ID", uid: "id", sortable: true },
+  { name: "NAME", uid: "name", sortable: true },
+  { name: "WAGE", uid: "wage", sortable: true },
+  { name: "AGE", uid: "age", sortable: true },
+  { name: "ROLE", uid: "role", sortable: true },
+  { name: "TEAM", uid: "team" },
+  { name: "EMAIL", uid: "email" },
+  { name: "STATUS", uid: "status", sortable: true },
+  { name: "ACTIONS", uid: "actions" },
 ];
 
 const statusOptions = [
-  {name: "Active", uid: "active"},
-  {name: "Paused", uid: "paused"},
-  {name: "Vacation", uid: "vacation"},
+  { name: "Active", uid: "active" },
+  { name: "Paused", uid: "paused" },
+  { name: "Vacation", uid: "vacation" },
 ];
 
 const users = [
   {
     id: 1,
     name: "Tony Reichert",
-    wage:50000,
+    wage: 50000,
     role: "CEO",
     team: "Management",
     status: "active",
@@ -32,7 +32,7 @@ const users = [
   {
     id: 2,
     name: "Zoey Lang",
-    wage:40000,
+    wage: 40000,
     role: "Tech Lead",
     team: "Development",
     status: "paused",
@@ -43,7 +43,7 @@ const users = [
   {
     id: 3,
     name: "Jane Fisher",
-    wage:54000,
+    wage: 54000,
     role: "Sr. Dev",
     team: "Development",
     status: "active",
@@ -54,7 +54,7 @@ const users = [
   {
     id: 4,
     name: "William Howard",
-    wage:53000,
+    wage: 53000,
     role: "C.M.",
     team: "Marketing",
     status: "vacation",
@@ -65,7 +65,7 @@ const users = [
   {
     id: 5,
     name: "Kristen Copper",
-    wage:523000,
+    wage: 523000,
     role: "S. Manager",
     team: "Sales",
     status: "active",
@@ -76,7 +76,7 @@ const users = [
   {
     id: 6,
     name: "Brian Kim",
-    wage:55600,
+    wage: 55600,
     role: "P. Manager",
     team: "Management",
     age: "29",
@@ -87,7 +87,7 @@ const users = [
   {
     id: 7,
     name: "Michael Hunt",
-    wage:56780,
+    wage: 56780,
     role: "Designer",
     team: "Design",
     status: "paused",
@@ -98,7 +98,7 @@ const users = [
   {
     id: 8,
     name: "Samantha Brooks",
-    wage:43000,
+    wage: 43000,
     role: "HR Manager",
     team: "HR",
     status: "active",
@@ -109,7 +109,7 @@ const users = [
   {
     id: 9,
     name: "Frank Harrison",
-    wage:34000,
+    wage: 34000,
     role: "F. Manager",
     team: "Finance",
     status: "vacation",
@@ -120,7 +120,7 @@ const users = [
   {
     id: 10,
     name: "Emma Adams",
-    wage:75000,
+    wage: 75000,
     role: "Ops Manager",
     team: "Operations",
     status: "active",
@@ -131,7 +131,7 @@ const users = [
   {
     id: 11,
     name: "Brandon Stevens",
-    wage:34000,
+    wage: 34000,
     role: "Jr. Dev",
     team: "Development",
     status: "active",
@@ -142,7 +142,7 @@ const users = [
   {
     id: 12,
     name: "Megan Richards",
-    wage:65300,
+    wage: 65300,
     role: "P. Manager",
     team: "Product",
     status: "paused",
@@ -153,7 +153,7 @@ const users = [
   {
     id: 13,
     name: "Oliver Scott",
-    wage:78000,
+    wage: 78000,
     role: "S. Manager",
     team: "Security",
     status: "active",
@@ -164,7 +164,7 @@ const users = [
   {
     id: 14,
     name: "Grace Allen",
-    wage:34200,
+    wage: 34200,
     role: "M. Specialist",
     team: "Marketing",
     status: "active",
@@ -175,7 +175,7 @@ const users = [
   {
     id: 15,
     name: "Noah Carter",
-    wage:78000,
+    wage: 78000,
     role: "IT Specialist",
     team: "I. Technology",
     status: "paused",
@@ -186,7 +186,7 @@ const users = [
   {
     id: 16,
     name: "Ava Perez",
-    wage:75200,
+    wage: 75200,
     role: "Manager",
     team: "Sales",
     status: "active",
@@ -197,7 +197,7 @@ const users = [
   {
     id: 17,
     name: "Liam Johnson",
-    wage:86000,
+    wage: 86000,
     role: "Data Analyst",
     team: "Analysis",
     status: "active",
@@ -208,7 +208,7 @@ const users = [
   {
     id: 18,
     name: "Sophia Taylor",
-    wage:86000,
+    wage: 86000,
     role: "QA Analyst",
     team: "Testing",
     status: "active",
@@ -219,7 +219,7 @@ const users = [
   {
     id: 19,
     name: "Lucas Harris",
-    wage:50000,
+    wage: 50000,
     role: "Administrator",
     team: "Information Technology",
     status: "paused",
@@ -230,7 +230,7 @@ const users = [
   {
     id: 20,
     name: "Mia Robinson",
-    wage:57000,
+    wage: 57000,
     role: "Coordinator",
     team: "Operations",
     status: "active",
@@ -240,4 +240,5 @@ const users = [
   },
 ];
 
-export {columns, users, statusOptions};
+const layoutExiestPages = ["builder"]
+export { columns, users, statusOptions, layoutExiestPages };

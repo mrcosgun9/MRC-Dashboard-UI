@@ -8,7 +8,7 @@ import TextSlider from '@/components/main-components/themas/midnight-amethyst/te
 const HomePage = () => {
   return <>
     {createPage(mockResponse)}
-    <TextSlider/>
+ 
     {/* <Hero />
     <ServicesList />
     <Features />
