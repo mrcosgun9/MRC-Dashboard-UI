@@ -2,13 +2,13 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Select, SelectItem } from '@nextui-org/react'
 import React from 'react'
 import type { Selection } from "@nextui-org/react";
-import { MdCircle, MdDelete, MdKeyboardArrowDown } from 'react-icons/md';
+import { MdCircle, MdKeyboardArrowDown } from 'react-icons/md';
 import { createPage } from '@/dynamic-rendering';
 import mockResponse from '@/dynamic-rendering/dynamic-rendering.mock';
+import ComponentList from '@/components/pages/builder/component-list';
 
 const BuilderPage = () => {
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set(["home"]));
-
   const selectedValue = React.useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
     [selectedKeys]
@@ -18,9 +18,7 @@ const BuilderPage = () => {
     { key: "company", title: "Şirket" },
     { key: "service", title: "Servis" },
   ]
-  const components = [
-    "Header", "Slider", "Footer"
-  ]
+
   return (
     <>
       <div className="flex flex-col h-screen">
@@ -58,13 +56,8 @@ const BuilderPage = () => {
                 SEO
               </Button>
             </div>
-            <div className='px-3 py-2'>
-              <div className='flex flex-col text-sm font-bold gap-2'>
-                {components.map((x, i) => <div key={i} className='border border-gray-300 border-dashed px-3 py-2 rounded bg-white flex justify-between align-middle items-center'>
-                  {x}
-                  <Button isIconOnly variant='flat' size='sm' color='danger'>  <MdDelete /></Button>
-                </div>)}
-              </div>
+            <div className='px-3 py-2 relative'>
+              <ComponentList/>
             </div>
           </div>
           <main className="w-4/5 ">
