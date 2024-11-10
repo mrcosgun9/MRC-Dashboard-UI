@@ -47,7 +47,7 @@ const ChatNoteModal = ({ userId, fakeUserId, chatId, chatNotes, setChatNotes }: 
                     onValueChange={setSelected}
                   >
                     <Radio value={userId.toString()}>Kunde</Radio>
-                    <Radio value={fakeUserId.toString()}>X Ake</Radio>
+                    <Radio value={fakeUserId.toString()}>Fake</Radio>
                   </RadioGroup>
                 </div>
                 <Textarea

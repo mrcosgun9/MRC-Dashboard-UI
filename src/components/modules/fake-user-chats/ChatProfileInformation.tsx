@@ -57,7 +57,7 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: User | undefin
       {
         user?.userType == 4 && <div className='flex justify-end'>
           <div className='flex justify-end my-3 py-1 px-3 rounded-full border border-gray-400 align-middle items-center gap-2 bg-gray-100 w-fit'>
-            <div className='text-xs font-bold'>X Ake</div>
+            <div className='text-xs font-bold'>Fake</div>
             <div><BiUser size={20} className='text-gray-600' /></div>
           </div>
         </div>

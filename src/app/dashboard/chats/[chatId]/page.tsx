@@ -5,7 +5,7 @@ import ChatProfileInformation from '@/components/modules/fake-user-chats/ChatPro
 import useGetUsersChatById from '@/hooks/useGetUsersChatById'
 import { Avatar, Button, Input, Textarea } from '@nextui-org/react'
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import useGetMessagesByChatId from '@/hooks/useGetMessagesByChatId'
 import ChatItem from '@/components/modules/fake-user-chats/ChatItem'
 import { BiSend } from 'react-icons/bi'
@@ -13,8 +13,10 @@ import { useAppContext } from '@/context/AppContext'
 import { getSession } from 'next-auth/react'
 import { GetMessageByChatIdResponses, MessagesUser } from '@/services/actions/messages/type'
 import ChatService from '@/services/actions/chat'
+import { ResponseStatus } from '@/types/baseType'
 
 const ChatsPage = () => {
+  const router = useRouter();
   const params = useParams()
   const { connection } = useAppContext();
   const { data, setChatId } = useGetUsersChatById();
@@ -64,7 +66,15 @@ const ChatsPage = () => {
         inputRef.current?.focus();
         const res = await ChatService.getFakeUserLastedChat();
         console.log(res);
-        
+
+        if (res.status == ResponseStatus.Ok) {
+          if (res.data.id) {
+            router.push(`/dashboard/chats/${res.data.id}`);
+          }
+          else {
+            router.push(`/dashboard`);
+          }
+        }
         setLoading(false);
       } catch (err) {
         console.error("SignalR Hatası:", err);
