@@ -7,7 +7,9 @@ import UserMenu from "./UserMenu";
 interface ILogo {
   url: string,
   href: string,
-  isCenter: boolean
+  isCenter: {
+    value: boolean
+  }
 }
 interface IChildMenuItem {
   title: string,
@@ -16,24 +18,32 @@ interface IChildMenuItem {
   img?: string
 }
 interface IMenuItem {
-  title: string,
-  href: string,
+  title: {
+    value: string
+  },
+  href: {
+    value: string
+  },
   items?: IChildMenuItem[]
 }
 interface INavbar {
   logo: ILogo | null,
-  menuItems: IMenuItem[],
-  position: "static" | "sticky"
+  menuItems:{
+    items: IMenuItem[],
+  },
+  position: {
+    value: "static" | "sticky"
+  }
 }
 
-export default function HomeNavbar({ logo, menuItems, position = "sticky" }: INavbar) {
+export default function HomeNavbar({ logo, menuItems, position }: INavbar) {
   const icons = {
     chevron: <BiChevronDown fill="currentColor" size={16} />,
   };
   return (
-    <Navbar position={position} maxWidth="xl">
+    <Navbar position={position.value} maxWidth="xl">
       {
-        !logo?.isCenter && <NavbarContent justify="start">
+        !logo?.isCenter?.value && <NavbarContent justify="start">
           <NavbarBrand>
             <Link href={logo?.href ?? ""} className="font-bold text-inherit">
               <img src={logo?.url} className="h-11" />
@@ -43,11 +53,11 @@ export default function HomeNavbar({ logo, menuItems, position = "sticky" }: INa
       }
       <NavbarContent className="hidden sm:flex gap-4" justify="start">
         {
-          menuItems?.map((x, i) => {
+          menuItems?.items.map((x, i) => {
             if (!x.items) {
               return <NavbarItem key={i}>
-                <Link href={x.href} color="foreground">
-                  {x.title}
+                <Link href={x.href.value} color="foreground">
+                  {x.title.value}
                 </Link>
               </NavbarItem>
             }
@@ -63,7 +73,7 @@ export default function HomeNavbar({ logo, menuItems, position = "sticky" }: INa
                       variant="light"
 
                     >
-                      {x.title}
+                      {x.title.value}
                     </Button>
                   </DropdownTrigger>
                 </NavbarItem>
@@ -93,7 +103,7 @@ export default function HomeNavbar({ logo, menuItems, position = "sticky" }: INa
         }
       </NavbarContent>
       {
-        logo?.isCenter && <NavbarContent justify="center">
+        logo?.isCenter.value && <NavbarContent justify="center">
           <NavbarBrand>
             <Link href={logo?.href ?? ""} className="font-bold text-inherit">
               <img src={logo?.url} className="h-11" />

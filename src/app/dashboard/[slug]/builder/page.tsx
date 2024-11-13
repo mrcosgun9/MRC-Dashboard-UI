@@ -57,12 +57,12 @@ const BuilderPage = () => {
               </Button>
             </div>
             <div className='px-3 py-2 relative'>
-              <ComponentList/>
+              <ComponentList />
             </div>
           </div>
           <main className="w-4/5 ">
             <div className='w-full py-6 border-b border-gray-300'></div>
-            <div className='container h-screen'>
+            <div className='container h-screen overflow-hidden'>
               {createPage(mockResponse)}
             </div>
           </main>

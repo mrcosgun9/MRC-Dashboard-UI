@@ -10,54 +10,57 @@ const mockResponse: IComponent = {
         type: "HomeNavbar",
         data: {
           id: "navbar",
-          position: "sticky",
+          position: {
+            value: "static",
+            default: "sticky",
+            name: "Pozisyon",
+            isEditable: true,
+            items: [{
+              value: "static",
+              label: "Sabit"
+            }, {
+              value: "sticky",
+              label: "Yapışkan"
+            }],
+            type: "select"
+          },
           logo: {
+            name: 'Logo',
             url: "/images/logo.png",
             href: "/",
-            isCenter: false
+            isCenter: {
+              value: false,
+              default: false,
+              name: "Ortala",
+              isEditable: true,
+              type: "checkbox"
+            },
+            isEditable: true,
+            type: "file"
           },
-          menuItems: [
-            {
-              title: "Kurumsal",
-              href: "/kurumsal"
-            },
-            {
-              title: "Hizmetlerimiz",
-              href: "/hizmetlerimiz",
-              items: [
-                {
-                  title: "Alt Menü 1",
-                  href: "alt-menu-1",
-                  description: "Alt Menü 1 Açıklaması",
-                  img: "/images/favicon.png"
+          menuItems: {
+            name: 'Menü',
+            isEditable: true,
+            type: "group",
+            items: [
+              {
+                title: {
+                  value: "Anasayfa",
+                  name: "Başlık",
+                  isEditable: true,
+                  type: "text"
                 },
-                {
-                  title: "Alt Menü 2",
-                  href: "alt-menu-2",
-                  description: "Alt Menü 2 Açıklaması",
-                  img: "/images/favicon.png"
+                href: {
+                  value: "/",
+                  name: "Link",
+                  isEditable: true,
+                  type: "text"
                 },
-                {
-                  title: "Alt Menü 3",
-                  href: "alt-menu-3",
-                  description: "Alt Menü 3 Açıklaması",
-                  img: "/images/favicon.png"
-                }
-              ]
-            },
-            {
-              title: "Referanslar",
-              href: "/referanslar"
-            },
-            {
-              title: "Blog",
-              href: "/blog"
-            },
-            {
-              title: "İletişim",
-              href: "/iletisim"
-            }
-          ]
+                isEditable: true,
+              },
+
+            ]
+          }
         }
       },
       {
@@ -75,12 +78,12 @@ const mockResponse: IComponent = {
                 {
                   title: "Ücretsiz Kayıt Ol",
                   href: "/hakkimizda",
-                  radius:"lg"
+                  radius: "lg"
                 },
                 {
                   title: "Planları İnceleyin",
                   href: "/hakkimizda",
-                  radius:"lg"
+                  radius: "lg"
                 }
               ],
               img: {
@@ -89,7 +92,7 @@ const mockResponse: IComponent = {
                 isFullImage: false
               }
             },
-            
+
           ]
         }
       }
