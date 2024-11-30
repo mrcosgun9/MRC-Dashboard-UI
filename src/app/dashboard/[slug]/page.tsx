@@ -7,8 +7,9 @@ import useSWR from "swr";
 export default function Home({ params }: { params: { slug: string } }) {
 
   const { data, isLoading, error } = useSWR<any>(
-    () => ['/Chat/GetUserChat', {}, { 
-      'app-name': params.slug
+    () => ['/Settings/GetSettings', {}, { 
+      'app-name': params.slug,
+ 
     }],
     ([url, body, headers]) => swrFetcher(url, body, headers)
   );

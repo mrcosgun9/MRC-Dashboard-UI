@@ -34,8 +34,7 @@ const CreateTenantModal = ({ createTenantIsModal, createTenantOnModal, createTen
     console.log(tenantControlData?.isExist);
     
     if (!tenantControlData?.isExist) {
-      console.log("tenantData",tenantData);
-      
+       
       const res = await TenantService.upsertTenant(tenantData)
       console.log(res);
       

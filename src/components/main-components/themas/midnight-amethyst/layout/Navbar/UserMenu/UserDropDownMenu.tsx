@@ -24,6 +24,8 @@ const UserDropDownMenu = () => {
       .map(word => word[0])
       .join('');
   }
+  console.log(data);
+  
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -49,7 +51,7 @@ const UserDropDownMenu = () => {
                 return <DropdownItem key={i}
                   color="secondary"
                   description="Mağaza yönetimi"
-                  onClick={() => { router.push("/dashboard/" + x.slug) }}>
+                  onClick={() => { router.push("/dashboard/" + x.aliasId) }}>
                   {x.title} ({x.domain})
                 </DropdownItem>
               }) : <DropdownItem>
