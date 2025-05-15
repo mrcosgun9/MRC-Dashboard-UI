@@ -1,12 +1,13 @@
+"use server"
 import { IBaseDatasResponse } from "@/types/baseType";
 import { httpClient } from "@/services/httpClient";
 import { GetMessageByChatIdResponses } from "./type";
 
-const getMessagesByChatId = async ({chatId}:{chatId: number | undefined}): Promise<IBaseDatasResponse<GetMessageByChatIdResponses>> => {
+const getMessagesByChatId = async ({ chatId }: { chatId: number | undefined }): Promise<IBaseDatasResponse<GetMessageByChatIdResponses>> => {
   return await httpClient
     .post<IBaseDatasResponse<GetMessageByChatIdResponses>>(
       "Messages/GetMessageByChatId",
-      {chatId:chatId}
+      { chatId: chatId }
     )
     .then((response) => {
       const { data: res } = response;
@@ -17,6 +18,7 @@ const getMessagesByChatId = async ({chatId}:{chatId: number | undefined}): Promi
     })
     .finally();
 };
+
 const MessagesService = {
   getMessagesByChatId
 };

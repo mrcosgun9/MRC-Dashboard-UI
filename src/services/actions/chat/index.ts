@@ -1,6 +1,7 @@
 import { IBaseDataResponse, IBaseDatasResponse } from "@/types/baseType";
 import { httpClient } from "@/services/httpClient";
-import { GetFakeUserChatListResponse, GetFakeUserLastedChatResponse } from "./type";
+import { GetChatByIdResponse, GetFakeUserChatListResponse, GetFakeUserLastedChatResponse } from "./type";
+
 
 const getFakeUserChatList = async (): Promise<IBaseDatasResponse<GetFakeUserChatListResponse>> => {
   return await httpClient
@@ -32,7 +33,7 @@ const getUsersChatById = async ({ chatId }: { chatId: number | undefined }): Pro
     })
     .finally();
 };
-const getFakeUserLastedChat = async ( ): Promise<IBaseDataResponse<GetFakeUserLastedChatResponse>> => {
+const getFakeUserLastedChat = async (): Promise<IBaseDataResponse<GetFakeUserLastedChatResponse>> => {
   return await httpClient
     .post<IBaseDataResponse<GetFakeUserLastedChatResponse>>(
       "Chat/GetFakeUserLastedChat",
@@ -50,6 +51,7 @@ const getFakeUserLastedChat = async ( ): Promise<IBaseDataResponse<GetFakeUserLa
 const ChatService = {
   getFakeUserChatList,
   getUsersChatById,
-  getFakeUserLastedChat
+  getFakeUserLastedChat,
+
 };
 export default ChatService;

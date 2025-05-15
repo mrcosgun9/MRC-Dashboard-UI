@@ -1,7 +1,9 @@
 import { getServerSession, User, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import AuthService from "@/services/actions/auth";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -16,21 +18,25 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<User | null> {
         if (credentials) {
-          const res = await AuthService.login({
-            email: credentials.email,
-            password: credentials.password,
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
+          const user = await prisma.user.findUnique({
+            where: { Email: credentials.email as string, Password: credentials.password as string },
           });
-          const resProfileInfo = await AuthService.getProfileInfoClient({
-            accessToken: res.data.accessToken,
-          });
+          if (!user || !user.Password) {
+            return null;
+          }
+
+
           return {
-            fullName: resProfileInfo.data.fullName,
-            name: resProfileInfo.data.userName,
-            email: resProfileInfo.data.email,
-            image: resProfileInfo.data.profileImage,
-            id: resProfileInfo.data.id,
-            accessToken: res.data.accessToken,
-            refreshToken: res.data.refreshToken
+            fullName: user.FullName,
+            name: user.Name,
+            email: user.Email,
+            image: user.ProfileImage,
+            id: user.Id,
+            accessToken: "",
+            refreshToken: ""
           };
         }
 

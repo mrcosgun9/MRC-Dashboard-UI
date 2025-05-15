@@ -3,12 +3,13 @@ import ChatNoteService from '@/services/actions/chatNote';
 import { CreateChatNoteRequest, CreateChatNoteResponse } from '@/services/actions/chatNote/type';
 import { ResponseStatus } from '@/types/baseType';
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup, Textarea, useDisclosure } from '@nextui-org/react'
+import { ChatNote } from '@prisma/client';
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { BiPlus } from 'react-icons/bi'
 import { toast } from 'react-toastify';
 
-const ChatNoteModal = ({ userId, fakeUserId, chatId, chatNotes, setChatNotes }: { userId: number, fakeUserId: number, chatId: number, chatNotes: CreateChatNoteResponse[], setChatNotes: React.Dispatch<React.SetStateAction<CreateChatNoteResponse[]>> }) => {
+const ChatNoteModal = ({ userId, fakeUserId, chatId, chatNotes, setChatNotes }: { userId: number | undefined, fakeUserId: number | undefined, chatId: number, chatNotes: ChatNote[], setChatNotes: React.Dispatch<React.SetStateAction<ChatNote[]>> }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selected, setSelected] = React.useState("");
   const {
@@ -20,14 +21,14 @@ const ChatNoteModal = ({ userId, fakeUserId, chatId, chatNotes, setChatNotes }: 
     data.chatId = chatId;
     data.userId = Number(selected);
     const res = await ChatNoteService.createChatNote(data);
-    if (res.status == ResponseStatus.Ok) {
-      setChatNotes([...chatNotes, res.data])
-      onOpenChange();
-      toast.success("successful");
-    }
-    else {
-      toast.error("error");
-    }
+    // if (res.status == ResponseStatus.Ok) {
+    //   setChatNotes([...chatNotes, res.data])
+    //   onOpenChange();
+    //   toast.success("successful");
+    // }
+    // else {
+    //   toast.error("error");
+    // }
   }
   return (
     <div>
@@ -46,8 +47,8 @@ const ChatNoteModal = ({ userId, fakeUserId, chatId, chatNotes, setChatNotes }: 
                     value={selected}
                     onValueChange={setSelected}
                   >
-                    <Radio value={userId.toString()}>Kunde</Radio>
-                    <Radio value={fakeUserId.toString()}>Fake</Radio>
+                    <Radio value={userId?.toString() || ""}>Kunde</Radio>
+                    <Radio value={fakeUserId?.toString() || ""}>Fake</Radio>
                   </RadioGroup>
                 </div>
                 <Textarea

@@ -34,7 +34,7 @@ const UserMenu = () => {
         <DropdownItem key="help_and_feedback">
           Help & Feedback
         </DropdownItem>
-        <DropdownItem key="logout" color="danger" onClick={()=> signOut()}>
+        <DropdownItem key="logout" color="danger" onPress={()=> signOut()}>
           Log Out
         </DropdownItem>
       </DropdownMenu>

@@ -9,7 +9,7 @@ const PageHeader = ({ title, breadcrumbsItems }: { title: string, breadcrumbsIte
   return (
     <div className='w-full flex align-middle items-center justify-between bg-white dark:bg-gray-800 px-5 py-4 rounded-md mb-5 shadow'>
       <div className='w-full text-xl font-bold flex align-middle items-center justify-start gap-3'>
-        <Button isIconOnly size='sm' variant='light' color='primary' onClick={() => { router.back() }}>
+        <Button isIconOnly size='sm' variant='light' color='primary' onPress={() => { router.back() }}>
           <MdArrowBack size={18} />
         </Button>
         <div>{title}</div>

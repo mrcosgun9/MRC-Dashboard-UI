@@ -2,18 +2,19 @@ import ChatNoteService from '@/services/actions/chatNote'
 import { CreateChatNoteResponse } from '@/services/actions/chatNote/type'
 import { ResponseStatus } from '@/types/baseType'
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
+import { ChatNote } from '@prisma/client'
 import moment from 'moment'
 import React, { useState } from 'react'
 import { BiX } from 'react-icons/bi'
 import { toast } from 'react-toastify'
 import { twMerge } from 'tailwind-merge'
 moment.locale();
-const ChatInformationItem = ({ item, isLeft, chatNotes, setChatNotes }: { item: CreateChatNoteResponse, isLeft: boolean, chatNotes: CreateChatNoteResponse[], setChatNotes: React.Dispatch<React.SetStateAction<CreateChatNoteResponse[]>> }) => {
+const ChatInformationItem = ({ item, isLeft, chatNotes, setChatNotes }: { item: ChatNote, isLeft: boolean, chatNotes: ChatNote[], setChatNotes: React.Dispatch<React.SetStateAction<ChatNote[]>> }) => {
   const [isOpen, setIsOpen] = useState(false);
   const deleteNote = async () => {
-    const res = await ChatNoteService.deleteChatNote({ id: item.id });
+    const res = await ChatNoteService.deleteChatNote({ id: item.Id });
     if (res.status == ResponseStatus.Ok) {
-      setChatNotes(chatNotes.filter(x => x.id != item.id))
+      setChatNotes(chatNotes.filter(x => x.Id != item.Id))
       setIsOpen(false);
       toast.success("delete successful");
     }
@@ -24,8 +25,8 @@ const ChatInformationItem = ({ item, isLeft, chatNotes, setChatNotes }: { item: 
   return (
     <div className={twMerge('w-full text-xs flex align-middle items-start justify-between p-1 rounded', (isLeft ? "col-start-1 bg-blue-100 border border-blue-400" : "col-start-2 bg-gray-100 border border-gray-400"))}>
       <div>
-        <div>{item?.note}</div>
-        <div>{moment(item.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</div>
+        <div>{item?.Note}</div>
+        <div>{moment(item.CreatedAt).format('MMMM Do YYYY, h:mm:ss a')}</div>
       </div>
       <div className='cursor-pointer'>
         <Popover
@@ -57,8 +58,8 @@ const ChatInformationItem = ({ item, isLeft, chatNotes, setChatNotes }: { item: 
                   Do you want to delete the note?
                 </h3>
                 <div className='flex gap-2 pt-2 justify-end'>
-                  <Button color='danger' size='sm' onClick={() => deleteNote()}>Yes</Button>
-                  <Button color='primary' size='sm' onClick={() => setIsOpen(false)}>No</Button>
+                  <Button color='danger' size='sm' onPress={() => deleteNote()}>Yes</Button>
+                  <Button color='primary' size='sm' onPress={() => setIsOpen(false)}>No</Button>
                 </div>
               </div>
             )}

@@ -23,7 +23,7 @@ import {
   Link,
   Avatar
 } from "@nextui-org/react";
-import { BiChevronDown, BiDotsVertical, BiPlus, BiSearch } from "react-icons/bi";
+import { BiChevronDown, BiDotsVertical, BiEdit, BiPlus, BiSearch } from "react-icons/bi";
 import { capitalize } from "../utils";
 import { ColumnType, ColumnTypeEnum } from "@/types/DataTableType";
 import { useRouter } from "next/navigation";
@@ -46,8 +46,10 @@ interface IDataTableProps {
   addNewUrl?: string,
   rowEvent?: (item: any) => void,
   selectionMode?: 'none' | 'single' | 'multiple'
+  deleteEvent: (id: number) => void
+  editeUserEvent: (id: number) => Promise<void>
 }
-export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false, addNewUrl, rowEvent,selectionMode="single" }: IDataTableProps) {
+export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false, addNewUrl, rowEvent, selectionMode = "single", deleteEvent, editeUserEvent }: IDataTableProps) {
   const router = useRouter();
   type DataType = typeof data[0];
   const [filterValue, setFilterValue] = React.useState("");
@@ -90,7 +92,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
     const end = start + rowsPerPage;
 
     return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+  }, [page, filteredItems, rowsPerPage, data]);
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a: DataType, b: DataType) => {
@@ -115,18 +117,21 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
       case ColumnTypeEnum.actions:
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Dropdown className="bg-background border-1 border-default-200">
+            <Button isIconOnly radius="full" size="sm" onPress={()=>editeUserEvent(data.id)} variant="light">
+              <BiEdit className="text-default-400" />
+            </Button>
+            {/* <Dropdown className="bg-background border-1 border-default-200">
               <DropdownTrigger>
                 <Button isIconOnly radius="full" size="sm" variant="light">
                   <BiDotsVertical className="text-default-400" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem key={"view"}>View</DropdownItem>
+                <DropdownItem key={"edit"} onPress={()=>editeUserEvent(data.id)}>Edit</DropdownItem>
+                <DropdownItem key={"delete"} onPress={()=>deleteEvent(data.id)}>Delete</DropdownItem>
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         );
       case ColumnTypeEnum.email:
@@ -234,7 +239,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
               className="bg-foreground text-background"
               endContent={<BiPlus />}
               size="sm"
-              onClick={() => { router.push(addNewUrl) }}
+              onPress={() => { router.push(addNewUrl) }}
             >
               Add New
             </Button>}

@@ -1,0 +1,334 @@
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ChatNote {
+  Id        Int       @id(map: "PK_ChatNote") @default(autoincrement())
+  Note      String
+  ChatId    Int
+  UserId    Int
+  CreatedAt DateTime  @db.Timestamptz(6)
+  UpdatedAt DateTime? @db.Timestamptz(6)
+  IsDeleted Boolean
+  IsActive  Boolean
+  Chats     Chats     @relation(fields: [ChatId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_ChatNote_Chats_ChatId")
+  User      User      @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_ChatNote_User_UserId")
+
+  @@index([ChatId], map: "IX_ChatNote_ChatId")
+  @@index([UserId], map: "IX_ChatNote_UserId")
+}
+
+model Chats {
+  Id                               Int                   @id(map: "PK_Chats") @default(autoincrement())
+  Name                             String
+  CreatedAt                        DateTime              @db.Timestamptz(6)
+  UpdatedAt                        DateTime?             @db.Timestamptz(6)
+  IsDeleted                        Boolean
+  IsActive                         Boolean
+  RecipientUserId                  Int                   @default(0)
+  SenderUserId                     Int                   @default(0)
+  ModeratorId                      Int                   @default(0)
+  ChatNote                         ChatNote[]
+  User_Chats_RecipientUserIdToUser User                  @relation("Chats_RecipientUserIdToUser", fields: [RecipientUserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Chats_User_RecipientUserId")
+  User_Chats_SenderUserIdToUser    User                  @relation("Chats_SenderUserIdToUser", fields: [SenderUserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Chats_User_SenderUserId")
+  Messages                         Messages[]
+  UserChatInformation              UserChatInformation[]
+  UserChatRooms                    UserChatRooms[]
+
+  @@index([RecipientUserId], map: "IX_Chats_RecipientUserId")
+  @@index([SenderUserId], map: "IX_Chats_SenderUserId")
+}
+
+model CoinTransaction {
+  Id              Int       @id(map: "PK_CoinTransaction") @default(autoincrement())
+  UserId          Int
+  TransactionType Int
+  Amount          Float     @db.Real
+  Description     String?
+  CreatedAt       DateTime  @db.Timestamptz(6)
+  UpdatedAt       DateTime? @db.Timestamptz(6)
+  IsDeleted       Boolean
+  IsActive        Boolean
+  Credit          Int       @default(0)
+  UserImagesID    Int?
+  User            User      @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_CoinTransaction_User_UserId")
+
+  @@index([UserId], map: "IX_CoinTransaction_UserId")
+}
+
+model Coins {
+  Id        Int       @id(map: "PK_Coins") @default(autoincrement())
+  Credits   Int
+  Price     Float     @db.Real
+  Image     String
+  CreatedAt DateTime  @db.Timestamptz(6)
+  UpdatedAt DateTime? @db.Timestamptz(6)
+  IsDeleted Boolean
+  IsActive  Boolean
+  Color     String    @default("")
+}
+
+model Dream {
+  Id                 Int       @id(map: "PK_Dream") @default(autoincrement())
+  Content            String?
+  Interpretation     String?
+  TimeSpeed          Int
+  ViewingTime        DateTime  @db.Timestamptz(6)
+  IsShowNotification Boolean
+  IsShowRead         Boolean
+  IsSave             Boolean
+  UserId             Int
+  CreatedAt          DateTime  @db.Timestamptz(6)
+  UpdatedAt          DateTime? @db.Timestamptz(6)
+  IsDeleted          Boolean
+  IsActive           Boolean
+  User               User      @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Dream_User_UserId")
+
+  @@index([UserId], map: "IX_Dream_UserId")
+}
+
+model Friendships {
+  Id           Int         @id(map: "PK_Friendships") @default(autoincrement())
+  UserId       Int
+  FriendId     Int
+  Status       Int
+  RequestedAt  DateTime    @db.Timestamptz(6)
+  AcceptedAt   DateTime?   @db.Timestamptz(6)
+  UserImagesId Int?
+  CreatedAt    DateTime    @db.Timestamptz(6)
+  UpdatedAt    DateTime?   @db.Timestamptz(6)
+  IsDeleted    Boolean
+  IsActive     Boolean
+  UserImages   UserImages? @relation(fields: [UserImagesId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Friendships_UserImages_UserImagesId")
+  User         User        @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Friendships_User_UserId")
+
+  @@index([UserId], map: "IX_Friendships_UserId")
+  @@index([UserImagesId], map: "IX_Friendships_UserImagesId")
+}
+
+model Messages {
+  Id                                  Int                       @id(map: "PK_Messages") @default(autoincrement())
+  Content                             String
+  Timestamp                           DateTime                  @db.Timestamptz(6)
+  SenderId                            Int
+  ChatId                              Int
+  CreatedAt                           DateTime                  @db.Timestamptz(6)
+  UpdatedAt                           DateTime?                 @db.Timestamptz(6)
+  IsDeleted                           Boolean
+  IsActive                            Boolean
+  IsSeen                              Boolean                   @default(false)
+  RecipientUserId                     Int                       @default(0)
+  UserId                              Int?
+  ModeratorId                         Int?
+  Chats                               Chats                     @relation(fields: [ChatId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Messages_Chats_ChatId")
+  User_Messages_ModeratorIdToUser     User?                     @relation("Messages_ModeratorIdToUser", fields: [ModeratorId], references: [Id], onDelete: Restrict, onUpdate: NoAction, map: "FK_Messages_User_ModeratorId")
+  User_Messages_RecipientUserIdToUser User                      @relation("Messages_RecipientUserIdToUser", fields: [RecipientUserId], references: [Id], onUpdate: NoAction, map: "FK_Messages_User_RecipientUserId")
+  User_Messages_SenderIdToUser        User                      @relation("Messages_SenderIdToUser", fields: [SenderId], references: [Id], onUpdate: NoAction, map: "FK_Messages_User_SenderId")
+  User_Messages_UserIdToUser          User?                     @relation("Messages_UserIdToUser", fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Messages_User_UserId")
+  ModeratorInOutHistories             ModeratorInOutHistories[]
+
+  @@index([ChatId], map: "IX_Messages_ChatId")
+  @@index([ModeratorId], map: "IX_Messages_ModeratorId")
+  @@index([RecipientUserId], map: "IX_Messages_RecipientUserId")
+  @@index([SenderId], map: "IX_Messages_SenderId")
+  @@index([UserId], map: "IX_Messages_UserId")
+}
+
+model ModeratorInOutHistories {
+  Id              Int       @id(map: "PK_ModeratorInOutHistories") @default(autoincrement())
+  ModeratorId     Int?
+  ModeratorUserId Int?
+  MessageId       Int
+  In              Boolean
+  Out             Boolean
+  CreatedAt       DateTime  @db.Timestamptz(6)
+  UpdatedAt       DateTime? @db.Timestamptz(6)
+  IsDeleted       Boolean
+  IsActive        Boolean
+  Messages        Messages  @relation(fields: [MessageId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_ModeratorInOutHistories_Messages_MessageId")
+  User            User?     @relation(fields: [ModeratorUserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ModeratorInOutHistories_User_ModeratorUserId")
+
+  @@index([MessageId], map: "IX_ModeratorInOutHistories_MessageId")
+  @@index([ModeratorUserId], map: "IX_ModeratorInOutHistories_ModeratorUserId")
+}
+
+model Settings {
+  Id        Int       @id(map: "PK_Settings") @default(autoincrement())
+  CreatedAt DateTime  @db.Timestamptz(6)
+  UpdatedAt DateTime? @db.Timestamptz(6)
+  IsDeleted Boolean
+  IsActive  Boolean
+}
+
+model User {
+  Id                                      Int                       @id(map: "PK_User") @default(autoincrement())
+  Name                                    String
+  LastName                                String
+  UserName                                String                    @unique(map: "IX_User_UserName")
+  FullName                                String
+  PhoneNumber                             String
+  Email                                   String                    @unique(map: "IX_User_Email")
+  UserType                                Int
+  Gender                                  Int?
+  DateOfBirth                             DateTime?                 @db.Timestamptz(6)
+  DateOfBirthTime                         String?
+  PlaceOfBirth                            String?
+  MaritalStatus                           Int?
+  SexualOrientation                       Int?
+  BirthDay                                String?
+  BirthMonth                              String?
+  BirthYear                               String?
+  About                                   String?
+  Location                                String?
+  ProfileImage                            String?
+  IsVerify                                Boolean
+  CreatedAt                               DateTime                  @db.Timestamptz(6)
+  UpdatedAt                               DateTime?                 @db.Timestamptz(6)
+  IsDeleted                               Boolean
+  IsActive                                Boolean
+  BodyType                                String?
+  Education                               String?
+  Ethnicity                               String?
+  Height                                  String?
+  Job                                     String?
+  Religion                                String?
+  IsSmoke                                 Boolean?
+  NumberOfChildren                        Int                       @default(0)
+  ConnectionId                            String?
+  IsOnline                                Boolean                   @default(false)
+  Coin                                    Int                       @default(0)
+  Password                                String
+  Accounts                                Account[]
+  ChatNote                                ChatNote[]
+  Chats_Chats_RecipientUserIdToUser       Chats[]                   @relation("Chats_RecipientUserIdToUser")
+  Chats_Chats_SenderUserIdToUser          Chats[]                   @relation("Chats_SenderUserIdToUser")
+  CoinTransaction                         CoinTransaction[]
+  Dream                                   Dream[]
+  Friendships                             Friendships[]
+  Messages_Messages_ModeratorIdToUser     Messages[]                @relation("Messages_ModeratorIdToUser")
+  Messages_Messages_RecipientUserIdToUser Messages[]                @relation("Messages_RecipientUserIdToUser")
+  Messages_Messages_SenderIdToUser        Messages[]                @relation("Messages_SenderIdToUser")
+  Messages_Messages_UserIdToUser          Messages[]                @relation("Messages_UserIdToUser")
+  ModeratorInOutHistories                 ModeratorInOutHistories[]
+  Sessions                                Session[]
+  UserChatInformation                     UserChatInformation[]
+  UserChatRooms                           UserChatRooms[]
+  UserImages                              UserImages[]
+  UserLikes_UserLikes_LikedUserIdToUser   UserLikes[]               @relation("UserLikes_LikedUserIdToUser")
+  UserLikes_UserLikes_UserIdToUser        UserLikes[]               @relation("UserLikes_UserIdToUser")
+  UserTokens                              UserTokens[]
+}
+
+model Account {
+  Id                Int     @id(map: "PK_Account") @default(autoincrement())
+  UserId            Int
+  Type              String
+  Provider          String
+  ProviderAccountId String
+  RefreshToken      String?
+  AccessToken       String?
+  ExpiresAt         Int?
+  TokenType         String?
+  Scope             String?
+  IdToken           String?
+  SessionState      String?
+  User              User    @relation(fields: [UserId], references: [Id], onDelete: Cascade)
+
+  @@unique([Provider, ProviderAccountId])
+}
+
+model Session {
+  Id           String   @id @default(cuid())
+  SessionToken String   @unique
+  UserId       Int
+  Expires      DateTime
+  User         User     @relation(fields: [UserId], references: [Id], onDelete: Cascade)
+}
+
+model UserChatInformation {
+  Id           Int    @id(map: "PK_UserChatInformation") @default(autoincrement())
+  UserId       Int
+  ChatId       Int
+  Relationship String
+  Birthday     String
+  City         String
+  Profession   String
+  Hobbies      String
+  Infos        String
+  Chats        Chats  @relation(fields: [ChatId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserChatInformation_ChatId")
+  User         User   @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserChatInformation_UserId")
+}
+
+model UserChatRooms {
+  Id        Int       @id(map: "PK_UserChatRooms") @default(autoincrement())
+  UserId    Int
+  ChatId    Int
+  CreatedAt DateTime  @db.Timestamptz(6)
+  UpdatedAt DateTime? @db.Timestamptz(6)
+  IsDeleted Boolean
+  IsActive  Boolean
+  Chats     Chats     @relation(fields: [ChatId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserChatRooms_Chats_ChatId")
+  User      User      @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserChatRooms_User_UserId")
+
+  @@index([ChatId], map: "IX_UserChatRooms_ChatId")
+  @@index([UserId], map: "IX_UserChatRooms_UserId")
+}
+
+model UserImages {
+  Id            Int           @id(map: "PK_UserImages") @default(autoincrement())
+  ThumbImageUrl String
+  ImageUrl      String
+  IsProfile     Boolean
+  UserId        Int
+  CreatedAt     DateTime      @db.Timestamptz(6)
+  UpdatedAt     DateTime?     @db.Timestamptz(6)
+  IsDeleted     Boolean
+  IsActive      Boolean
+  isSecureImage Boolean       @default(false)
+  IsSpecial     Boolean       @default(false)
+  SpecialUrl    String        @default("")
+  Friendships   Friendships[]
+  User          User          @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserImages_User_UserId")
+
+  @@index([UserId], map: "IX_UserImages_UserId")
+}
+
+model UserLikes {
+  Id                               Int       @id(map: "PK_UserLikes") @default(autoincrement())
+  UserId                           Int
+  LikedUserId                      Int
+  CreatedAt                        DateTime  @db.Timestamptz(6)
+  UpdatedAt                        DateTime? @db.Timestamptz(6)
+  IsDeleted                        Boolean
+  IsActive                         Boolean
+  IsSeen                           Boolean   @default(false)
+  User_UserLikes_LikedUserIdToUser User      @relation("UserLikes_LikedUserIdToUser", fields: [LikedUserId], references: [Id], onUpdate: NoAction, map: "FK_UserLikes_User_LikedUserId")
+  User_UserLikes_UserIdToUser      User      @relation("UserLikes_UserIdToUser", fields: [UserId], references: [Id], onUpdate: NoAction, map: "FK_UserLikes_User_UserId")
+
+  @@index([LikedUserId], map: "IX_UserLikes_LikedUserId")
+  @@index([UserId], map: "IX_UserLikes_UserId")
+}
+
+model UserTokens {
+  Token      String   @id(map: "PK_UserTokens")
+  TokenType  Int
+  ValidUntil DateTime @db.Timestamptz(6)
+  UserId     Int
+  Id         String?
+  User       User     @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserTokens_User_UserId")
+
+  @@index([UserId], map: "IX_UserTokens_UserId")
+}
+
+model EFMigrationsHistory {
+  MigrationId    String @id(map: "PK___EFMigrationsHistory") @db.VarChar(150)
+  ProductVersion String @db.VarChar(32)
+
+  @@map("__EFMigrationsHistory")
+}

@@ -20,7 +20,7 @@ const NavbarMobileMenuItem = ({ item }: { item: MenuItemType }) => {
         </div>
       </div>
       {
-        item.childs && 
+        item.childs &&
         <div className={twMerge('ml-3 mb-2 transition-all ease-in-out bg-gray-100 dark:bg-gray-700 rounded-md',(openMenuItem?'h-auto':'h-0 overflow-hidden'))}>
           {item.childs.map((x, i) => {
             return (

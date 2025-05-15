@@ -1,4 +1,5 @@
 "use client"
+import { createUserService, UploadStoredFile } from '@/actions/userAction'
 import PageHeader from '@/components/layouts/main-layout/PageHeader'
 import { bodyTypeItems, dayItems, ethnicityItems, genderItems, isSmokeItems, monthItems, relationshipItems, sexualOrientationItems, yearItems } from '@/constants/selectItemList'
 import { useAppContext } from '@/context/AppContext'
@@ -7,8 +8,9 @@ import UserService from '@/services/actions/userService'
 import { CreateUserRequest, CreateUserResponse } from '@/services/actions/userService/type'
 import { ResponseStatus } from '@/types/baseType'
 import { Button, Checkbox, Image, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
+import { User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { BsTrash } from 'react-icons/bs'
 import { toast } from 'react-toastify'
@@ -22,20 +24,23 @@ const CreateUserPage = () => {
   const router = useRouter();
   const { loading, setLoading } = useAppContext();
   const [imageList, setImageList] = useState<ImageType[]>()
-  const [addedUser, setAddedUser] = useState<CreateUserResponse>( )
+  const [addedUser, setAddedUser] = useState<User>()
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<CreateUserRequest>()
-  const onSubmit: SubmitHandler<CreateUserRequest> = async (data) => {
+  } = useForm<User>()
+  const onSubmit: SubmitHandler<User> = async (data) => {
     setLoading(true);
-    data.fullName = `${data.name} ${data.lastName}`
-    data.userType = 4;
-    data.gender = Number(data.gender);
-    data.maritalStatus = Number(data.maritalStatus);
-    data.sexualOrientation = Number(data.sexualOrientation);
-    const res = await UserService.createUser(data);
+
+    data.FullName = `${data.Name} ${data.LastName}`
+    data.UserType = 4;
+    data.Gender = Number(data.Gender);
+    data.MaritalStatus = Number(data.MaritalStatus);
+    data.SexualOrientation = Number(data.SexualOrientation);
+    const res = await createUserService({ data });
     if (res.status == ResponseStatus.Ok) {
 
       console.log(res);
@@ -79,13 +84,18 @@ const CreateUserPage = () => {
     if (addedUser) {
       setLoading(true);
       const formData = new FormData();
-      formData.append("UserId", addedUser.id.toString())
-      imageList?.map((x, i) => {
-        formData.append(`UserImages[${i}].file`, x.file);
-        formData.append(`UserImages[${i}].isProfile`, x.isProfile.toString());
-        formData.append(`UserImages[${i}].isSpecial`, x.isSpecial.toString());
-      })
-      const res = await UserImages.createUserImage(formData);
+
+      // Kullanıcı ID'sini ekle
+      formData.append("userId", addedUser.Id.toString());
+
+      // Her resim için ayrı entry'ler
+      imageList?.forEach((img, index) => {
+        formData.append(`images[${index}].file`, img.file);
+        formData.append(`images[${index}].isProfile`, img.isProfile.toString());
+        formData.append(`images[${index}].isSpecial`, img.isSpecial.toString());
+      });
+      const res = await UploadStoredFile(formData);
+      console.log("res", res);
       if (res.status == ResponseStatus.Ok) {
         setLoading(false);
         router.push('/dashboard/manage-users/all-user')
@@ -96,6 +106,20 @@ const CreateUserPage = () => {
       }
     }
   }
+
+  useEffect(() => {
+    const generateRandomPassword = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+      let password = '';
+      for (let i = 0; i < 12; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return password;
+    };
+
+    setValue('Password', generateRandomPassword());
+  }, [setValue])
+
   return (
     <div>
       <PageHeader title="CREATE USER" breadcrumbsItems={[
@@ -112,13 +136,13 @@ const CreateUserPage = () => {
                   label="Name"
                   placeholder="Enter your name"
                   labelPlacement='outside'
-                  {...register('name', { required: "This is required" })}
+                  {...register('Name', { required: "This is required" })}
                 />
                 <Input
                   label="Last Name"
                   placeholder="Enter your last name"
                   labelPlacement='outside'
-                  {...register('lastName', { required: "This is required" })}
+                  {...register('LastName', { required: "This is required" })}
                 />
               </div>
               <div className='flex gap-2'>
@@ -126,13 +150,13 @@ const CreateUserPage = () => {
                   label="User Name"
                   placeholder="Enter your User Name"
                   labelPlacement='outside'
-                  {...register('userName', { required: "This is required" })}
+                  {...register('UserName', { required: "This is required" })}
                 />
                 <Input
                   label="Job"
                   placeholder="Enter your job"
                   labelPlacement='outside'
-                  {...register('job', { required: "This is required" })}
+                  {...register('Job')}
                 />
               </div>
               <div className='flex gap-2'>
@@ -140,13 +164,13 @@ const CreateUserPage = () => {
                   label="Email"
                   placeholder="Enter your email"
                   labelPlacement='outside'
-                  {...register('email', { required: "This is required" })}
+                  {...register('Email', { required: "This is required" })}
                 />
                 <Input
                   label="Phone"
                   placeholder="Enter your phone"
                   labelPlacement='outside'
-                  {...register('phoneNumber', { required: "This is required" })}
+                  {...register('PhoneNumber')}
                 />
               </div>
 
@@ -154,7 +178,7 @@ const CreateUserPage = () => {
                 label="Password"
                 labelPlacement='outside'
                 placeholder="Enter your password"
-                {...register('password', { required: "This is required" })}
+                {...register('Password')}
                 type="text"
               />
 
@@ -163,7 +187,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Birth Day"
                   placeholder="Select Birth Day"
-                  {...register('birthDay', { required: "This is required" })}
+                  {...register('BirthDay')}
                 >
                   {dayItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -175,7 +199,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Birth Month"
                   placeholder="Select Birth Month"
-                  {...register('birthMonth', { required: "This is required" })}
+                  {...register('BirthMonth')}
                 >
                   {monthItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -187,7 +211,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Birth Year"
                   placeholder="Select Birth Year"
-                  {...register('birthYear', { required: "This is required" })}
+                  {...register('BirthYear')}
                 >
                   {yearItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -199,7 +223,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Gender"
                   placeholder="Select Gender"
-                  {...register('gender', { required: "This is required" })}
+                  {...register('Gender')}
                 >
                   {genderItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -211,7 +235,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Sexual Orientation"
                   placeholder="Select Sexual Orientation"
-                  {...register('sexualOrientation', { required: "This is required" })}
+                  {...register('SexualOrientation')}
                 >
                   {sexualOrientationItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -223,7 +247,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Ethnicity"
                   placeholder="Select Ethnicity"
-                  {...register('ethnicity', { required: "This is required" })}
+                  {...register('Ethnicity')}
                 >
                   {ethnicityItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -235,7 +259,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Body Type"
                   placeholder="Select Body Type"
-                  {...register('bodyType', { required: "This is required" })}
+                  {...register('BodyType')}
                 >
                   {bodyTypeItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -247,7 +271,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Relationship"
                   placeholder="Select Relationship"
-                  {...register('maritalStatus', { required: "This is required" })}
+                  {...register('MaritalStatus')}
                 >
                   {relationshipItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -259,7 +283,7 @@ const CreateUserPage = () => {
                   labelPlacement='outside'
                   label="Select Relationship"
                   placeholder="Select Relationship"
-                  {...register('maritalStatus', { required: "This is required" })}
+                  {...register('MaritalStatus')}
                 >
                   {isSmokeItems.map((item) => (
                     <SelectItem key={item.value}>
@@ -270,12 +294,23 @@ const CreateUserPage = () => {
               </div>
               <div>
                 <Textarea
-                  {...register('about', { required: "This is required" })}
+                  {...register('About')}
                   labelPlacement='outside'
                   label="About"
                   placeholder="Enter your about"
                   className="max-w-full"
                 />
+              </div>
+              <div>
+                {Object.keys(errors).length > 0 && (
+                  <div className="bg-red-100 text-red-700 p-3 rounded-md">
+                    <ul>
+                      {Object.entries(errors).map(([key, error]) => (
+                        <li key={key}>{key} - {(error as any).message}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               <div className='flex justify-end'>
                 <Button color="primary" variant='flat' disabled={loading} isLoading={loading} type='submit'>
@@ -322,7 +357,7 @@ const CreateUserPage = () => {
                               }}>Special</Checkbox>
                             </div>
                             <div>
-                              <Button size='sm' color='danger' variant='flat' isIconOnly onClick={() => {
+                              <Button size='sm' color='danger' variant='flat' isIconOnly onPress={() => {
                                 const updatedItems = imageList.filter((j) => j !== x);
                                 setImageList(updatedItems);
                               }}><BsTrash /></Button>
@@ -333,7 +368,7 @@ const CreateUserPage = () => {
                     </div>
                   }
                   <div className='flex justify-end'>
-                    <Button color="primary" variant='flat' disabled={loading} isLoading={loading} onClick={() => { submitImage() }} >
+                    <Button color="primary" variant='flat' disabled={loading} isLoading={loading} onPress={() => { submitImage() }} >
                       Save
                     </Button>
                   </div>

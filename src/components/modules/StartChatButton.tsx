@@ -1,6 +1,6 @@
 "use client"
-import { useAppContext } from '@/context/AppContext';
-import ChatService from '@/services/actions/chat';
+
+import { getLastedChat } from '@/actions/messageAction';
 import { Button } from '@nextui-org/react'
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -8,16 +8,18 @@ import React, { useEffect, useState } from 'react'
 const StartChatButton = () => {
   const router = useRouter();
   const [searching, setSearching] = useState(false);
-  const getLastedChat = async () => {
+  const lastedChat = async () => {
     fetchData();
   }
   const fetchData = async () => {
     try {
       setSearching(true);
-      const res = await ChatService.getFakeUserLastedChat();
-      if (res.data.id) {
+      const res = await getLastedChat();
+      console.log("res", res);
+
+      if (res) {
         setSearching(false)
-        router.push(`/dashboard/chats/` + res.data.id);
+        router.push(`/dashboard/chats/` + res);
       }
       else {
         setSearching(true)
@@ -39,8 +41,8 @@ const StartChatButton = () => {
   return (
     <Button variant="solid" color="secondary" className="font-semibold text-2xl py-8 px-8"
       isLoading={searching}
-      onClick={() => {
-        getLastedChat()
+      onPress={() => {
+        lastedChat()
       }}>
       {!searching ? 'Start Chat' : 'Looking for chat'}
     </Button>

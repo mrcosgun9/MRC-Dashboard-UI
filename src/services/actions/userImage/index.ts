@@ -4,9 +4,7 @@ import { IBaseDatasResponse } from "@/types/baseType";
 import { GetUserImagesResponse } from "./type";
 import { httpClient } from "@/services/httpClient";
 
-const getUserImages = async (
-   
-): Promise<IBaseDatasResponse<GetUserImagesResponse>> => {
+const getUserImages = async (): Promise<IBaseDatasResponse<GetUserImagesResponse>> => {
   return await httpClient
     .post<IBaseDatasResponse<GetUserImagesResponse>>("UserImage/GetUserImages", {})
     .then((response) => {
