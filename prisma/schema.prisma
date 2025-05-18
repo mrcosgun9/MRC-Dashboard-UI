@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
@@ -261,6 +260,7 @@ model UserChatInformation {
   Profession   String
   Hobbies      String
   Infos        String
+  FullName     String
   Chats        Chats  @relation(fields: [ChatId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserChatInformation_ChatId")
   User         User   @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserChatInformation_UserId")
 }

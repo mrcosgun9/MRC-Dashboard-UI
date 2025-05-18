@@ -8,14 +8,22 @@ import UserService from '@/services/actions/userService'
 import { ResponseStatus } from '@/types/baseType'
 import { toast } from 'react-toastify'
 import UserListWrapper from '@/components/modules/manage-users/all-user/UserListWrapper'
-
+import { getAllUser } from '@/actions/userAction'
+const columns: ColumnType[] = [
+  { name: "IMAGE", uid: "profileImage", type: ColumnTypeEnum.image },
+  { name: "ID", uid: "id", sortable: true },
+  { name: "FULL NAME", uid: "fullName", sortable: true },
+  { name: "Email", uid: "email", sortable: true, type: ColumnTypeEnum.email },
+  { name: "ACTIONS", uid: "actions", type: ColumnTypeEnum.actions },
+]
 
 const AllUser = async () => {
-  // const users = await fetchUserList();
+  const users = await getAllUser();
 
   return (
-  <>
-  </>
+    <div>
+      <UserListWrapper data={users.data} />
+    </div>
   )
 }
 

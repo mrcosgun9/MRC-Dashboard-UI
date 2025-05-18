@@ -1,4 +1,4 @@
-import { ChatNote, Messages } from "@prisma/client"
+import { ChatNote, Messages, UserChatInformation } from "@prisma/client"
 import { CreateChatNoteResponse } from "../chatNote/type"
 
 export interface GetFakeUserChatListResponse {
@@ -50,6 +50,7 @@ export type ChatData = {
   ModeratorId: number | null;
   Name: string | null;
   CreatedAt: Date;
+  UserChatInformation: UserChatInformation[] | null;
 };
 
 export type ChatMessageItem = {
@@ -97,6 +98,7 @@ export type GetChatByIdResponse = {
   chat: ChatData;
   SenderUser: GetChatByIdUserResponse | null;
   RecipientUser: GetChatByIdUserResponse | null;
+
 }
 export type GetChatByIdUserResponse = {
   Id: number;

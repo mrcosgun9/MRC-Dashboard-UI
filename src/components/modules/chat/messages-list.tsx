@@ -96,7 +96,7 @@ const MessagesList = ({ chatData }: { chatData: GetChatByIdResponse }) => {
 
   return (
     <div className='w-full flex align-top items-start justify-between gap-4 pb-6'>
-      <ChatProfileInformation user={chatData.SenderUser} />
+      <ChatProfileInformation chatData={chatData} user={chatData.SenderUser} />
       <div className='w-6/12'>
         <div className='bg-white rounded shadow'>
           <div className='max-h-[calc(100vh-21rem)] overflow-x-auto p-4'>
@@ -124,7 +124,7 @@ const MessagesList = ({ chatData }: { chatData: GetChatByIdResponse }) => {
           </Button>
         </div>
       </div>
-      <ChatProfileInformation user={chatData?.RecipientUser} isLeft={true} />
+      <ChatProfileInformation chatData={chatData} user={chatData?.RecipientUser} isLeft={true} />
     </div>
   )
 }

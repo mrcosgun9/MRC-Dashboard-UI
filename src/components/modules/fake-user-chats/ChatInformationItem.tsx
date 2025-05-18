@@ -1,5 +1,4 @@
-import ChatNoteService from '@/services/actions/chatNote'
-import { CreateChatNoteResponse } from '@/services/actions/chatNote/type'
+import { DeleteChatNote } from '@/actions/messageAction'
 import { ResponseStatus } from '@/types/baseType'
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
 import { ChatNote } from '@prisma/client'
@@ -12,7 +11,7 @@ moment.locale();
 const ChatInformationItem = ({ item, isLeft, chatNotes, setChatNotes }: { item: ChatNote, isLeft: boolean, chatNotes: ChatNote[], setChatNotes: React.Dispatch<React.SetStateAction<ChatNote[]>> }) => {
   const [isOpen, setIsOpen] = useState(false);
   const deleteNote = async () => {
-    const res = await ChatNoteService.deleteChatNote({ id: item.Id });
+    const res = await DeleteChatNote(item.Id);
     if (res.status == ResponseStatus.Ok) {
       setChatNotes(chatNotes.filter(x => x.Id != item.Id))
       setIsOpen(false);

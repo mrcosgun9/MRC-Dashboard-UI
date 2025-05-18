@@ -83,7 +83,6 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
     //     Array.from(statusFilter).includes(data.status),
     //   );
     // }
-
     return filteredData;
   }, [data, filterValue, statusFilter]);
 
@@ -106,6 +105,31 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
   const getNestedValue = (obj: any, path: string) => {
     return path.split('.').reduce((acc, key) => acc && acc[key], obj);
   };
+  //   public enum UserType
+  // {
+  //     Admin,
+  //     SuperUser,
+  //     User,
+  //     Moderator,
+  //     FaceUser
+  // }
+  const getUserType = (userType: number) => {
+    switch (userType) {
+      case 0:
+        return <Chip size="sm" color={statusColorMap["active"]} variant="flat" className="capitalize">{capitalize("admin")}</Chip>
+      case 1:
+        return <Chip size="sm" color={statusColorMap["active"]} variant="flat" className="capitalize">{capitalize("Super User")}</Chip>
+      case 2:
+        return <Chip size="sm" color={statusColorMap["active"]} variant="flat" className="capitalize">{capitalize("User")}</Chip>
+      case 3:
+        return <Chip size="sm" color={statusColorMap["active"]} variant="flat" className="capitalize">{capitalize("Moderator")}</Chip>
+      case 4:
+        return <Chip size="sm" color={"primary"} variant="flat" className="capitalize">{capitalize("Fake")}</Chip>
+      default:
+        break;
+    }
+
+  }
   const renderCell = React.useCallback((data: DataType, columnKey: React.Key) => {
     const cellValue = getNestedValue(data, columnKey.toString());
     const getColumnTytpe = columns.find(x => x.uid == columnKey)?.type
@@ -117,7 +141,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
       case ColumnTypeEnum.actions:
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button isIconOnly radius="full" size="sm" onPress={()=>editeUserEvent(data.id)} variant="light">
+            <Button isIconOnly radius="full" size="sm" onPress={() => editeUserEvent(data.id)} variant="light">
               <BiEdit className="text-default-400" />
             </Button>
             {/* <Dropdown className="bg-background border-1 border-default-200">
@@ -140,6 +164,19 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
             <Link href={`mailto:${cellValue}`}>
               {cellValue}
             </Link>
+          </div>
+        );
+      case ColumnTypeEnum.userType:
+        return (
+          <div className="relative flex justify-start items-center">
+            {getUserType(cellValue)}
+
+          </div>
+        );
+      case ColumnTypeEnum.date:
+        return (
+          <div className="relative flex justify-start items-center">
+            {new Date(cellValue).toLocaleDateString()} - {new Date(cellValue).toLocaleTimeString()}
           </div>
         );
       default:
@@ -318,6 +355,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow p-5 rounded-md overflow-y-auto">
+
       <Table
         isCompact
         removeWrapper
@@ -362,7 +400,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
           items={sortedItems}
           isLoading={loading}>
           {(item) => (
-            <TableRow key={item.id} onClick={() => {
+            <TableRow key={item.Id} onClick={() => {
               rowEvent && rowEvent(item);
             }}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

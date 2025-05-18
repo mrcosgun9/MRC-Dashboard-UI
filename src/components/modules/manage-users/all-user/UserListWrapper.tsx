@@ -8,10 +8,12 @@ import UserService from '@/services/actions/userService'
 import { ResponseStatus } from '@/types/baseType'
 import { toast } from 'react-toastify'
 const columns: ColumnType[] = [
-  { name: "IMAGE", uid: "profileImage", type: ColumnTypeEnum.image },
-  { name: "ID", uid: "id", sortable: true },
-  { name: "FULL NAME", uid: "Name", sortable: true },
+  { name: "IMAGE", uid: "ProfileImage", type: ColumnTypeEnum.image },
+  { name: "ID", uid: "Id", sortable: true },
+  { name: "FULL NAME", uid: "FullName", sortable: true },
   { name: "Email", uid: "Email", sortable: true, type: ColumnTypeEnum.email },
+  { name: "Type", uid: "UserType", sortable: true, type: ColumnTypeEnum.userType },
+  { name: "Create Date", uid: "CreatedAt", sortable: true, type: ColumnTypeEnum.date },
   { name: "ACTIONS", uid: "actions", type: ColumnTypeEnum.actions },
 ]
 const UserListWrapper = ({ data }: { data: any }) => {
@@ -34,12 +36,10 @@ const UserListWrapper = ({ data }: { data: any }) => {
         { title: 'DASHBOARD', url: '/dashboard' },
         { title: 'ALL USERS' },
       ]} />
-      <pre>
-        {JSON.stringify(data, null, 2)}
-      </pre>
       <AllUserListCount />
       <div className='my-5'>
-        {/* <DataTable
+
+        <DataTable
           loading={false}
           columns={columns}
           addNewUrl='/dashboard/manage-users/create-user'
@@ -47,11 +47,11 @@ const UserListWrapper = ({ data }: { data: any }) => {
           deleteEvent={deleteUserEvent}
           editeUserEvent={editeUserEvent}
           defaultSort={{
-            column: "id",
-            direction: "ascending"
+            column: "Id",
+            direction: "descending"
           }}
-          filteredRowName={["fullName", "email"]}
-        /> */}
+          filteredRowName={["FullName", "Email"]}
+        />
       </div>
 
     </div>

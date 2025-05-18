@@ -1,12 +1,10 @@
-import { Id } from 'react-toastify';
 "use server"
-import { Messages } from "@prisma/client";
+import { ChatNote, Messages, UserChatInformation } from "@prisma/client";
 import prisma from '@/lib/prisma'
 import { GetChatByIdResponse } from "@/services/actions/chat/type";
+import { IBaseDataResponse, IBaseDatasResponse, ResponseStatus } from "@/types/baseType";
 
 export const createMessages = async ({ data }: { data: Omit<Messages, 'Id'> }) => {
-  console.log(data);
-
   const res = await prisma.messages.create({
     data: data
   })
@@ -22,6 +20,7 @@ export const getChatById = async (chatId: number): Promise<GetChatByIdResponse> 
       Id: true,
       SenderUserId: true,
       RecipientUserId: true,
+      UserChatInformation: true,
       Messages: {
         include: {
           User_Messages_RecipientUserIdToUser: {
@@ -129,6 +128,35 @@ export const getChatById = async (chatId: number): Promise<GetChatByIdResponse> 
 
 };
 
+export const DeleteChatNote = async (noteId: number): Promise<IBaseDataResponse<ChatNote>> => {
+  const res = await prisma.chatNote.delete({
+    where: {
+      Id: noteId
+    }
+  })
+  return {
+    data: res,
+    message: "Chat note deleted successfully",
+    status: ResponseStatus.Ok
+  };
+}
+
+export const CreateChatNote = async (data: ChatNote):Promise<IBaseDataResponse<ChatNote>> => {
+  data.CreatedAt = new Date();
+  data.UpdatedAt = new Date();
+  data.IsActive = true;
+  data.IsDeleted = false;
+  console.log("data", data);
+  const res = await prisma.chatNote.create({
+    data: data
+  })
+  return {
+    data: res,
+    message: "Chat note created successfully",
+    status: ResponseStatus.Ok
+  };
+}
+
 export const getLastedChat = async () => {
   const lastMessages = await prisma.messages.findMany({
     distinct: ['ChatId'],
@@ -139,4 +167,20 @@ export const getLastedChat = async () => {
     m.ModeratorId === null
   );
   return unanswered[0]?.ChatId;
+}
+
+export const UpsertUserChatInformation = async (data: UserChatInformation) => {
+
+  const res = await prisma.userChatInformation.upsert({
+    where: {
+      Id: data.Id
+    },
+    update: {
+      ...data
+    },
+    create: {
+      ...data
+    }
+  })
+  return res;
 }

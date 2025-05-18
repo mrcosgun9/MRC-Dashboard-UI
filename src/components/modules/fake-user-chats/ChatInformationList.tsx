@@ -51,11 +51,11 @@ const ChatInformationList = ({ chatResponse }: { chatResponse: GetChatByIdRespon
             ASA Dialog {asaText}
           </Button>
           <div className={twMerge('text-sm')}>
-            erst kontakt : <span className={textColor}>{moment(chat.CreatedAt).format('MMMM DD YYYY, h:mm:ss a')}</span>
+            Erstkontakt: <span className={textColor}>{moment(chat.CreatedAt).format('MMMM DD YYYY, h:mm:ss a')}</span>
           </div>
         </div>
       </div>
-      <div className={twMerge('bg-white rounded-md shadow-md mb-4 px-4 py-5 overflow-y-auto', (isListShow ? 'max-h-48' : 'max-h-16'))}>
+      <div className={twMerge('bg-white rounded-md shadow-md mb-4 px-4 py-5 overflow-y-auto', (isListShow ? 'max-h-full' : 'max-h-28'))}>
         <div className='grid grid-cols-2 align-middle items-center justify-between gap-3 w-full h-full'>
           {chatNotes?.map((x, i) => {
             return <ChatInformationItem item={x} isLeft={x.UserId == userId} key={i} chatNotes={chatNotes} setChatNotes={setChatNotes} />

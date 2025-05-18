@@ -1,8 +1,8 @@
 "use client"
 import { GenderType } from '@/services/actions/auth/type'
-import { GetChatByIdUserResponse, User } from '@/services/actions/chat/type'
+import { GetChatByIdResponse, GetChatByIdUserResponse } from '@/services/actions/chat/type'
 import { Avatar, Button, Input, Textarea, Tooltip } from '@nextui-org/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { AiOutlineMan, AiOutlineWoman } from 'react-icons/ai'
 import { BiUser } from 'react-icons/bi'
 import { BsCalendarDate } from 'react-icons/bs'
@@ -10,6 +10,9 @@ import { FaTransgender, FaUser } from 'react-icons/fa6'
 import { MdQuestionMark } from 'react-icons/md'
 import { PiCoinsDuotone } from 'react-icons/pi'
 import { twMerge } from 'tailwind-merge'
+import { useForm } from 'react-hook-form'
+import { UserChatInformation } from '@prisma/client'
+import { UpsertUserChatInformation } from '@/actions/messageAction'
 
 const GetGenderIcon = ({ gender }: { gender: number | null }) => {
   if (gender == GenderType.Unknown) {
@@ -27,46 +30,77 @@ const GetGenderIcon = ({ gender }: { gender: number | null }) => {
   else if (gender == GenderType.Other) {
     return <FaUser className='text-gray-700' size={24} />;
   }
+  return null;
 }
-const ChatProfileInformation = ({ user, isLeft = false }: { user: GetChatByIdUserResponse | null, isLeft?: boolean }) => {
+
+
+const ChatProfileInformation = ({ user, isLeft = false, chatData }: { user: GetChatByIdUserResponse | null, isLeft?: boolean, chatData: GetChatByIdResponse }) => {
+  const defaultFormData = chatData.chat.UserChatInformation?.find(x => x.UserId == user?.Id)
+  const { register, handleSubmit, setValue, watch } = useForm<UserChatInformation>(
+    {
+      defaultValues: defaultFormData ?? {
+        Birthday: '',
+        ChatId: 0,
+        City: '',
+        Hobbies: '',
+        Infos: '',
+        Profession: '',
+        Relationship: '',
+        UserId: 0,
+      }
+    });
+
+  const onSubmit = (data: UserChatInformation) => {
+    data.UserId = user?.Id ?? 0;
+    data.ChatId = chatData.chat.Id ?? 0;
+    // Güncellenen verileri burada işleyebilirsiniz
+    UpsertUserChatInformation(data).then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
+    console.log(data);
+  };
 
   return (
     <div className='w-3/12 bg-white rounded shadow p-5'>
-      <div className={twMerge('flex gap-3 align-middle items-center', (isLeft && 'flex-row-reverse'))}>
-        <div className='w-14'>
-          <Avatar src={user?.ProfileImage ?? ""} radius='sm' className="w-14 h-14 text-large" isBordered color='primary' />
-        </div>
-        <div className='w-full'>
-          <div className={twMerge('flex justify-between align-middle items-center w-full', (isLeft && 'flex-row-reverse'))}>
-            {user?.UserName} {user && <GetGenderIcon gender={user?.Gender} />}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+        <div className={twMerge('flex gap-3 align-middle items-center', (isLeft && 'flex-row-reverse'))}>
+          <div className='w-14'>
+            <Avatar src={user?.ProfileImage ?? ""} radius='sm' className="w-14 h-14 text-large" isBordered color='primary' />
           </div>
-          <div className={twMerge('text-xs flex align-middle items-center justify-start gap-1', (isLeft && 'justify-end'))}>
-            <BsCalendarDate className='text-purple-800' />
-            {Number(new Date().getFullYear()) - Number(user?.BirthYear)} Jahre ({user?.BirthYear}-{user?.BirthMonth}-{user?.BirthMonth})</div>
-        </div>
-      </div>
-      {
-        user?.UserType == 0 && <div className='flex justify-start my-3 py-1 px-3 rounded-full border border-yellow-400 align-middle items-center gap-2 bg-yellow-100'>
-          <div><PiCoinsDuotone size={20} className='text-yellow-600' /></div>
-          <div className='text-xs font-bold'>10 oder mehr Nachrichten verbleiben</div>
-        </div>
-      }
-      {
-        user?.UserType == 4 && <div className='flex justify-end'>
-          <div className='flex justify-end my-3 py-1 px-3 rounded-full border border-gray-400 align-middle items-center gap-2 bg-gray-100 w-fit'>
-            <div className='text-xs font-bold'>Fake</div>
-            <div><BiUser size={20} className='text-gray-600' /></div>
+          <div className='w-full'>
+            <div className={twMerge('flex justify-between align-middle items-center w-full', (isLeft && 'flex-row-reverse'))}>
+              {user?.FullName} {user && <GetGenderIcon gender={user?.Gender} />}
+            </div>
+            <div className={twMerge('text-xs flex align-middle items-center justify-start gap-1', (isLeft && 'justify-end'))}>
+              <BsCalendarDate className='text-purple-800' />
+              {Number(new Date().getFullYear()) - Number(user?.BirthYear)} Jahre ({user?.BirthYear}-{user?.BirthMonth}-{user?.BirthMonth})
+            </div>
           </div>
         </div>
-      }
-      <div className='flex flex-col gap-3'>
+        {
+          user?.UserType == 0 && <div className='flex justify-start my-3 py-1 px-3 rounded-full border border-yellow-400 align-middle items-center gap-2 bg-yellow-100'>
+            <div><PiCoinsDuotone size={20} className='text-yellow-600' /></div>
+            <div className='text-xs font-bold'>10 oder mehr Nachrichten verbleiben</div>
+          </div>
+        }
+        {
+          user?.UserType == 4 && <div className='flex justify-end'>
+            <div className='flex justify-end my-3 py-1 px-3 rounded-full border border-gray-400 align-middle items-center gap-2 bg-gray-100 w-fit'>
+              <div className='text-xs font-bold'>Fake</div>
+              <div><BiUser size={20} className='text-gray-600' /></div>
+            </div>
+          </div>
+        }
         <Input
           type="name"
           label="Name"
           labelPlacement="outside-left"
           placeholder="Name"
           size='sm'
-          value={user?.FullName}
+          {...register('FullName')}
           classNames={{
             mainWrapper: ['w-full'],
             label: ['min-w-16']
@@ -78,6 +112,7 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: GetChatByIdUse
           labelPlacement="outside-left"
           placeholder="Beziehung"
           size='sm'
+          {...register('Relationship')}
           classNames={{
             mainWrapper: ['w-full'],
             label: ['min-w-16']
@@ -89,6 +124,7 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: GetChatByIdUse
           labelPlacement="outside-left"
           placeholder="Geburtstag"
           size='sm'
+          {...register('Birthday')}
           classNames={{
             mainWrapper: ['w-full'],
             label: ['min-w-16']
@@ -100,6 +136,7 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: GetChatByIdUse
           labelPlacement="outside-left"
           placeholder="Stadt"
           size='sm'
+          {...register('City')}
           classNames={{
             mainWrapper: ['w-full'],
             label: ['min-w-16']
@@ -111,6 +148,7 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: GetChatByIdUse
           labelPlacement="outside-left"
           placeholder="Beruf"
           size='sm'
+          {...register('Profession')}
           classNames={{
             mainWrapper: ['w-full'],
             label: ['min-w-16']
@@ -122,6 +160,7 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: GetChatByIdUse
           labelPlacement="outside-left"
           placeholder="Hobbys"
           size='sm'
+          {...register('Hobbies')}
           classNames={{
             mainWrapper: ['w-full'],
             label: ['min-w-16']
@@ -136,9 +175,10 @@ const ChatProfileInformation = ({ user, isLeft = false }: { user: GetChatByIdUse
           labelPlacement="outside"
           size='sm'
           className="w-full h-min"
-          value={``}
+          {...register('Infos')}
         />
-      </div>
+        <Button type="submit" color="primary" size="sm" className="mt-2 self-end">Save</Button>
+      </form>
     </div>
   )
 }

@@ -124,6 +124,14 @@ export async function UploadStoredFile(formData: FormData): Promise<IBaseDatasRe
         await fs.writeFile(filePath, Buffer.from(bytes));
 
         // Database Kaydı
+        if (isProfile) {
+          await prisma.user.update({
+            where: { Id: Number(userId) },
+            data: { ProfileImage: `${process.env.NEXT_PUBLIC_APP_DOMAIN}/uploads/${uniqueFileName}` },
+          });
+
+        }
+
         const storedFile = await prisma.userImages.create({
           data: {
             ImageUrl: `${process.env.NEXT_PUBLIC_APP_DOMAIN}/uploads/${uniqueFileName}`,
@@ -169,5 +177,19 @@ export async function UploadStoredFile(formData: FormData): Promise<IBaseDatasRe
       message: "Dosya yükleme sırasında beklenmeyen bir hata oluştu",
       status: ResponseStatus.Error,
     };
+  }
+}
+
+export async function getAllUser(): Promise<IBaseDatasResponse<User>> {
+  const users = await prisma.user.findMany({
+    where: {
+      IsActive: true,
+      IsDeleted: false
+    }
+  })
+  return {
+    data: users,
+    message: "Kullanıcılar başarıyla alındı",
+    status: ResponseStatus.Ok
   }
 }

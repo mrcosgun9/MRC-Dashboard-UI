@@ -1,4 +1,5 @@
-
+"use client"
+import { CreateChatNote } from '@/actions/messageAction';
 import ChatNoteService from '@/services/actions/chatNote';
 import { CreateChatNoteRequest, CreateChatNoteResponse } from '@/services/actions/chatNote/type';
 import { ResponseStatus } from '@/types/baseType';
@@ -16,19 +17,19 @@ const ChatNoteModal = ({ userId, fakeUserId, chatId, chatNotes, setChatNotes }: 
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateChatNoteRequest>()
-  const onSubmit: SubmitHandler<CreateChatNoteRequest> = async (data) => {
-    data.chatId = chatId;
-    data.userId = Number(selected);
-    const res = await ChatNoteService.createChatNote(data);
-    // if (res.status == ResponseStatus.Ok) {
-    //   setChatNotes([...chatNotes, res.data])
-    //   onOpenChange();
-    //   toast.success("successful");
-    // }
-    // else {
-    //   toast.error("error");
-    // }
+  } = useForm<ChatNote>()
+  const onSubmit: SubmitHandler<ChatNote> = async (data) => {
+    data.ChatId = chatId;
+    data.UserId = Number(selected);
+    const res = await CreateChatNote(data);
+    if (res.status == ResponseStatus.Ok) {
+      setChatNotes([...chatNotes, res.data])
+      onOpenChange();
+      toast.success("successful");
+    }
+    else {
+      toast.error("error");
+    }
   }
   return (
     <div>
@@ -57,7 +58,7 @@ const ChatNoteModal = ({ userId, fakeUserId, chatId, chatNotes, setChatNotes }: 
                   placeholder="Enter your Note"
                   disableAnimation
                   disableAutosize
-                  {...register('note', { required: "This is required" })}
+                  {...register('Note', { required: "This is required" })}
                   classNames={{
                     input: "resize-y min-h-[40px]",
                   }}
