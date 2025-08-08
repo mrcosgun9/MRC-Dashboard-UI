@@ -1,55 +1,57 @@
 "use client"
 import PageHeader from '@/components/layouts/main-layout/PageHeader'
 import React from 'react'
-import AllUserListCount from './AllUserListCount'
+import AllUserListCount from '../manage-users/all-user/AllUserListCount'
 import DataTable from '@/components/elements/DataTable'
 import { ColumnType, ColumnTypeEnum } from '@/types/DataTableType'
+import UserService from '@/services/actions/userService'
 import { ResponseStatus } from '@/types/baseType'
 import { toast } from 'react-toastify'
-import { DeleteUser } from '@/actions/userAction'
 import { useRouter } from 'next/navigation'
-import { UserStats } from '@/services/actions/userService'
 const columns: ColumnType[] = [
   { name: "IMAGE", uid: "ProfileImage", type: ColumnTypeEnum.image },
-  { name: "ID", uid: "Id", sortable: true },
-  { name: "FULL NAME", uid: "FullName", sortable: true },
-  { name: "Email", uid: "Email", sortable: true, type: ColumnTypeEnum.email },
-  { name: "Type", uid: "UserType", sortable: true, type: ColumnTypeEnum.userType },
-  { name: "Create Date", uid: "CreatedAt", sortable: true, type: ColumnTypeEnum.date },
+  { name: "ID", uid: "id", sortable: true },
+
+  { name: "Recipient Full Name", uid: "recipientUserNameLastName", sortable: true },
+  { name: "Recipient Email", uid: "recipientEmail", sortable: true, type: ColumnTypeEnum.email },
+  { name: "Recipient Type", uid: "recipientType", sortable: true, type: ColumnTypeEnum.userType },
+
+  { name: "Sender Full Name", uid: "senderUserNameLastName", sortable: true },
+  { name: "Sender Email", uid: "senderEmail", sortable: true, type: ColumnTypeEnum.email },
+  { name: "Sender Type", uid: "senderType", sortable: true, type: ColumnTypeEnum.userType },
+  { name: "Create Date", uid: "creaeAt", sortable: true, type: ColumnTypeEnum.date },
   { name: "ACTIONS", uid: "actions", type: ColumnTypeEnum.actions },
 ]
-const UserListWrapper = ({ data, userStats }: { data: any,userStats: UserStats }) => {
+const ChatListWrapper = ({ data }: { data: any }) => {
   const router = useRouter();
-  const [viewData, setViewData] = React.useState<any>(data);
   const deleteUserEvent = async (id: number) => {
-    const res = await DeleteUser({ id })
+    const res = await UserService.deleteUser({ id })
     if (res.status === ResponseStatus.Ok) {
       toast.success("User deleted successfully");
-      setViewData((prevData: any) => prevData.filter((item: any) => item.Id !== id));
     }
     else {
       toast.error("User deletion failed")
     }
   }
-  const editeUserEvent = async (id: number) => {
-    router.push("/dashboard/manage-users/" + id)
+  const viewChat = async (id: number) => {
+    router.push("/dashboard/chats/" + id)
   }
+
   return (
     <div>
       <PageHeader title="ALL USERS" breadcrumbsItems={[
         { title: 'DASHBOARD', url: '/dashboard' },
         { title: 'ALL USERS' },
       ]} />
-      <AllUserListCount userStats={userStats} />
+
       <div className='my-5'>
 
         <DataTable
           loading={false}
           columns={columns}
-          addNewUrl='/dashboard/manage-users/create-user'
-          data={viewData}
+          data={data}
           deleteEvent={deleteUserEvent}
-          editeUserEvent={editeUserEvent}
+          editeUserEvent={viewChat}
           defaultSort={{
             column: "Id",
             direction: "descending"
@@ -62,4 +64,4 @@ const UserListWrapper = ({ data, userStats }: { data: any,userStats: UserStats }
   )
 }
 
-export default UserListWrapper
+export default ChatListWrapper

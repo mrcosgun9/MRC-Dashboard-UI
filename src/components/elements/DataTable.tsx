@@ -46,10 +46,12 @@ interface IDataTableProps {
   addNewUrl?: string,
   rowEvent?: (item: any) => void,
   selectionMode?: 'none' | 'single' | 'multiple'
-  deleteEvent: (id: number) => void
-  editeUserEvent: (id: number) => Promise<void>
+  deleteEvent?: (id: number) => void
+  viewEvent?: (id: number) => void
+  editeUserEvent?: (id: number) => Promise<void>
 }
-export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 10, filteredRowName, loading = false, addNewUrl, rowEvent, selectionMode = "single", deleteEvent, editeUserEvent }: IDataTableProps) {
+export default function DataTable({ columns, data, defaultSort, defaultVisibleColumns, defaultPageSize = 50, filteredRowName, loading = false, addNewUrl, rowEvent, selectionMode = "single",
+  deleteEvent, editeUserEvent,viewEvent }: IDataTableProps) {
   const router = useRouter();
   type DataType = typeof data[0];
   const [filterValue, setFilterValue] = React.useState("");
@@ -130,6 +132,7 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
     }
 
   }
+
   const renderCell = React.useCallback((data: DataType, columnKey: React.Key) => {
     const cellValue = getNestedValue(data, columnKey.toString());
     const getColumnTytpe = columns.find(x => x.uid == columnKey)?.type
@@ -141,21 +144,21 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
       case ColumnTypeEnum.actions:
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button isIconOnly radius="full" size="sm" onPress={() => editeUserEvent(data.id)} variant="light">
+            {/* <Button isIconOnly radius="full" size="sm" onPress={() => editeUserEvent(data.id)} variant="light">
               <BiEdit className="text-default-400" />
-            </Button>
-            {/* <Dropdown className="bg-background border-1 border-default-200">
+            </Button> */}
+            <Dropdown className="bg-background border-1 border-default-200">
               <DropdownTrigger>
                 <Button isIconOnly radius="full" size="sm" variant="light">
                   <BiDotsVertical className="text-default-400" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem key={"view"}>View</DropdownItem>
-                <DropdownItem key={"edit"} onPress={()=>editeUserEvent(data.id)}>Edit</DropdownItem>
-                <DropdownItem key={"delete"} onPress={()=>deleteEvent(data.id)}>Delete</DropdownItem>
+                {viewEvent ? <DropdownItem key={"view"} onPress={() => viewEvent(data.Id)}>View</DropdownItem> : null}
+                {editeUserEvent ? <DropdownItem key={"edit"} onPress={() => editeUserEvent(data.Id)}>Edit</DropdownItem> : null}
+                {deleteEvent ? <DropdownItem key={"delete"} onPress={() => deleteEvent(data.Id)}>Delete</DropdownItem> : null}
               </DropdownMenu>
-            </Dropdown> */}
+            </Dropdown>
           </div>
         );
       case ColumnTypeEnum.email:
@@ -292,9 +295,9 @@ export default function DataTable({ columns, data, defaultSort, defaultVisibleCo
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
             >
-              <option value="10">10</option>
-              <option value="30">30</option>
               <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="150">150</option>
             </select>
           </label>
         </div>

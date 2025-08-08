@@ -126,10 +126,14 @@ model Messages {
   UserId                              Int?
   ModeratorId                         Int?
   Chats                               Chats                     @relation(fields: [ChatId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Messages_Chats_ChatId")
-  User_Messages_ModeratorIdToUser     User?                     @relation("Messages_ModeratorIdToUser", fields: [ModeratorId], references: [Id], onDelete: Restrict, onUpdate: NoAction, map: "FK_Messages_User_ModeratorId")
-  User_Messages_RecipientUserIdToUser User                      @relation("Messages_RecipientUserIdToUser", fields: [RecipientUserId], references: [Id], onUpdate: NoAction, map: "FK_Messages_User_RecipientUserId")
-  User_Messages_SenderIdToUser        User                      @relation("Messages_SenderIdToUser", fields: [SenderId], references: [Id], onUpdate: NoAction, map: "FK_Messages_User_SenderId")
-  User_Messages_UserIdToUser          User?                     @relation("Messages_UserIdToUser", fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Messages_User_UserId")
+  // If a user (Moderator) is deleted we keep the message history; set FK to null
+  User_Messages_ModeratorIdToUser     User?                     @relation("Messages_ModeratorIdToUser", fields: [ModeratorId], references: [Id], onDelete: SetNull, onUpdate: NoAction, map: "FK_Messages_User_ModeratorId")
+  // If recipient user is deleted, cascade delete messages referencing them (required field)
+  User_Messages_RecipientUserIdToUser User                      @relation("Messages_RecipientUserIdToUser", fields: [RecipientUserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Messages_User_RecipientUserId")
+  // If sender user is deleted, cascade delete their sent messages (required field)
+  User_Messages_SenderIdToUser        User                      @relation("Messages_SenderIdToUser", fields: [SenderId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_Messages_User_SenderId")
+  // Optional generic UserId reference: nullify on user deletion
+  User_Messages_UserIdToUser          User?                     @relation("Messages_UserIdToUser", fields: [UserId], references: [Id], onDelete: SetNull, onUpdate: NoAction, map: "FK_Messages_User_UserId")
   ModeratorInOutHistories             ModeratorInOutHistories[]
 
   @@index([ChatId], map: "IX_Messages_ChatId")
@@ -151,7 +155,8 @@ model ModeratorInOutHistories {
   IsDeleted       Boolean
   IsActive        Boolean
   Messages        Messages  @relation(fields: [MessageId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_ModeratorInOutHistories_Messages_MessageId")
-  User            User?     @relation(fields: [ModeratorUserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ModeratorInOutHistories_User_ModeratorUserId")
+  // Nullify moderator user reference on deletion
+  User            User?     @relation(fields: [ModeratorUserId], references: [Id], onDelete: SetNull, onUpdate: NoAction, map: "FK_ModeratorInOutHistories_User_ModeratorUserId")
 
   @@index([MessageId], map: "IX_ModeratorInOutHistories_MessageId")
   @@index([ModeratorUserId], map: "IX_ModeratorInOutHistories_ModeratorUserId")
@@ -308,8 +313,10 @@ model UserLikes {
   IsDeleted                        Boolean
   IsActive                         Boolean
   IsSeen                           Boolean   @default(false)
-  User_UserLikes_LikedUserIdToUser User      @relation("UserLikes_LikedUserIdToUser", fields: [LikedUserId], references: [Id], onUpdate: NoAction, map: "FK_UserLikes_User_LikedUserId")
-  User_UserLikes_UserIdToUser      User      @relation("UserLikes_UserIdToUser", fields: [UserId], references: [Id], onUpdate: NoAction, map: "FK_UserLikes_User_UserId")
+  // Cascade delete likes where the liked user is removed
+  User_UserLikes_LikedUserIdToUser User      @relation("UserLikes_LikedUserIdToUser", fields: [LikedUserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserLikes_User_LikedUserId")
+  // Cascade delete likes authored by the removed user
+  User_UserLikes_UserIdToUser      User      @relation("UserLikes_UserIdToUser", fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserLikes_User_UserId")
 
   @@index([LikedUserId], map: "IX_UserLikes_LikedUserId")
   @@index([UserId], map: "IX_UserLikes_UserId")

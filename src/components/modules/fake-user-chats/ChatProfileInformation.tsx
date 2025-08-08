@@ -13,6 +13,7 @@ import { twMerge } from 'tailwind-merge'
 import { useForm } from 'react-hook-form'
 import { UserChatInformation } from '@prisma/client'
 import { UpsertUserChatInformation } from '@/actions/messageAction'
+import toast from 'react-hot-toast'
 
 const GetGenderIcon = ({ gender }: { gender: number | null }) => {
   if (gender == GenderType.Unknown) {
@@ -47,24 +48,28 @@ const ChatProfileInformation = ({ user, isLeft = false, chatData }: { user: GetC
         Profession: '',
         Relationship: '',
         UserId: 0,
+        FullName: '', // Add FullName to default values
       }
     });
 
   const onSubmit = (data: UserChatInformation) => {
+
     data.UserId = user?.Id ?? 0;
     data.ChatId = chatData.chat.Id ?? 0;
+
+
     // Güncellenen verileri burada işleyebilirsiniz
     UpsertUserChatInformation(data).then((res) => {
-      console.log(res);
+      toast.success("Profil erfolgreich aktualisiert");
     }).catch((err) => {
       console.log(err);
+      toast.error("Fehler beim Aktualisieren des Profils");
     });
-    console.log(data);
+
   };
 
   return (
     <div className='w-3/12 bg-white rounded shadow p-5'>
-
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <div className={twMerge('flex gap-3 align-middle items-center', (isLeft && 'flex-row-reverse'))}>
           <div className='w-14'>
@@ -171,7 +176,7 @@ const ChatProfileInformation = ({ user, isLeft = false, chatData }: { user: GetC
         </div>
         <div className='text-xs'><b>Profil Text:</b><br />{user?.About}</div>
         <Textarea
-          isRequired
+
           labelPlacement="outside"
           size='sm'
           className="w-full h-min"

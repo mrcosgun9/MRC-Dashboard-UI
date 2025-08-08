@@ -164,13 +164,93 @@ export const fetchUserById = async (userId: number | undefined): Promise<UserWit
     await prisma.$disconnect();
   }
 }
+
+export interface UserStats {
+  total: number;
+  real: number;
+  fake: number;
+  premium: number;
+  online: number;
+  verified: number;
+}
+
+const fetchUserStats = async (): Promise<UserStats> => {
+  try {
+    const [
+      total,
+      real,
+      fake,
+      premium,
+      online,
+      verified
+    ] = await Promise.all([
+      // Total users (not deleted)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+        },
+      }),
+      // Real users (UserType = 1)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          UserType: 1,
+        },
+      }),
+      // Fake users (UserType = 2)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          UserType: 2,
+        },
+      }),
+      // Premium users (have coins > 0)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          Coin: {
+            gt: 0,
+          },
+        },
+      }),
+      // Online users
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          IsOnline: true,
+        },
+      }),
+      // Verified users
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          IsVerify: true,
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      real,
+      fake,
+      premium,
+      online,
+      verified,
+    };
+  } catch (error) {
+    console.error('Error fetching user stats:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 const UserService = {
   getAllOnlineUser,
   createUser,
   getFakeUserLastedChat,
   deleteUser,
-
   fetchUserById,
-  fetchUserList
+  fetchUserList,
+  fetchUserStats
 };
 export default UserService;

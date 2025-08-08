@@ -6,6 +6,7 @@ import { GetChatByIdResponse } from "@/services/actions/chat/type";
 import { IBaseDataResponse, IBaseDatasResponse, ResponseStatus } from '@/types/baseType';
 import { join } from "path";
 import { promises as fs } from "fs";
+import { UserStats } from '@/services/actions/userService';
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "application/pdf", "image/webp", "video/mp4"];
@@ -28,12 +29,21 @@ export const createUserService = async ({ data }: { data: Omit<User, 'Id'> }): P
     status: ResponseStatus.Ok
   };
 }
-
-
-interface UserImage {
-  file: string; // Base64 string
-  isProfile: boolean;
-  isSpecial: boolean;
+export const updateUserService = async ({ data }: { data: User }): Promise<IBaseDataResponse<User>> => {
+  const res = await prisma.user.update({
+    where: {
+      Id: data.Id
+    },
+    data: {
+      ...data,
+      UpdatedAt: new Date()
+    }
+  })
+  return {
+    data: res,
+    message: "User updated successfully",
+    status: ResponseStatus.Ok
+  };
 }
 
 export interface UploadPayload {
@@ -80,7 +90,14 @@ export async function UploadStoredFile(formData: FormData): Promise<IBaseDatasRe
     )).filter(Boolean);
 
     // 5. Dosya Validasyon ve İşleme
-    const uploadDir = join(process.cwd(), "public", "uploads");
+    // Ana dizindeki (realdates.online) public/uploads klasörüne kaydetmek için tam path belirtin.
+    // Örneğin, ana dizinin tam path'ini bir environment variable olarak .env dosyanıza ekleyin:
+    // MAIN_APP_PUBLIC_PATH=/var/www/realdates.online/public
+    // Sonra burada kullanın:
+    const uploadDir = process.env.MAIN_APP_PUBLIC_PATH
+      ? join(process.env.MAIN_APP_PUBLIC_PATH, "uploads")
+      : join(process.cwd(), "public", "uploads"); // fallback: local public/uploads
+
     await fs.mkdir(uploadDir, { recursive: true });
 
     const savedFiles: UserImages[] = [];
@@ -174,7 +191,7 @@ export async function UploadStoredFile(formData: FormData): Promise<IBaseDatasRe
     console.error("Genel yükleme hatası:", error);
     return {
       data: [],
-      message: "Dosya yükleme sırasında beklenmeyen bir hata oluştu",
+      message: "Dosya yükleme sırasında beklenmeyen bir hata oluştu" + error,
       status: ResponseStatus.Error,
     };
   }
@@ -185,11 +202,201 @@ export async function getAllUser(): Promise<IBaseDatasResponse<User>> {
     where: {
       IsActive: true,
       IsDeleted: false
+    },
+    orderBy: {
+      CreatedAt: "desc"
     }
   })
   return {
     data: users,
     message: "Kullanıcılar başarıyla alındı",
     status: ResponseStatus.Ok
+  }
+}
+
+export async function DeleteUser({ id }: { id: number }): Promise<IBaseDataResponse<User>> {
+  console.log("DeleteUser", id)
+  const user = await prisma.user.findUnique({
+    where: {
+      Id: id
+    },
+    include: {
+      UserImages: true
+    }
+  })
+  if (!user) {
+    return {
+      data: {} as User,
+      message: "Kullanıcı bulunamadı",
+      status: ResponseStatus.Error
+    };
+  }
+  const res = await prisma.user.delete({
+    where: {
+      Id: id
+    }
+  });
+
+  return {
+    data: res,
+    message: "Kullanıcı başarıyla silindi",
+    status: ResponseStatus.Ok
+  }
+}
+export interface UserWithImages extends User {
+  UserImages?: UserImages[]; // veya uygun image type'ı ile değiştirin
+}
+export async function getUserById(id: number): Promise<IBaseDataResponse<UserWithImages>> {
+  const user = await prisma.user.findUnique({
+    where: {
+      Id: id
+    },
+    include: {
+      UserImages: {
+        where: {
+          IsActive: true,
+          IsDeleted: false
+        }
+      }
+    }
+  });
+
+  if (!user) {
+    return {
+      data: {} as UserWithImages,
+      message: "Kullanıcı bulunamadı",
+      status: ResponseStatus.Error
+    };
+  }
+
+  return {
+    data: user,
+    message: "Kullanıcı başarıyla alındı",
+    status: ResponseStatus.Ok
+  };
+}
+
+export async function DeleteUserImage({ id }: { id: number }): Promise<IBaseDataResponse<UserImages>> {
+  const res = await prisma.userImages.delete({
+    where: {
+      Id: id
+    }
+  })
+  return {
+    data: res,
+    message: "Kullanıcı resmi başarıyla silindi",
+    status: ResponseStatus.Ok
+  }
+}
+
+// Belirli bir resmi profil resmi olarak ayarlama
+export async function SetProfileUserImage({ imageId }: { imageId: number }): Promise<IBaseDataResponse<UserImages>> {
+  try {
+    const image = await prisma.userImages.findUnique({ where: { Id: imageId } });
+    if (!image) {
+      return { data: {} as UserImages, message: "Resim bulunamadı", status: ResponseStatus.Error };
+    }
+
+    const userId = image.UserId;
+
+    const updatedImage = await prisma.$transaction(async (tx) => {
+      // Tüm diğer profil resimlerini sıfırla
+      await tx.userImages.updateMany({ where: { UserId: userId, IsProfile: true }, data: { IsProfile: false } });
+      // Seçilen resmi profil yap
+      const newProfile = await tx.userImages.update({ where: { Id: imageId }, data: { IsProfile: true } });
+      // User tablosuna yaz
+      await tx.user.update({ where: { Id: userId }, data: { ProfileImage: newProfile.ImageUrl, UpdatedAt: new Date() } });
+      return newProfile;
+    });
+
+    return { data: updatedImage, message: "Profil resmi güncellendi", status: ResponseStatus.Ok };
+  } catch (e) {
+    console.error(e);
+    return { data: {} as UserImages, message: "Profil resmi güncellenemedi", status: ResponseStatus.Error };
+  }
+}
+
+// Özel (special) resim atama / kaldırma
+export async function ToggleSpecialUserImage({ imageId, isSpecial }: { imageId: number, isSpecial: boolean }): Promise<IBaseDataResponse<UserImages>> {
+  try {
+    const updated = await prisma.userImages.update({
+      where: { Id: imageId },
+      data: { IsSpecial: isSpecial, UpdatedAt: new Date() }
+    });
+    return { data: updated, message: "Special durum güncellendi", status: ResponseStatus.Ok };
+  } catch (e) {
+    console.error(e);
+    return { data: {} as UserImages, message: "Special durum güncellenemedi", status: ResponseStatus.Error };
+  }
+}
+
+export const fetchUserStats = async (): Promise<UserStats> => {
+  try {
+    const [
+      total,
+      real,
+      fake,
+      premium,
+      online,
+      verified
+    ] = await Promise.all([
+      // Total users (not deleted)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+        },
+      }),
+      // Real users (UserType = 1)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          UserType: 2,
+        },
+      }),
+      // Fake users (UserType = 2)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          UserType: 4,
+        },
+      }),
+      // Premium users (have coins > 0)
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          Coin: {
+            gt: 0,
+          },
+        },
+      }),
+      // Online users
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          IsOnline: true,
+        },
+      }),
+      // Verified users
+      prisma.user.count({
+        where: {
+          IsDeleted: false,
+          IsVerify: true,
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      real,
+      fake,
+      premium,
+      online,
+      verified,
+    };
+  } catch (error) {
+    console.error('Error fetching user stats:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
   }
 }

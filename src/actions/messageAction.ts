@@ -141,7 +141,7 @@ export const DeleteChatNote = async (noteId: number): Promise<IBaseDataResponse<
   };
 }
 
-export const CreateChatNote = async (data: ChatNote):Promise<IBaseDataResponse<ChatNote>> => {
+export const CreateChatNote = async (data: ChatNote): Promise<IBaseDataResponse<ChatNote>> => {
   data.CreatedAt = new Date();
   data.UpdatedAt = new Date();
   data.IsActive = true;
@@ -170,17 +170,38 @@ export const getLastedChat = async () => {
 }
 
 export const UpsertUserChatInformation = async (data: UserChatInformation) => {
+  if (!data.Id) {
 
-  const res = await prisma.userChatInformation.upsert({
+    const res = await prisma.userChatInformation.create({
+      data: {
+        ...data
+      }
+    })
+    return res;
+  }
+  const res = await prisma.userChatInformation.update({
     where: {
       Id: data.Id
     },
-    update: {
-      ...data
-    },
-    create: {
+    data: {
       ...data
     }
   })
   return res;
+
+}
+
+export const getFakeUserChatList = async () => {
+  const data = await prisma.chats.findMany({
+    where: {
+      IsActive: true,
+      IsDeleted: false,
+
+    },
+    include:{
+      User_Chats_RecipientUserIdToUser:true,
+      User_Chats_SenderUserIdToUser:true
+    }
+  })
+  return data;
 }

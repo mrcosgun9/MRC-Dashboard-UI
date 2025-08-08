@@ -1,14 +1,13 @@
 "use client"
-import { createUserService, UploadStoredFile } from '@/actions/userAction'
+import { createUserService, DeleteUserImage, updateUserService, UploadStoredFile, UserWithImages, SetProfileUserImage, ToggleSpecialUserImage } from '@/actions/userAction'
 import PageHeader from '@/components/layouts/main-layout/PageHeader'
 import { bodyTypeItems, dayItems, ethnicityItems, genderItems, isSmokeItems, monthItems, relationshipItems, sexualOrientationItems, yearItems } from '@/constants/selectItemList'
 import { useAppContext } from '@/context/AppContext'
-import UserImages from '@/services/actions/userImage'
 import UserService from '@/services/actions/userService'
 import { CreateUserRequest, CreateUserResponse } from '@/services/actions/userService/type'
 import { ResponseStatus } from '@/types/baseType'
 import { Button, Checkbox, Image, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
-import { User } from '@prisma/client'
+import { User, UserImages } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -20,10 +19,11 @@ interface ImageType {
   file: File
 }
 
-const CreateUserPage = () => {
+const UserForm = ({ user }: { user: UserWithImages }) => {
   const router = useRouter();
   const { loading, setLoading } = useAppContext();
   const [imageList, setImageList] = useState<ImageType[]>()
+  const [userImages, setUserImages] = useState<UserImages[]>(user.UserImages ?? [])
   const [addedUser, setAddedUser] = useState<User>()
   const {
     register,
@@ -31,25 +31,28 @@ const CreateUserPage = () => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<User>()
-  const onSubmit: SubmitHandler<User> = async (data) => {
-    setLoading(true);
+  } = useForm<User>(
+    {
+      defaultValues: user
+    }
+  )
 
-    data.FullName = `${data.Name} ${data.LastName}`
+  const onSubmit: SubmitHandler<UserWithImages> = async (data) => {
+    setLoading(true);
+    data.FullName = `${data.Name} ${data.LastName}`;
     data.UserType = 4;
     data.Gender = Number(data.Gender);
     data.MaritalStatus = Number(data.MaritalStatus);
     data.SexualOrientation = Number(data.SexualOrientation);
-    const res = await createUserService({ data });
+    // Artık UserImages alanı data'da mevcut
+    delete data.UserImages;
+    const res = await updateUserService({ data });
     if (res.status == ResponseStatus.Ok) {
-
-      console.log(res);
       toast.success('User added successfully');
       setLoading(false);
-      setAddedUser(res.data)
+      setAddedUser(res.data);
       // router.push('/dashboard/manage-users/all-user')
-    }
-    else {
+    } else {
       toast.error('Adding user failed');
       setLoading(false);
     }
@@ -122,10 +125,10 @@ const CreateUserPage = () => {
 
   return (
     <div>
-      <PageHeader title="CREATE USER" breadcrumbsItems={[
+      <PageHeader title="EDIT USER" breadcrumbsItems={[
         { title: 'DASHBOARD', url: '/dashboard' },
         { title: 'ALL USERS', url: '/dashboard/manage-users/all-user' },
-        { title: 'CREATE USER' },
+        { title: 'EDIT USER' },
       ]} />
       <div className='w-full flex align-middle justify-center'>
         <div className='w-full max-w-3xl bg-white rounded-md shadow-md dark:bg-gray-800 p-5 mb-5'>
@@ -337,71 +340,92 @@ const CreateUserPage = () => {
                 <div className='mt-2'>
 
                   {imageList &&
-                    <div className='flex flex-wrap align-middle items-start justify-start gap-3'>
-                      {imageList.map((img, i) => {
-                        const hasProfile = imageList.some(im => im.isProfile);
-                        const isProfile = img.isProfile;
-                        const isSpecial = img.isSpecial;
-                        return (
-                          <div
-                            key={i}
-                            className={`relative rounded-lg p-2 border transition-colors ${
-                              isProfile ? 'border-green-500' : isSpecial ? 'border-amber-500' : 'border-gray-200'
-                            }`}
-                          >
-                            <div className='h-24 w-32 overflow-hidden flex items-center justify-center rounded-md bg-gray-50'>
-                              <Image
-                                width={128}
-                                src={URL.createObjectURL(img.file)}
-                                alt='preview image'
-                                className='object-cover'
-                              />
-                            </div>
-                            <div className='mt-2 flex flex-col gap-1 text-xs'>
-                              <Checkbox
-                                radius='md'
-                                size='sm'
-                                isSelected={isProfile}
-                                isDisabled={hasProfile && !isProfile}
-                                onChange={(e) => {
-                                  handleCheckboxChange(i, 'isProfile', e.target.checked);
-                                  if (e.target.checked) {
-                                    // Başka profil işaretlileri temizle
-                                    setImageList(prev => prev?.map((p, idx) => idx === i ? { ...p, isProfile: true } : { ...p, isProfile: false }) );
-                                  }
-                                }}
-                              >Profil</Checkbox>
-                              <Checkbox
-                                radius='md'
-                                size='sm'
-                                isSelected={isSpecial}
-                                isDisabled={isProfile}
-                                onChange={(e) => {
-                                  handleCheckboxChange(i, 'isSpecial', e.target.checked);
-                                }}
-                              >Special</Checkbox>
-                            </div>
-                            <div className='mt-1 flex justify-between gap-1'>
-                              {isProfile && <span className='text-[10px] px-1 py-0.5 rounded bg-green-500 text-white'>Profile</span>}
-                              {!isProfile && isSpecial && <span className='text-[10px] px-1 py-0.5 rounded bg-amber-500 text-white'>Special</span>}
-                            </div>
-                            <Button
-                              size='sm'
-                              color='danger'
-                              variant='flat'
-                              isIconOnly
-                              className='absolute top-1 right-1'
-                              onPress={() => {
-                                setImageList(imageList.filter((_, idx) => idx !== i));
-                              }}
-                            >
-                              <BsTrash />
-                            </Button>
+                    <div className='flex align-middle items-center justify-start gap-2'>
+                      {imageList.map((x, i) => {
+                        return <div key={i} className='border border-gray-200 rounded-lg p-1'>
+                          <div className='h-20 overflow-hidden flex align-middle items-center justify-center'>
+                            <Image
+                              width={120}
+                              src={URL.createObjectURL(x.file)}
+                              alt='preview image'
+                              className='mb-1'
+                            />
                           </div>
-                        );
+                          <div className='flex flex-col gap-1'>
+                            <div className='flex gap-1'>
+                              <Checkbox radius="md" size='sm' isDisabled={imageList.filter(x => x.isProfile).length > 0 && imageList.filter(x => x.isProfile)[0] != x} onChange={(e) => {
+                                handleCheckboxChange(i, 'isProfile', e.target.checked);
+                              }}>Profil</Checkbox>
+                              <Checkbox radius="md" size='sm' isDisabled={x.isProfile} onChange={(e) => {
+                                handleCheckboxChange(i, 'isSpecial', e.target.checked);
+                              }}>Special</Checkbox>
+                            </div>
+                            <div>
+                              <Button size='sm' color='danger' variant='flat' isIconOnly onPress={() => {
+                                const updatedItems = imageList.filter((j) => j !== x);
+                                setImageList(updatedItems);
+                              }}><BsTrash /></Button>
+                            </div>
+                          </div>
+                        </div>
                       })}
                     </div>
                   }
+
+                  <div className='flex align-middle items-center flex-wrap justify-center gap-4'>
+                    {
+                      userImages?.map((x, i) => {
+                        return <div key={i} className='border border-gray-200 rounded-lg p-2 relative flex flex-col items-center gap-2 min-w-[140px]'>
+                          <div className='absolute top-1 right-1 flex gap-1'>
+                            <Button size='sm' color='danger' variant='flat' isIconOnly onPress={() => {
+                              DeleteUserImage({ id: x.Id }).then((res) => {
+                                if (res.status == ResponseStatus.Ok) {
+                                  toast.success("Image Deleted")
+                                  setUserImages(userImages.filter((j) => j.Id != x.Id))
+                                }
+                                else {
+                                  toast.error("Image Deletion Error")
+                                }
+                              })
+                            }}>
+                              <BsTrash />
+                            </Button>
+                          </div>
+                          <div className='h-20 w-full overflow-hidden flex align-middle items-center justify-center'>
+                            <Image
+                              width={120}
+                              src={x.ImageUrl}
+                              alt='user image'
+                              className='mb-1 object-cover'
+                            />
+                          </div>
+                          <div className='flex flex-col gap-1 w-full'>
+                            <Button size='sm' variant={x.IsProfile ? 'solid' : 'flat'} color={x.IsProfile ? 'success' : 'default'} onPress={() => {
+                              if (x.IsProfile) return; // zaten profil
+                              SetProfileUserImage({ imageId: x.Id }).then(res => {
+                                if (res.status == ResponseStatus.Ok) {
+                                  toast.success('Profil resmi güncellendi');
+                                  setUserImages(userImages.map(img => ({ ...img, IsProfile: img.Id === x.Id })));
+                                } else {
+                                  toast.error('Profil resmi güncellenemedi');
+                                }
+                              })
+                            }}>{x.IsProfile ? 'Profil' : 'Profil Yap'}</Button>
+                            <Button size='sm' variant={x.IsSpecial ? 'solid' : 'flat'} color={x.IsSpecial ? 'warning' : 'default'} onPress={() => {
+                              ToggleSpecialUserImage({ imageId: x.Id, isSpecial: !x.IsSpecial }).then(res => {
+                                if (res.status == ResponseStatus.Ok) {
+                                  toast.success('Special durum güncellendi');
+                                  setUserImages(userImages.map(img => img.Id === x.Id ? { ...img, IsSpecial: !img.IsSpecial } : img));
+                                } else {
+                                  toast.error('Special durum güncellenemedi');
+                                }
+                              })
+                            }}>{x.IsSpecial ? 'Special' : 'Special Yap'}</Button>
+                          </div>
+                        </div>
+                      })
+                    }
+                  </div>
                   <div className='flex justify-end'>
                     <Button color="primary" variant='flat' disabled={loading} isLoading={loading} onPress={() => { submitImage() }} >
                       Save
@@ -422,4 +446,4 @@ const CreateUserPage = () => {
   )
 }
 
-export default CreateUserPage
+export default UserForm

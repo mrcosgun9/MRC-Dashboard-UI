@@ -1,3 +1,4 @@
+
 import DataTable from '@/components/elements/DataTable'
 import AllUserListCount from '@/components/modules/manage-users/all-user/AllUserListCount'
 import useGetAllUsers from '@/hooks/useGetAllUsers'
@@ -8,7 +9,7 @@ import UserService from '@/services/actions/userService'
 import { ResponseStatus } from '@/types/baseType'
 import { toast } from 'react-toastify'
 import UserListWrapper from '@/components/modules/manage-users/all-user/UserListWrapper'
-import { getAllUser } from '@/actions/userAction'
+import { fetchUserStats, getAllUser } from '@/actions/userAction'
 const columns: ColumnType[] = [
   { name: "IMAGE", uid: "profileImage", type: ColumnTypeEnum.image },
   { name: "ID", uid: "id", sortable: true },
@@ -19,10 +20,10 @@ const columns: ColumnType[] = [
 
 const AllUser = async () => {
   const users = await getAllUser();
-
+  const userStats = await fetchUserStats();
   return (
     <div>
-      <UserListWrapper data={users.data} />
+      <UserListWrapper data={users.data} userStats={userStats} />
     </div>
   )
 }

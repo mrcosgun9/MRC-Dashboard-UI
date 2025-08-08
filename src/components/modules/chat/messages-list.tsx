@@ -7,8 +7,8 @@ import { Button, Input } from '@nextui-org/react'
 import { BiSend } from 'react-icons/bi'
 import { createMessages, getChatById, getLastedChat } from '@/actions/messageAction'
 import { useSession } from 'next-auth/react'
-import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 const MessagesList = ({ chatData }: { chatData: GetChatByIdResponse }) => {
   const router = useRouter();
