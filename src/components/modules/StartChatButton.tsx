@@ -15,17 +15,25 @@ const StartChatButton = () => {
     try {
       setSearching(true);
       const res = await getLastedChat();
-      console.log("res", res);
-
       if (res) {
         setSearching(false)
         router.push(`/dashboard/chats/` + res);
       }
       else {
-        setSearching(true)
+        const currentCount = parseInt(sessionStorage.getItem('emptyDataCount') || '0');
+        const newCount = currentCount + 1;
+        sessionStorage.setItem('emptyDataCount', newCount.toString());
+
+        if (newCount >= 6) {
+          setSearching(false);
+          sessionStorage.removeItem('emptyDataCount');
+        } else {
+          setSearching(true);
+        }
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+      setSearching(false);
     }
   };
 

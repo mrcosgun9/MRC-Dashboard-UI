@@ -5,6 +5,7 @@ import React from 'react'
 import { IoSettingsOutline } from 'react-icons/io5';
 import NavbarMenuList from './NavbarMenuList';
 import NavbarMobile from './NavbarMobile';
+import Link from 'next/link';
 
 
 const Navbar = () => {
@@ -13,7 +14,7 @@ const Navbar = () => {
       <div className='w-full py-2 border-b border-gray-100 dark:border-gray-800'>
         <div className='container flex justify-between align-middle items-center'>
           <div className='flex align-middle items-center justify-center gap-3'>
-            <div className='font-extrabold'>LOGO</div>
+            <Link href={"/"} className='font-extrabold text-pink-600'>FANLY</Link>
             <NavbarMobile/>
           </div>
           <div className='flex justify-end align-middle items-center gap-4'>

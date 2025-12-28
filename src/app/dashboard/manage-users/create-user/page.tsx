@@ -42,8 +42,6 @@ const CreateUserPage = () => {
     data.SexualOrientation = Number(data.SexualOrientation);
     const res = await createUserService({ data });
     if (res.status == ResponseStatus.Ok) {
-
-      console.log(res);
       toast.success('User added successfully');
       setLoading(false);
       setAddedUser(res.data)
@@ -95,7 +93,6 @@ const CreateUserPage = () => {
         formData.append(`images[${index}].isSpecial`, img.isSpecial.toString());
       });
       const res = await UploadStoredFile(formData);
-      console.log("res", res);
       if (res.status == ResponseStatus.Ok) {
         setLoading(false);
         router.push('/dashboard/manage-users/all-user')

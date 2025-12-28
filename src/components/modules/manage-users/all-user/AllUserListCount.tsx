@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react'
-import { useGetUserStats } from '@/hooks/useGetUserStats'
 import { UserStats } from '@/services/actions/userService';
 
 const AllUserListItem = ({ title, count }: { title: string, count: string | number }) => {

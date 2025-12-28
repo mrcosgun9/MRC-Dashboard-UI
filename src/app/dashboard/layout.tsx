@@ -5,7 +5,7 @@ import { useAppContext } from "@/context/AppContext";
 import React,{ useEffect } from "react";
 import { showToast } from "@/services/toastrServices";
 import toast from "react-hot-toast";
- 
+
 
 export default function DashboardLayout({
   children,
@@ -14,24 +14,24 @@ export default function DashboardLayout({
   children: React.ReactNode;
   session: any;
 }>) {
-  const { connection } = useAppContext();
-  useEffect(() => {
-    if (connection) {
-      connection.on("UserLoggedIn", (userName: string) => {
-        showToast('success', `${userName} is online`)
-        const audio = new Audio('/sounds/bell.wav'); // Ses dosyanızın yolu
-        audio.play();
-      })
-       connection.on("userConnections", (userList: any[]) => {
-        console.log("userConnections", userList)
-      })
-      connection.on("receiveMessageNotification", (senderId: number, userName: string, receiverUserId: number, content: string) => {
-        const audio = new Audio('/sounds/bell.wav'); // Ses dosyanızın yolu
-        audio.play();
-        toast.success(`new message`);
-      })
-    }
-  }, [connection])
+  // const { connection } = useAppContext();
+  // useEffect(() => {
+  //   if (connection) {
+  //     connection.on("UserLoggedIn", (userName: string) => {
+  //       showToast('success', `${userName} is online`)
+  //       const audio = new Audio('/sounds/bell.wav'); // Ses dosyanızın yolu
+  //       audio.play();
+  //     })
+  //      connection.on("userConnections", (userList: any[]) => {
+  //       console.log("userConnections", userList)
+  //     })
+  //     connection.on("receiveMessageNotification", (senderId: number, userName: string, receiverUserId: number, content: string) => {
+  //       const audio = new Audio('/sounds/bell.wav'); // Ses dosyanızın yolu
+  //       audio.play();
+  //       toast.success(`new message`);
+  //     })
+  //   }
+  // }, [connection])
   return (
 
     <>

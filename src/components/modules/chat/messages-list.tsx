@@ -64,8 +64,7 @@ const MessagesList = ({ chatData }: { chatData: GetChatByIdResponse }) => {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
       }
       setMessage('');
-      getLastedChat().then((res) => {
-        console.log(res);
+      getLastedChat(chatData.chat.Id).then((res) => {
         if (res)
           router.push(`/dashboard/chats/${res}`);
         else

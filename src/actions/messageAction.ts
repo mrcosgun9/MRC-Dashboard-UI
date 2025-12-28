@@ -22,6 +22,9 @@ export const getChatById = async (chatId: number): Promise<GetChatByIdResponse> 
       RecipientUserId: true,
       UserChatInformation: true,
       Messages: {
+        orderBy: {
+          CreatedAt: 'asc'
+        },
         include: {
           User_Messages_RecipientUserIdToUser: {
             select: {
@@ -146,7 +149,6 @@ export const CreateChatNote = async (data: ChatNote): Promise<IBaseDataResponse<
   data.UpdatedAt = new Date();
   data.IsActive = true;
   data.IsDeleted = false;
-  console.log("data", data);
   const res = await prisma.chatNote.create({
     data: data
   })
@@ -157,12 +159,19 @@ export const CreateChatNote = async (data: ChatNote): Promise<IBaseDataResponse<
   };
 }
 
-export const getLastedChat = async () => {
+export const getLastedChat = async (id?:number) => {
   const lastMessages = await prisma.messages.findMany({
     distinct: ['ChatId'],
     orderBy: { CreatedAt: 'desc' },
+    ...(id && {
+      where: {
+        ChatId: {
+          not: id
+        }
+      }
+    })
   });
-  console.log("lastMessages", lastMessages);
+
   const unanswered = lastMessages.filter(m =>
     m.ModeratorId === null
   );

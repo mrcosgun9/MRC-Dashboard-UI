@@ -215,7 +215,6 @@ export async function getAllUser(): Promise<IBaseDatasResponse<User>> {
 }
 
 export async function DeleteUser({ id }: { id: number }): Promise<IBaseDataResponse<User>> {
-  console.log("DeleteUser", id)
   const user = await prisma.user.findUnique({
     where: {
       Id: id
