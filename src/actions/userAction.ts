@@ -90,9 +90,9 @@ export async function UploadStoredFile(formData: FormData): Promise<IBaseDatasRe
     )).filter(Boolean);
 
     // 5. Dosya Validasyon ve İşleme
-    // Ana dizindeki (realdates.online) public/uploads klasörüne kaydetmek için tam path belirtin.
+    // Ana dizindeki (fanly.fun) public/uploads klasörüne kaydetmek için tam path belirtin.
     // Örneğin, ana dizinin tam path'ini bir environment variable olarak .env dosyanıza ekleyin:
-    // MAIN_APP_PUBLIC_PATH=/var/www/realdates.online/public
+    // MAIN_APP_PUBLIC_PATH=/var/www/fanly.fun/public
     // Sonra burada kullanın:
     const uploadDir = process.env.MAIN_APP_PUBLIC_PATH
       ? join(process.env.MAIN_APP_PUBLIC_PATH, "uploads")

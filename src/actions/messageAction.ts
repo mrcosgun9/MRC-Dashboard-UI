@@ -3,11 +3,52 @@ import { ChatNote, Messages, UserChatInformation } from "@prisma/client";
 import prisma from '@/lib/prisma'
 import { GetChatByIdResponse } from "@/services/actions/chat/type";
 import { IBaseDataResponse, IBaseDatasResponse, ResponseStatus } from "@/types/baseType";
+import { sendMessageNotification } from "@/services/actions/email";
 
 export const createMessages = async ({ data }: { data: Omit<Messages, 'Id'> }) => {
   const res = await prisma.messages.create({
     data: data
   })
+
+  // Mesaj oluşturulduktan sonra e-posta bildirimi gönder
+  try {
+    // Alıcı kullanıcının bilgilerini çek
+    const recipientUser = await prisma.user.findUnique({
+      where: {
+        Id: data.RecipientUserId,
+      },
+      select: {
+        Email: true,
+        FullName: true,
+        Name: true,
+      },
+    });
+
+    // Gönderen kullanıcının bilgilerini çek
+    const senderUser = await prisma.user.findUnique({
+      where: {
+        Id: data.SenderId,
+      },
+      select: {
+        FullName: true,
+      },
+    });
+
+    // Eğer her iki kullanıcı da bulunursa e-posta gönder
+    if (recipientUser && senderUser && recipientUser.Email) {
+      await sendMessageNotification({
+        recipientEmail: recipientUser.Email,
+        recipientName: recipientUser.FullName || recipientUser.Name,
+        senderFullName: senderUser.FullName,
+        messageContent: data.Content,
+        chatId: data.ChatId,
+      });
+    }
+  } catch (error) {
+    // E-posta gönderimi başarısız olursa sadece logla, mesaj kaydı devam etsin
+    console.error('E-posta bildirimi gönderilemedi:', error);
+  }
+
   return res;
 }
 
